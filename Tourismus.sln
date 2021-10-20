@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tourismus.WebApp", "Tourismus.WebApp\Tourismus.WebApp.csproj", "{7C426707-9836-4D9F-A6A0-74F8ECEF9208}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tourismus.Model", "Tourismus.Model\Tourismus.Model.csproj", "{0846E4FF-BEB4-4DDC-AAB2-190935676AD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C426707-9836-4D9F-A6A0-74F8ECEF9208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C426707-9836-4D9F-A6A0-74F8ECEF9208}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C426707-9836-4D9F-A6A0-74F8ECEF9208}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C426707-9836-4D9F-A6A0-74F8ECEF9208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0846E4FF-BEB4-4DDC-AAB2-190935676AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0846E4FF-BEB4-4DDC-AAB2-190935676AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0846E4FF-BEB4-4DDC-AAB2-190935676AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0846E4FF-BEB4-4DDC-AAB2-190935676AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AA9ED4F-B18F-4BEE-9E8D-3658548E5E8D}
+	EndGlobalSection
+EndGlobal
