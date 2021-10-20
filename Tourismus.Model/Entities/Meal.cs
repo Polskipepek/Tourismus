@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-#nullable disable
-
 namespace Api.Model.Database {
     public partial class Meal {
         public Meal() {

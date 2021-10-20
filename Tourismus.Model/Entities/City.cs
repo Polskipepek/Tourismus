@@ -1,8 +1,6 @@
 ﻿using NetTopologySuite.Geometries;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Api.Model.Database {
     public partial class City {
         public City() {

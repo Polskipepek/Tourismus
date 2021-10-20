@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Api.Model.Database {
     public partial class User {
         public User() {
-            Reservations = new HashSet<Reservation>();
+            Reservationsxd = new HashSet<Reservation>();
         }
 
         public int Id { get; set; }
@@ -16,6 +14,6 @@ namespace Api.Model.Database {
         public string Email { get; set; }
         public DateTime AccountCreationDate { get; set; }
         public bool IsAdmin { get; set; }
-        public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<Reservation> Reservationsxd { get; set; }
     }
 }

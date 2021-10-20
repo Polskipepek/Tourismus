@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Api.Model.Database {
     public partial class Offer {
         public Offer() {

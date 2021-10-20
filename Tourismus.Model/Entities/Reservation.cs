@@ -1,7 +1,5 @@
 ﻿using System;
 
-#nullable disable
-
 namespace Api.Model.Database {
     public partial class Reservation {
         public int Id { get; set; }
