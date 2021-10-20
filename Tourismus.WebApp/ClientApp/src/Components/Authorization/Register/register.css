@@ -1,0 +1,15 @@
+@media screen and (orientation: portrait) {
+  .register-modal {
+    min-width: 45vw;
+  }
+}
+@media screen and (orientation: landscape) {
+  .register-modal {
+    min-width: 20vw;
+    max-width: 25vw;
+    transition: all 0.5s ease-in-out;
+  }
+}
+.unselectable-menu-item:hover {
+  background: #001529 !important;
+}
