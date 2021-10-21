@@ -6,7 +6,7 @@ namespace Tourismus.WebApp.Configuration.Modules.AppConfiguration {
         public AppConfig(IConfiguration configuration) {
             this.configuration = configuration;
         }
-        public string WebApiConnectionString => GetConnectionString(nameof(WebApiConnectionString));
+        public string TourismusConnectionString => GetConnectionString(nameof(TourismusConnectionString));
 
         public string WebApiUrl => GetUrl(nameof(WebApiUrl));
 

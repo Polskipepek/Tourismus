@@ -17,12 +17,12 @@ namespace Tourismus.WebApp.Configuration.Modules {
             builder.RegisterModule(new AppConfigModule(configuration));
 
             builder.RegisterModule<MapperModule>();
-            builder.RegisterModule(new ODataModule(configuration.GetConnectionString(nameof(AppConfig.WebApiConnectionString))));
+            builder.RegisterModule(new ODataModule(configuration.GetConnectionString(nameof(AppConfig.TourismusConnectionString))));
         }
 
         private static void RegisterAllAssemblies(ContainerBuilder builder, IEnumerable<System.Reflection.Assembly> additionalAssemblies) {
             var assemblies = new System.Reflection.Assembly[] {
-
+                //Additional assemblies
             }.Concat(additionalAssemblies).ToArray();
 
             builder.RegisterAssemblyModules(assemblies);

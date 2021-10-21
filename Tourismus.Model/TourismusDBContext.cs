@@ -1,16 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 using WebApi.Model.Configuration.Entities;
-
-#nullable disable
 
 namespace Api.Model.Database {
     public partial class TourismusDBContext : DbContext {
-        public TourismusDBContext() {
-        }
+        public TourismusDBContext() { }
 
-        public TourismusDBContext(DbContextOptions<TourismusDBContext> options)
-            : base(options) {
-        }
+        public TourismusDBContext(DbContextOptions<TourismusDBContext> options) : base(options) { }
 
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
@@ -19,10 +15,12 @@ namespace Api.Model.Database {
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
+        private const string TourismusConnectionString = "TourismusConnectionString";
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             if (!optionsBuilder.IsConfigured) {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=papek.database.windows.net;Database=TourismusDB;User Id=vsclient;Password=5xoN%2np&vzjns#DeF3fj", x => x.UseNetTopologySuite());
+                var connectionString = ConfigurationManager.ConnectionStrings[TourismusConnectionString].ConnectionString;
+                optionsBuilder.UseSqlServer(connectionString, x => x.UseNetTopologySuite());
             }
         }
 

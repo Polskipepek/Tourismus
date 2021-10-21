@@ -22,7 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Api.Model\Tourismus.Model.csproj" />
 		<ProjectReference Include="..\Tourismus.Model\Tourismus.Model.csproj" />
 	</ItemGroup>
 

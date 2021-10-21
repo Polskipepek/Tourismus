@@ -29,6 +29,7 @@ export default class Resources {
   public static Validation = {
     passwordConfirmation: "Hasło nie zgadza się",
     phoneNumber: "Numer telefonu nie jest prawidłowy",
+    passwordPolicy: "Hasło musi zawierać małą i wielką literę oraz cyfrę",
   };
 
   public static Notifications = {
