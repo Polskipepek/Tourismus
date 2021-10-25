@@ -34,9 +34,7 @@
 
 	bool ClassFilter(Class c){
 		string[] classes = {
-			"Product_ListDto",
-			"Shop_ListDto",
-		
+			"Offer_ListDto",
 		};
 		return classes.Contains(c.Name);
 	}

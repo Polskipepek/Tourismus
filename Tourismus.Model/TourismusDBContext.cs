@@ -3,10 +3,10 @@ using System.Configuration;
 using WebApi.Model.Configuration.Entities;
 
 namespace Api.Model.Database {
-    public partial class TourismusDBContext : DbContext {
-        public TourismusDBContext() { }
+    public partial class TourismusDbContext : DbContext {
+        public TourismusDbContext() { }
 
-        public TourismusDBContext(DbContextOptions<TourismusDBContext> options) : base(options) { }
+        public TourismusDbContext(DbContextOptions<TourismusDbContext> options) : base(options) { }
 
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }

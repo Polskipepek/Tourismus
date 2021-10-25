@@ -1,0 +1,1131 @@
+{
+  "x-generator": "NSwag v13.10.8.0 (NJsonSchema v10.3.11.0 (Newtonsoft.Json v12.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tourismus API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Authenticate": {
+      "post": {
+        "tags": [
+          "AuthenticateWithCredentials"
+        ],
+        "operationId": "AuthenticateWithCredentials_Authenticate",
+        "requestBody": {
+          "x-name": "action",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticateWithCredentialsParameters"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/offers/AddNewProductAction": {
+      "post": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "Offer_AddNewProductAction",
+        "requestBody": {
+          "x-name": "action",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/reservations/AddNewShopAction": {
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "operationId": "Reservation_AddNewShopAction",
+        "requestBody": {
+          "x-name": "action",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/reservations/EditShopAction": {
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "operationId": "Reservation_EditShopAction",
+        "requestBody": {
+          "x-name": "action",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/reservations/RemoveShopAction": {
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "operationId": "Reservation_RemoveShopAction",
+        "requestBody": {
+          "x-name": "action",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/users/AddNewCustomerAction": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_AddNewCustomerAction",
+        "requestBody": {
+          "x-name": "action",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "telephoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountCreationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "reservationsxd": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          }
+        }
+      },
+      "Reservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reservationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isPaid": {
+            "type": "boolean"
+          },
+          "offer": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Offer"
+              }
+            ]
+          },
+          "user": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ]
+          }
+        }
+      },
+      "Offer": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "stars": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dateFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dateTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "numberOfPeople": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "photoPaths": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "mealsId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "city": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/City"
+              }
+            ]
+          },
+          "meals": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Meal"
+              }
+            ]
+          },
+          "reservations": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "position": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Geometry"
+              }
+            ]
+          },
+          "isAirport": {
+            "type": "boolean"
+          },
+          "idNavigation": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Country"
+              }
+            ]
+          },
+          "offers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Offer"
+            }
+          }
+        }
+      },
+      "Geometry": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "factory": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeometryFactory"
+              }
+            ]
+          },
+          "userData": {
+            "nullable": true
+          },
+          "srid": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precisionModel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PrecisionModel"
+              }
+            ]
+          },
+          "numGeometries": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSimple": {
+            "type": "boolean"
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "area": {
+            "type": "number",
+            "format": "double"
+          },
+          "length": {
+            "type": "number",
+            "format": "double"
+          },
+          "centroid": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              }
+            ]
+          },
+          "interiorPoint": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              }
+            ]
+          },
+          "pointOnSurface": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              }
+            ]
+          },
+          "envelope": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Geometry"
+              }
+            ]
+          },
+          "envelopeInternal": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Envelope"
+              }
+            ]
+          },
+          "isRectangle": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GeometryFactory": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "precisionModel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PrecisionModel"
+              }
+            ]
+          },
+          "coordinateSequenceFactory": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoordinateSequenceFactory"
+              }
+            ]
+          },
+          "srid": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "geometryServices": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NtsGeometryServices"
+              }
+            ]
+          }
+        }
+      },
+      "PrecisionModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "isFloating": {
+            "type": "boolean"
+          },
+          "maximumSignificantDigits": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scale": {
+            "type": "number",
+            "format": "double"
+          },
+          "precisionModelType": {
+            "$ref": "#/components/schemas/PrecisionModels"
+          }
+        }
+      },
+      "PrecisionModels": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Floating",
+          "FloatingSingle",
+          "Fixed"
+        ],
+        "enum": [
+          "Floating",
+          "FloatingSingle",
+          "Fixed"
+        ]
+      },
+      "CoordinateSequenceFactory": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "ordinates": {
+            "$ref": "#/components/schemas/Ordinates"
+          }
+        }
+      },
+      "Ordinates": {
+        "type": "string",
+        "description": "",
+        "x-enumFlags": true,
+        "x-enumNames": [
+          "None",
+          "X",
+          "Spatial1",
+          "Y",
+          "Spatial2",
+          "XY",
+          "Spatial3",
+          "Z",
+          "XYZ",
+          "Spatial4",
+          "Spatial5",
+          "Spatial6",
+          "Spatial7",
+          "Spatial8",
+          "Spatial9",
+          "Spatial10",
+          "Spatial11",
+          "Spatial12",
+          "Spatial13",
+          "Spatial14",
+          "Spatial15",
+          "Spatial16",
+          "AllSpatialOrdinates",
+          "Measure1",
+          "M",
+          "XYM",
+          "XYZM",
+          "Measure2",
+          "Measure3",
+          "Measure4",
+          "Measure5",
+          "Measure6",
+          "Measure7",
+          "Measure8",
+          "Measure9",
+          "Measure10",
+          "Measure11",
+          "Measure12",
+          "Measure13",
+          "Measure14",
+          "Measure15",
+          "Measure16",
+          "AllMeasureOrdinates",
+          "AllOrdinates"
+        ],
+        "enum": [
+          "None",
+          "Spatial1",
+          "Spatial1",
+          "Spatial2",
+          "Spatial2",
+          "XY",
+          "Z",
+          "Z",
+          "XYZ",
+          "Spatial4",
+          "Spatial5",
+          "Spatial6",
+          "Spatial7",
+          "Spatial8",
+          "Spatial9",
+          "Spatial10",
+          "Spatial11",
+          "Spatial12",
+          "Spatial13",
+          "Spatial14",
+          "Spatial15",
+          "Spatial16",
+          "AllSpatialOrdinates",
+          "M",
+          "M",
+          "XYM",
+          "XYZM",
+          "Measure2",
+          "Measure3",
+          "Measure4",
+          "Measure5",
+          "Measure6",
+          "Measure7",
+          "Measure8",
+          "Measure9",
+          "Measure10",
+          "Measure11",
+          "Measure12",
+          "Measure13",
+          "Measure14",
+          "Measure15",
+          "Measure16",
+          "AllMeasureOrdinates",
+          "AllOrdinates"
+        ]
+      },
+      "NtsGeometryServices": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "geometryOverlay": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeometryOverlay"
+              }
+            ]
+          },
+          "coordinateEqualityComparer": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoordinateEqualityComparer"
+              }
+            ]
+          },
+          "defaultSRID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "defaultCoordinateSequenceFactory": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoordinateSequenceFactory"
+              }
+            ]
+          },
+          "defaultPrecisionModel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PrecisionModel"
+              }
+            ]
+          }
+        }
+      },
+      "GeometryOverlay": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false
+      },
+      "CoordinateEqualityComparer": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Point": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "factory": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeometryFactory"
+              }
+            ]
+          },
+          "userData": {
+            "nullable": true
+          },
+          "srid": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precisionModel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PrecisionModel"
+              }
+            ]
+          },
+          "numGeometries": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSimple": {
+            "type": "boolean"
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "area": {
+            "type": "number",
+            "format": "double"
+          },
+          "length": {
+            "type": "number",
+            "format": "double"
+          },
+          "centroid": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              }
+            ]
+          },
+          "interiorPoint": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              }
+            ]
+          },
+          "pointOnSurface": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              }
+            ]
+          },
+          "envelope": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Geometry"
+              }
+            ]
+          },
+          "envelopeInternal": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Envelope"
+              }
+            ]
+          },
+          "isRectangle": {
+            "type": "boolean"
+          },
+          "coordinateSequence": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoordinateSequence"
+              }
+            ]
+          },
+          "coordinates": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Coordinate"
+            }
+          },
+          "numPoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isEmpty": {
+            "type": "boolean"
+          },
+          "dimension": {
+            "$ref": "#/components/schemas/Dimension"
+          },
+          "boundaryDimension": {
+            "$ref": "#/components/schemas/Dimension"
+          },
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          },
+          "coordinate": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Coordinate"
+              }
+            ]
+          },
+          "geometryType": {
+            "type": "string",
+            "nullable": true
+          },
+          "ogcGeometryType": {
+            "$ref": "#/components/schemas/OgcGeometryType"
+          },
+          "boundary": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Geometry"
+              }
+            ]
+          },
+          "z": {
+            "type": "number",
+            "format": "double"
+          },
+          "m": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "Envelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "isNull": {
+            "type": "boolean"
+          },
+          "width": {
+            "type": "number",
+            "format": "double"
+          },
+          "height": {
+            "type": "number",
+            "format": "double"
+          },
+          "diameter": {
+            "type": "number",
+            "format": "double"
+          },
+          "minX": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxX": {
+            "type": "number",
+            "format": "double"
+          },
+          "minY": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxY": {
+            "type": "number",
+            "format": "double"
+          },
+          "area": {
+            "type": "number",
+            "format": "double"
+          },
+          "minExtent": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxExtent": {
+            "type": "number",
+            "format": "double"
+          },
+          "centre": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Coordinate"
+              }
+            ]
+          }
+        }
+      },
+      "Coordinate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          },
+          "z": {
+            "type": "number",
+            "format": "double"
+          },
+          "m": {
+            "type": "number",
+            "format": "double"
+          },
+          "coordinateValue": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Coordinate"
+              }
+            ]
+          },
+          "isValid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CoordinateSequence": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "dimension": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "measures": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spatial": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ordinates": {
+            "$ref": "#/components/schemas/Ordinates"
+          },
+          "hasZ": {
+            "type": "boolean"
+          },
+          "hasM": {
+            "type": "boolean"
+          },
+          "zOrdinateIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mOrdinateIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Coordinate"
+              }
+            ]
+          },
+          "last": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Coordinate"
+              }
+            ]
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Dimension": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "P",
+          "Point",
+          "Curve",
+          "L",
+          "A",
+          "Surface",
+          "Collapse",
+          "Dontcare",
+          "True",
+          "Unknown",
+          "False"
+        ],
+        "enum": [
+          "P",
+          "P",
+          "Curve",
+          "Curve",
+          "Surface",
+          "Surface",
+          "Collapse",
+          "Dontcare",
+          "True",
+          "Unknown",
+          "Unknown"
+        ]
+      },
+      "OgcGeometryType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Point",
+          "LineString",
+          "Polygon",
+          "MultiPoint",
+          "MultiLineString",
+          "MultiPolygon",
+          "GeometryCollection",
+          "CircularString",
+          "CompoundCurve",
+          "CurvePolygon",
+          "MultiCurve",
+          "MultiSurface",
+          "Curve",
+          "Surface",
+          "PolyhedralSurface",
+          "TIN"
+        ],
+        "enum": [
+          "Point",
+          "LineString",
+          "Polygon",
+          "MultiPoint",
+          "MultiLineString",
+          "MultiPolygon",
+          "GeometryCollection",
+          "CircularString",
+          "CompoundCurve",
+          "CurvePolygon",
+          "MultiCurve",
+          "MultiSurface",
+          "Curve",
+          "Surface",
+          "PolyhedralSurface",
+          "TIN"
+        ]
+      },
+      "Country": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/City"
+              }
+            ]
+          }
+        }
+      },
+      "Meal": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "offers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Offer"
+            }
+          }
+        }
+      },
+      "AuthenticateWithCredentialsParameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "mail": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

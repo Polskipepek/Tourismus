@@ -1,9 +1,7 @@
 import React from "react";
 import { IBaseFormikProps } from "../IBaseFormikProps";
 import FormikComponentBase from "../FormikComponentBase";
-import { Field } from "formik";
 import { Select } from "antd";
-import { IShopCategories_ListDto } from "../../../services/ListDtos/ShopCategories_ListDto";
 
 interface IOptionProps {
   key: number;

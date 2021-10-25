@@ -1,13 +1,13 @@
 ﻿using NetTopologySuite.Geometries;
 using System.Collections.Generic;
+using Tourismus.Model.Configuration._Infrastructure;
 
 namespace Api.Model.Database {
-    public partial class City {
+    public partial class City : ModelBase {
         public City() {
             Offers = new HashSet<Offer>();
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
         public int CountryId { get; set; }
         public Geometry Position { get; set; }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tourismus.Model.Configuration._Infrastructure;
 
 namespace Api.Model.Database {
-    public partial class Offer {
+    public partial class Offer : ModelBase {
         public Offer() {
             Reservations = new HashSet<Reservation>();
         }
-
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Stars { get; set; }
         public int CityId { get; set; }

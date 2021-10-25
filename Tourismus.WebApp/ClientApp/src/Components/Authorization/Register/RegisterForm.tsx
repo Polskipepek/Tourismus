@@ -10,7 +10,7 @@ import TextInputF from "../../../_Infrastructure/Formik/Components/TextInputF";
 import { IModalComponentProps } from "../../../_Infrastructure/Modals/IModalComponentProps";
 import Yup from "../../../_Infrastructure/Validation/YupValidation";
 import Resources from "../../../Resources";
-import { AddNewCustomerAction, AuthenticateWithCredentialsParameters, AuthenticationClient, CustomerClient } from "../../../services/GeneratedClient";
+import { AuthenticateWithCredentialsParameters, AuthenticateWithCredentialsClient } from "../../../services/GeneratedClient";
 
 interface IRegisterFormProps extends IModalComponentProps {}
 interface IRegisterFormValues {
@@ -46,6 +46,7 @@ class InnerForm extends React.Component<IRegisterFormProps & FormikProps<IRegist
 		);
 	}
 }
+
 const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 

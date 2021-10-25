@@ -1,7 +1,8 @@
 import { Table } from "antd";
-import { IProduct_ListDto } from "../../services/ListDtos/Product_ListDto";
+import { ColumnsType } from "antd/lib/table";
 interface ITabelkaProps {
-	data: IProduct_ListDto[];
+	data: any;
+	columns: ColumnsType<any>;
 }
 
 const Tabelka: React.FunctionComponent<ITabelkaProps> = (props) => {
@@ -20,7 +21,7 @@ const Tabelka: React.FunctionComponent<ITabelkaProps> = (props) => {
 
 	return (
 		<>
-			<Table dataSource={props.data} columns={columns} rowKey="Id"></Table>
+			<Table dataSource={props.data} columns={props.columns} rowKey="Id"></Table>
 		</>
 	);
 };

@@ -1,8 +1,8 @@
 ﻿using System;
+using Tourismus.Model.Configuration._Infrastructure;
 
 namespace Api.Model.Database {
-    public partial class Reservation {
-        public int Id { get; set; }
+    public partial class Reservation : ModelBase {
         public int OfferId { get; set; }
         public int UserId { get; set; }
         public DateTime ReservationDate { get; set; }

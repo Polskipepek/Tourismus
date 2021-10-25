@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>Tourismus.FakeData</AssemblyName>
+    <RootNamespace>Tourismus.FakeData</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="faker-csharp" Version="2.0.0" />
+    <PackageReference Include="Faker.Net" Version="1.5.150" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    <ProjectReference Include="..\Tourismus.Model\Tourismus.Model.csproj" />
+  </ItemGroup>
+
+</Project>

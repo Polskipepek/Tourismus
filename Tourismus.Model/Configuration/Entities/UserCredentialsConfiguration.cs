@@ -11,7 +11,6 @@ namespace WebApi.Model.Configuration.Entities {
             builder.Property(b => b.Id).HasComment("Identificator").ValueGeneratedOnAdd();
             builder.Property(b => b.Hash).HasComment("Hash");
             builder.Property(b => b.Salt).HasComment("Salt");
-            builder.Property(b => b.Token).HasComment("Token");
         }
     }
 }

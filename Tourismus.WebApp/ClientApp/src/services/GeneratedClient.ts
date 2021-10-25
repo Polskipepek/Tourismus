@@ -7,10 +7,10 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
-import { ClientBase } from './ClientBase';
-import moment from 'moment';
+import moment from "antd/node_modules/moment";
+import { ClientBase } from "./ClientBase";
 
-export class ShopCategoriesClient extends ClientBase {
+export class AuthenticateWithCredentialsClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -21,85 +21,8 @@ export class ShopCategoriesClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    getList(ifMatchQuery?: ETagOfShopCategories | null | undefined, ifNoneMatchQuery?: ETagOfShopCategories | null | undefined, request?: HttpRequest | null | undefined, internalRequest?: IWebApiRequestMessage | null | undefined, context?: ODataQueryContext | null | undefined, rawValues?: ODataRawQueryOptions | null | undefined, selectExpand?: SelectExpandQueryOption | null | undefined, apply?: ApplyQueryOption | null | undefined, filter?: FilterQueryOption | null | undefined, orderBy?: OrderByQueryOption | null | undefined, skip?: SkipQueryOption | null | undefined, skipToken?: SkipTokenQueryOption | null | undefined, top?: TopQueryOption | null | undefined, count?: CountQueryOption | null | undefined, validator?: ODataQueryValidator | null | undefined, signal?: AbortSignal | undefined): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/ShopCategories?";
-        if (ifMatchQuery !== undefined && ifMatchQuery !== null)
-            url_ += "ifMatch=" + encodeURIComponent("" + ifMatchQuery) + "&";
-        if (ifNoneMatchQuery !== undefined && ifNoneMatchQuery !== null)
-            url_ += "ifNoneMatch=" + encodeURIComponent("" + ifNoneMatchQuery) + "&";
-        if (request !== undefined && request !== null)
-            url_ += "request=" + encodeURIComponent("" + request) + "&";
-        if (internalRequest !== undefined && internalRequest !== null)
-            url_ += "internalRequest=" + encodeURIComponent("" + internalRequest) + "&";
-        if (context !== undefined && context !== null)
-            url_ += "context=" + encodeURIComponent("" + context) + "&";
-        if (rawValues !== undefined && rawValues !== null)
-            url_ += "rawValues=" + encodeURIComponent("" + rawValues) + "&";
-        if (selectExpand !== undefined && selectExpand !== null)
-            url_ += "selectExpand=" + encodeURIComponent("" + selectExpand) + "&";
-        if (apply !== undefined && apply !== null)
-            url_ += "apply=" + encodeURIComponent("" + apply) + "&";
-        if (filter !== undefined && filter !== null)
-            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
-        if (orderBy !== undefined && orderBy !== null)
-            url_ += "orderBy=" + encodeURIComponent("" + orderBy) + "&";
-        if (skip !== undefined && skip !== null)
-            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
-        if (skipToken !== undefined && skipToken !== null)
-            url_ += "skipToken=" + encodeURIComponent("" + skipToken) + "&";
-        if (top !== undefined && top !== null)
-            url_ += "top=" + encodeURIComponent("" + top) + "&";
-        if (count !== undefined && count !== null)
-            url_ += "count=" + encodeURIComponent("" + count) + "&";
-        if (validator !== undefined && validator !== null)
-            url_ += "validator=" + encodeURIComponent("" + validator) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            signal,
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processGetList(_response));
-        });
-    }
-
-    protected processGetList(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(<any>null);
-    }
-}
-
-export class AuthenticationClient extends ClientBase {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super();
-        this.http = http ? http : <any>window;
-        this.baseUrl = this.getBaseUrl("", baseUrl);
-    }
-
-    authenticate(action: AuthenticateWithCredentialsParameters, signal?: AbortSignal | undefined): Promise<AppUser | null> {
-        let url_ = this.baseUrl + "/api/authentication/Authenticate";
+    authenticate(action: AuthenticateWithCredentialsParameters, signal?: AbortSignal | undefined): Promise<User | null> {
+        let url_ = this.baseUrl + "/Authenticate";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(action);
@@ -121,14 +44,14 @@ export class AuthenticationClient extends ClientBase {
         });
     }
 
-    protected processAuthenticate(response: Response): Promise<AppUser | null> {
+    protected processAuthenticate(response: Response): Promise<User | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? AppUser.fromJS(resultData200) : <any>null;
+            result200 = resultData200 ? User.fromJS(resultData200) : <any>null;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -136,11 +59,11 @@ export class AuthenticationClient extends ClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<AppUser | null>(<any>null);
+        return Promise.resolve<User | null>(<any>null);
     }
 }
 
-export class ProductClient extends ClientBase {
+export class OfferClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -151,8 +74,8 @@ export class ProductClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewProductAction(action: AddNewProductAction, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/products/AddNewProductAction";
+    addNewProductAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/offers/AddNewProductAction";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(action);
@@ -189,7 +112,7 @@ export class ProductClient extends ClientBase {
     }
 }
 
-export class ShopClient extends ClientBase {
+export class ReservationClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -200,8 +123,8 @@ export class ShopClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewShopAction(action: AddNewShopAction, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/AddNewShopAction";
+    addNewShopAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/reservations/AddNewShopAction";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(action);
@@ -237,8 +160,8 @@ export class ShopClient extends ClientBase {
         return Promise.resolve<void>(<any>null);
     }
 
-    editShopAction(action: EditShopAction, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/EditShopAction";
+    editShopAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/reservations/EditShopAction";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(action);
@@ -274,8 +197,8 @@ export class ShopClient extends ClientBase {
         return Promise.resolve<void>(<any>null);
     }
 
-    removeShopAction(action: RemoveShopAction, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/RemoveShopAction";
+    removeShopAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/reservations/RemoveShopAction";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(action);
@@ -312,7 +235,7 @@ export class ShopClient extends ClientBase {
     }
 }
 
-export class CustomerClient extends ClientBase {
+export class UserClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -323,8 +246,8 @@ export class CustomerClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewCustomerAction(action: AddNewCustomerAction, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/customers/AddNewCustomerAction";
+    addNewCustomerAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/users/AddNewCustomerAction";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(action);
@@ -361,4984 +284,18 @@ export class CustomerClient extends ClientBase {
     }
 }
 
-export class ETagOfShopCategories implements IETagOfShopCategories {
-    item!: any | undefined;
-    isWellFormed!: boolean;
-    entityType!: string | undefined;
-    isAny!: boolean;
-    isIfNoneMatch!: boolean;
-    concurrencyProperties!: { [key: string]: any; } | undefined;
-
-    constructor(data?: IETagOfShopCategories) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.item = _data["Item"];
-            this.isWellFormed = _data["IsWellFormed"];
-            this.entityType = _data["EntityType"];
-            this.isAny = _data["IsAny"];
-            this.isIfNoneMatch = _data["IsIfNoneMatch"];
-            if (_data["ConcurrencyProperties"]) {
-                this.concurrencyProperties = {} as any;
-                for (let key in _data["ConcurrencyProperties"]) {
-                    if (_data["ConcurrencyProperties"].hasOwnProperty(key))
-                        this.concurrencyProperties![key] = _data["ConcurrencyProperties"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): ETagOfShopCategories {
-        data = typeof data === 'object' ? data : {};
-        let result = new ETagOfShopCategories();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Item"] = this.item;
-        data["IsWellFormed"] = this.isWellFormed;
-        data["EntityType"] = this.entityType;
-        data["IsAny"] = this.isAny;
-        data["IsIfNoneMatch"] = this.isIfNoneMatch;
-        if (this.concurrencyProperties) {
-            data["ConcurrencyProperties"] = {};
-            for (let key in this.concurrencyProperties) {
-                if (this.concurrencyProperties.hasOwnProperty(key))
-                    data["ConcurrencyProperties"][key] = this.concurrencyProperties[key];
-            }
-        }
-        return data; 
-    }
-}
-
-export interface IETagOfShopCategories {
-    item: any | undefined;
-    isWellFormed: boolean;
-    entityType: string | undefined;
-    isAny: boolean;
-    isIfNoneMatch: boolean;
-    concurrencyProperties: { [key: string]: any; } | undefined;
-}
-
-export abstract class HttpRequest implements IHttpRequest {
-    bodyReader!: PipeReader;
-    routeValues!: RouteValueDictionary;
-
-    constructor(data?: IHttpRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.bodyReader = _data["bodyReader"] ? PipeReader.fromJS(_data["bodyReader"]) : <any>undefined;
-            this.routeValues = _data["routeValues"] ? RouteValueDictionary.fromJS(_data["routeValues"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): HttpRequest {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'HttpRequest' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["bodyReader"] = this.bodyReader ? this.bodyReader.toJSON() : <any>undefined;
-        data["routeValues"] = this.routeValues ? this.routeValues.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IHttpRequest {
-    bodyReader: PipeReader;
-    routeValues: RouteValueDictionary;
-}
-
-export abstract class PipeReader implements IPipeReader {
-
-    constructor(data?: IPipeReader) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): PipeReader {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'PipeReader' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IPipeReader {
-}
-
-export class RouteValueDictionary implements IRouteValueDictionary {
-    _arrayStorage!: KeyValuePairOfStringAndObject[];
-    _propertyStorage!: PropertyStorage | undefined;
-    item!: any | undefined;
-    comparer!: IEqualityComparerOfString;
-    count!: number;
-    keys!: string[];
-    values!: (any | undefined)[];
-
-    constructor(data?: IRouteValueDictionary) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["_arrayStorage"])) {
-                this._arrayStorage = [] as any;
-                for (let item of _data["_arrayStorage"])
-                    this._arrayStorage!.push(KeyValuePairOfStringAndObject.fromJS(item));
-            }
-            this._propertyStorage = _data["_propertyStorage"] ? PropertyStorage.fromJS(_data["_propertyStorage"]) : <any>undefined;
-            this.item = _data["Item"];
-            this.comparer = _data["Comparer"] ? IEqualityComparerOfString.fromJS(_data["Comparer"]) : <any>undefined;
-            this.count = _data["Count"];
-            if (Array.isArray(_data["Keys"])) {
-                this.keys = [] as any;
-                for (let item of _data["Keys"])
-                    this.keys!.push(item);
-            }
-            if (Array.isArray(_data["Values"])) {
-                this.values = [] as any;
-                for (let item of _data["Values"])
-                    this.values!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): RouteValueDictionary {
-        data = typeof data === 'object' ? data : {};
-        let result = new RouteValueDictionary();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this._arrayStorage)) {
-            data["_arrayStorage"] = [];
-            for (let item of this._arrayStorage)
-                data["_arrayStorage"].push(item.toJSON());
-        }
-        data["_propertyStorage"] = this._propertyStorage ? this._propertyStorage.toJSON() : <any>undefined;
-        data["Item"] = this.item;
-        data["Comparer"] = this.comparer ? this.comparer.toJSON() : <any>undefined;
-        data["Count"] = this.count;
-        if (Array.isArray(this.keys)) {
-            data["Keys"] = [];
-            for (let item of this.keys)
-                data["Keys"].push(item);
-        }
-        if (Array.isArray(this.values)) {
-            data["Values"] = [];
-            for (let item of this.values)
-                data["Values"].push(item);
-        }
-        return data; 
-    }
-}
-
-export interface IRouteValueDictionary {
-    _arrayStorage: KeyValuePairOfStringAndObject[];
-    _propertyStorage: PropertyStorage | undefined;
-    item: any | undefined;
-    comparer: IEqualityComparerOfString;
-    count: number;
-    keys: string[];
-    values: (any | undefined)[];
-}
-
-export class KeyValuePairOfStringAndObject implements IKeyValuePairOfStringAndObject {
-    key!: string;
-    value!: any;
-
-    constructor(data?: IKeyValuePairOfStringAndObject) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.key = _data["key"];
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): KeyValuePairOfStringAndObject {
-        data = typeof data === 'object' ? data : {};
-        let result = new KeyValuePairOfStringAndObject();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["key"] = this.key;
-        data["value"] = this.value;
-        return data; 
-    }
-}
-
-export interface IKeyValuePairOfStringAndObject {
-    key: string;
-    value: any;
-}
-
-export class PropertyStorage implements IPropertyStorage {
-    value!: any;
-    properties!: PropertyHelper[];
-
-    constructor(data?: IPropertyStorage) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"];
-            if (Array.isArray(_data["properties"])) {
-                this.properties = [] as any;
-                for (let item of _data["properties"])
-                    this.properties!.push(PropertyHelper.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): PropertyStorage {
-        data = typeof data === 'object' ? data : {};
-        let result = new PropertyStorage();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value;
-        if (Array.isArray(this.properties)) {
-            data["properties"] = [];
-            for (let item of this.properties)
-                data["properties"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IPropertyStorage {
-    value: any;
-    properties: PropertyHelper[];
-}
-
-export class PropertyHelper implements IPropertyHelper {
-    property!: PropertyInfo;
-    name!: string;
-    valueGetter!: FuncOfObjectAndObject;
-    valueSetter!: ActionOfObjectAndObject;
-
-    constructor(data?: IPropertyHelper) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.property = _data["property"] ? PropertyInfo.fromJS(_data["property"]) : <any>undefined;
-            this.name = _data["name"];
-            this.valueGetter = _data["valueGetter"] ? FuncOfObjectAndObject.fromJS(_data["valueGetter"]) : <any>undefined;
-            this.valueSetter = _data["valueSetter"] ? ActionOfObjectAndObject.fromJS(_data["valueSetter"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): PropertyHelper {
-        data = typeof data === 'object' ? data : {};
-        let result = new PropertyHelper();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["property"] = this.property ? this.property.toJSON() : <any>undefined;
-        data["name"] = this.name;
-        data["valueGetter"] = this.valueGetter ? this.valueGetter.toJSON() : <any>undefined;
-        data["valueSetter"] = this.valueSetter ? this.valueSetter.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IPropertyHelper {
-    property: PropertyInfo;
-    name: string;
-    valueGetter: FuncOfObjectAndObject;
-    valueSetter: ActionOfObjectAndObject;
-}
-
-export abstract class PropertyInfo implements IPropertyInfo {
-    module!: Module;
-    customAttributes!: CustomAttributeData[];
-    isCollectible!: boolean;
-    metadataToken!: number;
-    memberType!: MemberTypes;
-    isSpecialName!: boolean;
-    getMethod!: MethodInfo | undefined;
-    setMethod!: MethodInfo | undefined;
-
-    constructor(data?: IPropertyInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.isCollectible = _data["isCollectible"];
-            this.metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            this.isSpecialName = _data["isSpecialName"];
-            this.getMethod = _data["getMethod"] ? MethodInfo.fromJS(_data["getMethod"]) : <any>undefined;
-            this.setMethod = _data["setMethod"] ? MethodInfo.fromJS(_data["setMethod"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): PropertyInfo {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'PropertyInfo' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["isSpecialName"] = this.isSpecialName;
-        data["getMethod"] = this.getMethod ? this.getMethod.toJSON() : <any>undefined;
-        data["setMethod"] = this.setMethod ? this.setMethod.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IPropertyInfo {
-    module: Module;
-    customAttributes: CustomAttributeData[];
-    isCollectible: boolean;
-    metadataToken: number;
-    memberType: MemberTypes;
-    isSpecialName: boolean;
-    getMethod: MethodInfo | undefined;
-    setMethod: MethodInfo | undefined;
-}
-
-export abstract class Module implements IModule {
-    assembly!: Assembly;
-    fullyQualifiedName!: string;
-    name!: string;
-    mdStreamVersion!: number;
-    moduleVersionId!: string;
-    scopeName!: string;
-    moduleHandle!: ModuleHandle;
-    customAttributes!: CustomAttributeData[];
-    metadataToken!: number;
-
-    constructor(data?: IModule) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
-            this.fullyQualifiedName = _data["fullyQualifiedName"];
-            this.name = _data["name"];
-            this.mdStreamVersion = _data["mdStreamVersion"];
-            this.moduleVersionId = _data["moduleVersionId"];
-            this.scopeName = _data["scopeName"];
-            this.moduleHandle = _data["moduleHandle"] ? ModuleHandle.fromJS(_data["moduleHandle"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.metadataToken = _data["metadataToken"];
-        }
-    }
-
-    static fromJS(data: any): Module {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'Module' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
-        data["fullyQualifiedName"] = this.fullyQualifiedName;
-        data["name"] = this.name;
-        data["mdStreamVersion"] = this.mdStreamVersion;
-        data["moduleVersionId"] = this.moduleVersionId;
-        data["scopeName"] = this.scopeName;
-        data["moduleHandle"] = this.moduleHandle ? this.moduleHandle.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["metadataToken"] = this.metadataToken;
-        return data; 
-    }
-}
-
-export interface IModule {
-    assembly: Assembly;
-    fullyQualifiedName: string;
-    name: string;
-    mdStreamVersion: number;
-    moduleVersionId: string;
-    scopeName: string;
-    moduleHandle: ModuleHandle;
-    customAttributes: CustomAttributeData[];
-    metadataToken: number;
-}
-
-export abstract class Assembly implements IAssembly {
-    definedTypes!: string[];
-    exportedTypes!: string[];
-    codeBase!: string | undefined;
-    entryPoint!: MethodInfo | undefined;
-    fullName!: string | undefined;
-    imageRuntimeVersion!: string;
-    isDynamic!: boolean;
-    location!: string;
-    reflectionOnly!: boolean;
-    isCollectible!: boolean;
-    isFullyTrusted!: boolean;
-    customAttributes!: CustomAttributeData[];
-    escapedCodeBase!: string;
-    manifestModule!: Module;
-    modules!: Module[];
-    globalAssemblyCache!: boolean;
-    hostContext!: number;
-    securityRuleSet!: SecurityRuleSet;
-
-    constructor(data?: IAssembly) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["definedTypes"])) {
-                this.definedTypes = [] as any;
-                for (let item of _data["definedTypes"])
-                    this.definedTypes!.push(item);
-            }
-            if (Array.isArray(_data["exportedTypes"])) {
-                this.exportedTypes = [] as any;
-                for (let item of _data["exportedTypes"])
-                    this.exportedTypes!.push(item);
-            }
-            this.codeBase = _data["codeBase"];
-            this.entryPoint = _data["entryPoint"] ? MethodInfo.fromJS(_data["entryPoint"]) : <any>undefined;
-            this.fullName = _data["fullName"];
-            this.imageRuntimeVersion = _data["imageRuntimeVersion"];
-            this.isDynamic = _data["isDynamic"];
-            this.location = _data["location"];
-            this.reflectionOnly = _data["reflectionOnly"];
-            this.isCollectible = _data["isCollectible"];
-            this.isFullyTrusted = _data["isFullyTrusted"];
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.escapedCodeBase = _data["escapedCodeBase"];
-            this.manifestModule = _data["manifestModule"] ? Module.fromJS(_data["manifestModule"]) : <any>undefined;
-            if (Array.isArray(_data["modules"])) {
-                this.modules = [] as any;
-                for (let item of _data["modules"])
-                    this.modules!.push(Module.fromJS(item));
-            }
-            this.globalAssemblyCache = _data["globalAssemblyCache"];
-            this.hostContext = _data["hostContext"];
-            this.securityRuleSet = _data["securityRuleSet"];
-        }
-    }
-
-    static fromJS(data: any): Assembly {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'Assembly' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.definedTypes)) {
-            data["definedTypes"] = [];
-            for (let item of this.definedTypes)
-                data["definedTypes"].push(item);
-        }
-        if (Array.isArray(this.exportedTypes)) {
-            data["exportedTypes"] = [];
-            for (let item of this.exportedTypes)
-                data["exportedTypes"].push(item);
-        }
-        data["codeBase"] = this.codeBase;
-        data["entryPoint"] = this.entryPoint ? this.entryPoint.toJSON() : <any>undefined;
-        data["fullName"] = this.fullName;
-        data["imageRuntimeVersion"] = this.imageRuntimeVersion;
-        data["isDynamic"] = this.isDynamic;
-        data["location"] = this.location;
-        data["reflectionOnly"] = this.reflectionOnly;
-        data["isCollectible"] = this.isCollectible;
-        data["isFullyTrusted"] = this.isFullyTrusted;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["escapedCodeBase"] = this.escapedCodeBase;
-        data["manifestModule"] = this.manifestModule ? this.manifestModule.toJSON() : <any>undefined;
-        if (Array.isArray(this.modules)) {
-            data["modules"] = [];
-            for (let item of this.modules)
-                data["modules"].push(item.toJSON());
-        }
-        data["globalAssemblyCache"] = this.globalAssemblyCache;
-        data["hostContext"] = this.hostContext;
-        data["securityRuleSet"] = this.securityRuleSet;
-        return data; 
-    }
-}
-
-export interface IAssembly {
-    definedTypes: string[];
-    exportedTypes: string[];
-    codeBase: string | undefined;
-    entryPoint: MethodInfo | undefined;
-    fullName: string | undefined;
-    imageRuntimeVersion: string;
-    isDynamic: boolean;
-    location: string;
-    reflectionOnly: boolean;
-    isCollectible: boolean;
-    isFullyTrusted: boolean;
-    customAttributes: CustomAttributeData[];
-    escapedCodeBase: string;
-    manifestModule: Module;
-    modules: Module[];
-    globalAssemblyCache: boolean;
-    hostContext: number;
-    securityRuleSet: SecurityRuleSet;
-}
-
-export abstract class MethodInfo implements IMethodInfo {
-    methodImplementationFlags!: MethodImplAttributes;
-    callingConvention!: CallingConventions;
-    isAbstract!: boolean;
-    isConstructor!: boolean;
-    isFinal!: boolean;
-    isHideBySig!: boolean;
-    isSpecialName!: boolean;
-    isStatic!: boolean;
-    isVirtual!: boolean;
-    isAssembly!: boolean;
-    isFamily!: boolean;
-    isFamilyAndAssembly!: boolean;
-    isFamilyOrAssembly!: boolean;
-    isPrivate!: boolean;
-    isPublic!: boolean;
-    isConstructedGenericMethod!: boolean;
-    isGenericMethod!: boolean;
-    isGenericMethodDefinition!: boolean;
-    containsGenericParameters!: boolean;
-    isSecurityCritical!: boolean;
-    isSecuritySafeCritical!: boolean;
-    isSecurityTransparent!: boolean;
-    module!: Module;
-    customAttributes!: CustomAttributeData[];
-    isCollectible!: boolean;
-    metadataToken!: number;
-    memberType!: MemberTypes;
-    returnParameter!: ParameterInfo;
-    returnType!: string;
-
-    constructor(data?: IMethodInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.methodImplementationFlags = _data["methodImplementationFlags"];
-            this.callingConvention = _data["callingConvention"];
-            this.isAbstract = _data["isAbstract"];
-            this.isConstructor = _data["isConstructor"];
-            this.isFinal = _data["isFinal"];
-            this.isHideBySig = _data["isHideBySig"];
-            this.isSpecialName = _data["isSpecialName"];
-            this.isStatic = _data["isStatic"];
-            this.isVirtual = _data["isVirtual"];
-            this.isAssembly = _data["isAssembly"];
-            this.isFamily = _data["isFamily"];
-            this.isFamilyAndAssembly = _data["isFamilyAndAssembly"];
-            this.isFamilyOrAssembly = _data["isFamilyOrAssembly"];
-            this.isPrivate = _data["isPrivate"];
-            this.isPublic = _data["isPublic"];
-            this.isConstructedGenericMethod = _data["isConstructedGenericMethod"];
-            this.isGenericMethod = _data["isGenericMethod"];
-            this.isGenericMethodDefinition = _data["isGenericMethodDefinition"];
-            this.containsGenericParameters = _data["containsGenericParameters"];
-            this.isSecurityCritical = _data["isSecurityCritical"];
-            this.isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            this.isSecurityTransparent = _data["isSecurityTransparent"];
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.isCollectible = _data["isCollectible"];
-            this.metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            this.returnParameter = _data["returnParameter"] ? ParameterInfo.fromJS(_data["returnParameter"]) : <any>undefined;
-            this.returnType = _data["returnType"];
-        }
-    }
-
-    static fromJS(data: any): MethodInfo {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'MethodInfo' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["methodImplementationFlags"] = this.methodImplementationFlags;
-        data["callingConvention"] = this.callingConvention;
-        data["isAbstract"] = this.isAbstract;
-        data["isConstructor"] = this.isConstructor;
-        data["isFinal"] = this.isFinal;
-        data["isHideBySig"] = this.isHideBySig;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isStatic"] = this.isStatic;
-        data["isVirtual"] = this.isVirtual;
-        data["isAssembly"] = this.isAssembly;
-        data["isFamily"] = this.isFamily;
-        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
-        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
-        data["isPrivate"] = this.isPrivate;
-        data["isPublic"] = this.isPublic;
-        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
-        data["isGenericMethod"] = this.isGenericMethod;
-        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["returnParameter"] = this.returnParameter ? this.returnParameter.toJSON() : <any>undefined;
-        data["returnType"] = this.returnType;
-        return data; 
-    }
-}
-
-export interface IMethodInfo {
-    methodImplementationFlags: MethodImplAttributes;
-    callingConvention: CallingConventions;
-    isAbstract: boolean;
-    isConstructor: boolean;
-    isFinal: boolean;
-    isHideBySig: boolean;
-    isSpecialName: boolean;
-    isStatic: boolean;
-    isVirtual: boolean;
-    isAssembly: boolean;
-    isFamily: boolean;
-    isFamilyAndAssembly: boolean;
-    isFamilyOrAssembly: boolean;
-    isPrivate: boolean;
-    isPublic: boolean;
-    isConstructedGenericMethod: boolean;
-    isGenericMethod: boolean;
-    isGenericMethodDefinition: boolean;
-    containsGenericParameters: boolean;
-    isSecurityCritical: boolean;
-    isSecuritySafeCritical: boolean;
-    isSecurityTransparent: boolean;
-    module: Module;
-    customAttributes: CustomAttributeData[];
-    isCollectible: boolean;
-    metadataToken: number;
-    memberType: MemberTypes;
-    returnParameter: ParameterInfo;
-    returnType: string;
-}
-
-export enum MethodImplAttributes {
-    IL = "Managed",
-    Managed = "Managed",
-    Native = "Native",
-    OPTIL = "OPTIL",
-    Runtime = "CodeTypeMask",
-    CodeTypeMask = "CodeTypeMask",
-    Unmanaged = "Unmanaged",
-    ManagedMask = "Unmanaged",
-    NoInlining = "NoInlining",
-    ForwardRef = "ForwardRef",
-    Synchronized = "Synchronized",
-    NoOptimization = "NoOptimization",
-    PreserveSig = "PreserveSig",
-    AggressiveInlining = "AggressiveInlining",
-    AggressiveOptimization = "AggressiveOptimization",
-    InternalCall = "InternalCall",
-    MaxMethodImplVal = "MaxMethodImplVal",
-}
-
-export enum CallingConventions {
-    Standard = "Standard",
-    VarArgs = "VarArgs",
-    Any = "Any",
-    HasThis = "HasThis",
-    ExplicitThis = "ExplicitThis",
-}
-
-export class CustomAttributeData implements ICustomAttributeData {
-    attributeType!: string;
-    constructor_!: ConstructorInfo;
-    constructorArguments!: CustomAttributeTypedArgument[];
-    namedArguments!: CustomAttributeNamedArgument[];
-
-    constructor(data?: ICustomAttributeData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.attributeType = _data["attributeType"];
-            this.constructor_ = _data["constructor"] ? ConstructorInfo.fromJS(_data["constructor"]) : <any>undefined;
-            if (Array.isArray(_data["constructorArguments"])) {
-                this.constructorArguments = [] as any;
-                for (let item of _data["constructorArguments"])
-                    this.constructorArguments!.push(CustomAttributeTypedArgument.fromJS(item));
-            }
-            if (Array.isArray(_data["namedArguments"])) {
-                this.namedArguments = [] as any;
-                for (let item of _data["namedArguments"])
-                    this.namedArguments!.push(CustomAttributeNamedArgument.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): CustomAttributeData {
-        data = typeof data === 'object' ? data : {};
-        let result = new CustomAttributeData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["attributeType"] = this.attributeType;
-        data["constructor"] = this.constructor_ ? this.constructor_.toJSON() : <any>undefined;
-        if (Array.isArray(this.constructorArguments)) {
-            data["constructorArguments"] = [];
-            for (let item of this.constructorArguments)
-                data["constructorArguments"].push(item.toJSON());
-        }
-        if (Array.isArray(this.namedArguments)) {
-            data["namedArguments"] = [];
-            for (let item of this.namedArguments)
-                data["namedArguments"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface ICustomAttributeData {
-    attributeType: string;
-    constructor_: ConstructorInfo;
-    constructorArguments: CustomAttributeTypedArgument[];
-    namedArguments: CustomAttributeNamedArgument[];
-}
-
-export abstract class ConstructorInfo implements IConstructorInfo {
-    methodImplementationFlags!: MethodImplAttributes;
-    callingConvention!: CallingConventions;
-    isAbstract!: boolean;
-    isConstructor!: boolean;
-    isFinal!: boolean;
-    isHideBySig!: boolean;
-    isSpecialName!: boolean;
-    isStatic!: boolean;
-    isVirtual!: boolean;
-    isAssembly!: boolean;
-    isFamily!: boolean;
-    isFamilyAndAssembly!: boolean;
-    isFamilyOrAssembly!: boolean;
-    isPrivate!: boolean;
-    isPublic!: boolean;
-    isConstructedGenericMethod!: boolean;
-    isGenericMethod!: boolean;
-    isGenericMethodDefinition!: boolean;
-    containsGenericParameters!: boolean;
-    isSecurityCritical!: boolean;
-    isSecuritySafeCritical!: boolean;
-    isSecurityTransparent!: boolean;
-    module!: Module;
-    customAttributes!: CustomAttributeData[];
-    isCollectible!: boolean;
-    metadataToken!: number;
-    memberType!: MemberTypes;
-
-    constructor(data?: IConstructorInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.methodImplementationFlags = _data["methodImplementationFlags"];
-            this.callingConvention = _data["callingConvention"];
-            this.isAbstract = _data["isAbstract"];
-            this.isConstructor = _data["isConstructor"];
-            this.isFinal = _data["isFinal"];
-            this.isHideBySig = _data["isHideBySig"];
-            this.isSpecialName = _data["isSpecialName"];
-            this.isStatic = _data["isStatic"];
-            this.isVirtual = _data["isVirtual"];
-            this.isAssembly = _data["isAssembly"];
-            this.isFamily = _data["isFamily"];
-            this.isFamilyAndAssembly = _data["isFamilyAndAssembly"];
-            this.isFamilyOrAssembly = _data["isFamilyOrAssembly"];
-            this.isPrivate = _data["isPrivate"];
-            this.isPublic = _data["isPublic"];
-            this.isConstructedGenericMethod = _data["isConstructedGenericMethod"];
-            this.isGenericMethod = _data["isGenericMethod"];
-            this.isGenericMethodDefinition = _data["isGenericMethodDefinition"];
-            this.containsGenericParameters = _data["containsGenericParameters"];
-            this.isSecurityCritical = _data["isSecurityCritical"];
-            this.isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            this.isSecurityTransparent = _data["isSecurityTransparent"];
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.isCollectible = _data["isCollectible"];
-            this.metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-        }
-    }
-
-    static fromJS(data: any): ConstructorInfo {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ConstructorInfo' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["methodImplementationFlags"] = this.methodImplementationFlags;
-        data["callingConvention"] = this.callingConvention;
-        data["isAbstract"] = this.isAbstract;
-        data["isConstructor"] = this.isConstructor;
-        data["isFinal"] = this.isFinal;
-        data["isHideBySig"] = this.isHideBySig;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isStatic"] = this.isStatic;
-        data["isVirtual"] = this.isVirtual;
-        data["isAssembly"] = this.isAssembly;
-        data["isFamily"] = this.isFamily;
-        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
-        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
-        data["isPrivate"] = this.isPrivate;
-        data["isPublic"] = this.isPublic;
-        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
-        data["isGenericMethod"] = this.isGenericMethod;
-        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        return data; 
-    }
-}
-
-export interface IConstructorInfo {
-    methodImplementationFlags: MethodImplAttributes;
-    callingConvention: CallingConventions;
-    isAbstract: boolean;
-    isConstructor: boolean;
-    isFinal: boolean;
-    isHideBySig: boolean;
-    isSpecialName: boolean;
-    isStatic: boolean;
-    isVirtual: boolean;
-    isAssembly: boolean;
-    isFamily: boolean;
-    isFamilyAndAssembly: boolean;
-    isFamilyOrAssembly: boolean;
-    isPrivate: boolean;
-    isPublic: boolean;
-    isConstructedGenericMethod: boolean;
-    isGenericMethod: boolean;
-    isGenericMethodDefinition: boolean;
-    containsGenericParameters: boolean;
-    isSecurityCritical: boolean;
-    isSecuritySafeCritical: boolean;
-    isSecurityTransparent: boolean;
-    module: Module;
-    customAttributes: CustomAttributeData[];
-    isCollectible: boolean;
-    metadataToken: number;
-    memberType: MemberTypes;
-}
-
-export enum MemberTypes {
-    Constructor = "Constructor",
-    Event = "Event",
-    Field = "Field",
-    Method = "Method",
-    Property = "Property",
-    TypeInfo = "TypeInfo",
-    Custom = "Custom",
-    NestedType = "NestedType",
-    All = "All",
-}
-
-export class CustomAttributeTypedArgument implements ICustomAttributeTypedArgument {
-    argumentType!: string;
-    value!: any | undefined;
-
-    constructor(data?: ICustomAttributeTypedArgument) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.argumentType = _data["argumentType"];
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): CustomAttributeTypedArgument {
-        data = typeof data === 'object' ? data : {};
-        let result = new CustomAttributeTypedArgument();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["argumentType"] = this.argumentType;
-        data["value"] = this.value;
-        return data; 
-    }
-}
-
-export interface ICustomAttributeTypedArgument {
-    argumentType: string;
-    value: any | undefined;
-}
-
-export class CustomAttributeNamedArgument implements ICustomAttributeNamedArgument {
-    memberInfo!: MemberInfo;
-    typedValue!: CustomAttributeTypedArgument;
-    memberName!: string;
-    isField!: boolean;
-
-    constructor(data?: ICustomAttributeNamedArgument) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.memberInfo = _data["memberInfo"] ? MemberInfo.fromJS(_data["memberInfo"]) : <any>undefined;
-            this.typedValue = _data["typedValue"] ? CustomAttributeTypedArgument.fromJS(_data["typedValue"]) : <any>undefined;
-            this.memberName = _data["memberName"];
-            this.isField = _data["isField"];
-        }
-    }
-
-    static fromJS(data: any): CustomAttributeNamedArgument {
-        data = typeof data === 'object' ? data : {};
-        let result = new CustomAttributeNamedArgument();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["memberInfo"] = this.memberInfo ? this.memberInfo.toJSON() : <any>undefined;
-        data["typedValue"] = this.typedValue ? this.typedValue.toJSON() : <any>undefined;
-        data["memberName"] = this.memberName;
-        data["isField"] = this.isField;
-        return data; 
-    }
-}
-
-export interface ICustomAttributeNamedArgument {
-    memberInfo: MemberInfo;
-    typedValue: CustomAttributeTypedArgument;
-    memberName: string;
-    isField: boolean;
-}
-
-export abstract class MemberInfo implements IMemberInfo {
-    module!: Module;
-    customAttributes!: CustomAttributeData[];
-    isCollectible!: boolean;
-    metadataToken!: number;
-
-    constructor(data?: IMemberInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.isCollectible = _data["isCollectible"];
-            this.metadataToken = _data["metadataToken"];
-        }
-    }
-
-    static fromJS(data: any): MemberInfo {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'MemberInfo' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        return data; 
-    }
-}
-
-export interface IMemberInfo {
-    module: Module;
-    customAttributes: CustomAttributeData[];
-    isCollectible: boolean;
-    metadataToken: number;
-}
-
-export class ParameterInfo implements IParameterInfo {
-    attributes!: ParameterAttributes;
-    member!: MemberInfo;
-    name!: string | undefined;
-    parameterType!: string;
-    position!: number;
-    isIn!: boolean;
-    isLcid!: boolean;
-    isOptional!: boolean;
-    isOut!: boolean;
-    isRetval!: boolean;
-    defaultValue!: any | undefined;
-    rawDefaultValue!: any | undefined;
-    hasDefaultValue!: boolean;
-    customAttributes!: CustomAttributeData[];
-    metadataToken!: number;
-
-    constructor(data?: IParameterInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.attributes = _data["attributes"];
-            this.member = _data["member"] ? MemberInfo.fromJS(_data["member"]) : <any>undefined;
-            this.name = _data["name"];
-            this.parameterType = _data["parameterType"];
-            this.position = _data["position"];
-            this.isIn = _data["isIn"];
-            this.isLcid = _data["isLcid"];
-            this.isOptional = _data["isOptional"];
-            this.isOut = _data["isOut"];
-            this.isRetval = _data["isRetval"];
-            this.defaultValue = _data["defaultValue"];
-            this.rawDefaultValue = _data["rawDefaultValue"];
-            this.hasDefaultValue = _data["hasDefaultValue"];
-            if (Array.isArray(_data["customAttributes"])) {
-                this.customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    this.customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            this.metadataToken = _data["metadataToken"];
-        }
-    }
-
-    static fromJS(data: any): ParameterInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ParameterInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["attributes"] = this.attributes;
-        data["member"] = this.member ? this.member.toJSON() : <any>undefined;
-        data["name"] = this.name;
-        data["parameterType"] = this.parameterType;
-        data["position"] = this.position;
-        data["isIn"] = this.isIn;
-        data["isLcid"] = this.isLcid;
-        data["isOptional"] = this.isOptional;
-        data["isOut"] = this.isOut;
-        data["isRetval"] = this.isRetval;
-        data["defaultValue"] = this.defaultValue;
-        data["rawDefaultValue"] = this.rawDefaultValue;
-        data["hasDefaultValue"] = this.hasDefaultValue;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item.toJSON());
-        }
-        data["metadataToken"] = this.metadataToken;
-        return data; 
-    }
-}
-
-export interface IParameterInfo {
-    attributes: ParameterAttributes;
-    member: MemberInfo;
-    name: string | undefined;
-    parameterType: string;
-    position: number;
-    isIn: boolean;
-    isLcid: boolean;
-    isOptional: boolean;
-    isOut: boolean;
-    isRetval: boolean;
-    defaultValue: any | undefined;
-    rawDefaultValue: any | undefined;
-    hasDefaultValue: boolean;
-    customAttributes: CustomAttributeData[];
-    metadataToken: number;
-}
-
-export enum ParameterAttributes {
-    None = "None",
-    In = "In",
-    Out = "Out",
-    Lcid = "Lcid",
-    Retval = "Retval",
-    Optional = "Optional",
-    HasDefault = "HasDefault",
-    HasFieldMarshal = "HasFieldMarshal",
-    Reserved3 = "Reserved3",
-    Reserved4 = "Reserved4",
-    ReservedMask = "ReservedMask",
-}
-
-export enum SecurityRuleSet {
-    None = "None",
-    Level1 = "Level1",
-    Level2 = "Level2",
-}
-
-export class ModuleHandle implements IModuleHandle {
-    mdStreamVersion!: number;
-
-    constructor(data?: IModuleHandle) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.mdStreamVersion = _data["mdStreamVersion"];
-        }
-    }
-
-    static fromJS(data: any): ModuleHandle {
-        data = typeof data === 'object' ? data : {};
-        let result = new ModuleHandle();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["mdStreamVersion"] = this.mdStreamVersion;
-        return data; 
-    }
-}
-
-export interface IModuleHandle {
-    mdStreamVersion: number;
-}
-
-export class FuncOfObjectAndObject implements IFuncOfObjectAndObject {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IFuncOfObjectAndObject) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FuncOfObjectAndObject {
-        data = typeof data === 'object' ? data : {};
-        let result = new FuncOfObjectAndObject();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFuncOfObjectAndObject {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export class ActionOfObjectAndObject implements IActionOfObjectAndObject {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IActionOfObjectAndObject) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ActionOfObjectAndObject {
-        data = typeof data === 'object' ? data : {};
-        let result = new ActionOfObjectAndObject();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IActionOfObjectAndObject {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export abstract class IEqualityComparerOfString implements IIEqualityComparerOfString {
-
-    constructor(data?: IIEqualityComparerOfString) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): IEqualityComparerOfString {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEqualityComparerOfString' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IIEqualityComparerOfString {
-}
-
-export abstract class IWebApiRequestMessage implements IIWebApiRequestMessage {
-    context!: IWebApiContext | undefined;
-    method!: ODataRequestMethod;
-    options!: IWebApiOptions | undefined;
-    headers!: IWebApiHeaders | undefined;
-    requestContainer!: IServiceProvider | undefined;
-    requestUri!: string | undefined;
-    deserializerProvider!: ODataDeserializerProvider | undefined;
-    oDataContentIdMapping!: { [key: string]: string; } | undefined;
-    pathHandler!: IODataPathHandler | undefined;
-    queryParameters!: { [key: string]: string; } | undefined;
-    readerSettings!: ODataMessageReaderSettings | undefined;
-    writerSettings!: ODataMessageWriterSettings | undefined;
-
-    constructor(data?: IIWebApiRequestMessage) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? IWebApiContext.fromJS(_data["context"]) : <any>undefined;
-            this.method = _data["method"];
-            this.options = _data["options"] ? IWebApiOptions.fromJS(_data["options"]) : <any>undefined;
-            this.headers = _data["headers"] ? IWebApiHeaders.fromJS(_data["headers"]) : <any>undefined;
-            this.requestContainer = _data["requestContainer"] ? IServiceProvider.fromJS(_data["requestContainer"]) : <any>undefined;
-            this.requestUri = _data["requestUri"];
-            this.deserializerProvider = _data["deserializerProvider"] ? ODataDeserializerProvider.fromJS(_data["deserializerProvider"]) : <any>undefined;
-            if (_data["oDataContentIdMapping"]) {
-                this.oDataContentIdMapping = {} as any;
-                for (let key in _data["oDataContentIdMapping"]) {
-                    if (_data["oDataContentIdMapping"].hasOwnProperty(key))
-                        this.oDataContentIdMapping![key] = _data["oDataContentIdMapping"][key];
-                }
-            }
-            this.pathHandler = _data["pathHandler"] ? IODataPathHandler.fromJS(_data["pathHandler"]) : <any>undefined;
-            if (_data["queryParameters"]) {
-                this.queryParameters = {} as any;
-                for (let key in _data["queryParameters"]) {
-                    if (_data["queryParameters"].hasOwnProperty(key))
-                        this.queryParameters![key] = _data["queryParameters"][key];
-                }
-            }
-            this.readerSettings = _data["readerSettings"] ? ODataMessageReaderSettings.fromJS(_data["readerSettings"]) : <any>undefined;
-            this.writerSettings = _data["writerSettings"] ? ODataMessageWriterSettings.fromJS(_data["writerSettings"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IWebApiRequestMessage {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IWebApiRequestMessage' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["method"] = this.method;
-        data["options"] = this.options ? this.options.toJSON() : <any>undefined;
-        data["headers"] = this.headers ? this.headers.toJSON() : <any>undefined;
-        data["requestContainer"] = this.requestContainer ? this.requestContainer.toJSON() : <any>undefined;
-        data["requestUri"] = this.requestUri;
-        data["deserializerProvider"] = this.deserializerProvider ? this.deserializerProvider.toJSON() : <any>undefined;
-        if (this.oDataContentIdMapping) {
-            data["oDataContentIdMapping"] = {};
-            for (let key in this.oDataContentIdMapping) {
-                if (this.oDataContentIdMapping.hasOwnProperty(key))
-                    data["oDataContentIdMapping"][key] = this.oDataContentIdMapping[key];
-            }
-        }
-        data["pathHandler"] = this.pathHandler ? this.pathHandler.toJSON() : <any>undefined;
-        if (this.queryParameters) {
-            data["queryParameters"] = {};
-            for (let key in this.queryParameters) {
-                if (this.queryParameters.hasOwnProperty(key))
-                    data["queryParameters"][key] = this.queryParameters[key];
-            }
-        }
-        data["readerSettings"] = this.readerSettings ? this.readerSettings.toJSON() : <any>undefined;
-        data["writerSettings"] = this.writerSettings ? this.writerSettings.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIWebApiRequestMessage {
-    context: IWebApiContext | undefined;
-    method: ODataRequestMethod;
-    options: IWebApiOptions | undefined;
-    headers: IWebApiHeaders | undefined;
-    requestContainer: IServiceProvider | undefined;
-    requestUri: string | undefined;
-    deserializerProvider: ODataDeserializerProvider | undefined;
-    oDataContentIdMapping: { [key: string]: string; } | undefined;
-    pathHandler: IODataPathHandler | undefined;
-    queryParameters: { [key: string]: string; } | undefined;
-    readerSettings: ODataMessageReaderSettings | undefined;
-    writerSettings: ODataMessageWriterSettings | undefined;
-}
-
-export abstract class IWebApiContext implements IIWebApiContext {
-    applyClause!: ApplyClause | undefined;
-    nextLink!: string | undefined;
-    deltaLink!: string | undefined;
-    pageSize!: number;
-    path!: ODataPath | undefined;
-    routeName!: string | undefined;
-    routingConventionsStore!: { [key: string]: any; } | undefined;
-    processedSelectExpandClause!: SelectExpandClause | undefined;
-    queryOptions!: ODataQueryOptions | undefined;
-    totalCount!: number | undefined;
-    totalCountFunc!: FuncOfLong | undefined;
-
-    constructor(data?: IIWebApiContext) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.applyClause = _data["applyClause"] ? ApplyClause.fromJS(_data["applyClause"]) : <any>undefined;
-            this.nextLink = _data["nextLink"];
-            this.deltaLink = _data["deltaLink"];
-            this.pageSize = _data["pageSize"];
-            this.path = _data["path"] ? ODataPath.fromJS(_data["path"]) : <any>undefined;
-            this.routeName = _data["routeName"];
-            if (_data["routingConventionsStore"]) {
-                this.routingConventionsStore = {} as any;
-                for (let key in _data["routingConventionsStore"]) {
-                    if (_data["routingConventionsStore"].hasOwnProperty(key))
-                        this.routingConventionsStore![key] = _data["routingConventionsStore"][key];
-                }
-            }
-            this.processedSelectExpandClause = _data["processedSelectExpandClause"] ? SelectExpandClause.fromJS(_data["processedSelectExpandClause"]) : <any>undefined;
-            this.queryOptions = _data["queryOptions"] ? ODataQueryOptions.fromJS(_data["queryOptions"]) : <any>undefined;
-            this.totalCount = _data["totalCount"];
-            this.totalCountFunc = _data["totalCountFunc"] ? FuncOfLong.fromJS(_data["totalCountFunc"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IWebApiContext {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IWebApiContext' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["applyClause"] = this.applyClause ? this.applyClause.toJSON() : <any>undefined;
-        data["nextLink"] = this.nextLink;
-        data["deltaLink"] = this.deltaLink;
-        data["pageSize"] = this.pageSize;
-        data["path"] = this.path ? this.path.toJSON() : <any>undefined;
-        data["routeName"] = this.routeName;
-        if (this.routingConventionsStore) {
-            data["routingConventionsStore"] = {};
-            for (let key in this.routingConventionsStore) {
-                if (this.routingConventionsStore.hasOwnProperty(key))
-                    data["routingConventionsStore"][key] = this.routingConventionsStore[key];
-            }
-        }
-        data["processedSelectExpandClause"] = this.processedSelectExpandClause ? this.processedSelectExpandClause.toJSON() : <any>undefined;
-        data["queryOptions"] = this.queryOptions ? this.queryOptions.toJSON() : <any>undefined;
-        data["totalCount"] = this.totalCount;
-        data["totalCountFunc"] = this.totalCountFunc ? this.totalCountFunc.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIWebApiContext {
-    applyClause: ApplyClause | undefined;
-    nextLink: string | undefined;
-    deltaLink: string | undefined;
-    pageSize: number;
-    path: ODataPath | undefined;
-    routeName: string | undefined;
-    routingConventionsStore: { [key: string]: any; } | undefined;
-    processedSelectExpandClause: SelectExpandClause | undefined;
-    queryOptions: ODataQueryOptions | undefined;
-    totalCount: number | undefined;
-    totalCountFunc: FuncOfLong | undefined;
-}
-
-export class ApplyClause implements IApplyClause {
-    transformations!: TransformationNode[] | undefined;
-
-    constructor(data?: IApplyClause) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["transformations"])) {
-                this.transformations = [] as any;
-                for (let item of _data["transformations"])
-                    this.transformations!.push(TransformationNode.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ApplyClause {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplyClause();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.transformations)) {
-            data["transformations"] = [];
-            for (let item of this.transformations)
-                data["transformations"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IApplyClause {
-    transformations: TransformationNode[] | undefined;
-}
-
-export abstract class TransformationNode implements ITransformationNode {
-
-    constructor(data?: ITransformationNode) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): TransformationNode {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'TransformationNode' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ITransformationNode {
-}
-
-export class ODataPath implements IODataPath {
-    edmType!: IEdmType | undefined;
-    navigationSource!: IEdmNavigationSource | undefined;
-    segments!: ODataPathSegment[] | undefined;
-    pathTemplate!: string | undefined;
-    path!: ODataPathSegment[] | undefined;
-
-    constructor(data?: IODataPath) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.edmType = _data["edmType"] ? IEdmType.fromJS(_data["edmType"]) : <any>undefined;
-            this.navigationSource = _data["navigationSource"] ? IEdmNavigationSource.fromJS(_data["navigationSource"]) : <any>undefined;
-            if (Array.isArray(_data["segments"])) {
-                this.segments = [] as any;
-                for (let item of _data["segments"])
-                    this.segments!.push(ODataPathSegment.fromJS(item));
-            }
-            this.pathTemplate = _data["pathTemplate"];
-            if (Array.isArray(_data["path"])) {
-                this.path = [] as any;
-                for (let item of _data["path"])
-                    this.path!.push(ODataPathSegment.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ODataPath {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataPath();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["edmType"] = this.edmType ? this.edmType.toJSON() : <any>undefined;
-        data["navigationSource"] = this.navigationSource ? this.navigationSource.toJSON() : <any>undefined;
-        if (Array.isArray(this.segments)) {
-            data["segments"] = [];
-            for (let item of this.segments)
-                data["segments"].push(item.toJSON());
-        }
-        data["pathTemplate"] = this.pathTemplate;
-        if (Array.isArray(this.path)) {
-            data["path"] = [];
-            for (let item of this.path)
-                data["path"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IODataPath {
-    edmType: IEdmType | undefined;
-    navigationSource: IEdmNavigationSource | undefined;
-    segments: ODataPathSegment[] | undefined;
-    pathTemplate: string | undefined;
-    path: ODataPathSegment[] | undefined;
-}
-
-export abstract class IEdmType implements IIEdmType {
-    typeKind!: EdmTypeKind;
-
-    constructor(data?: IIEdmType) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.typeKind = _data["typeKind"];
-        }
-    }
-
-    static fromJS(data: any): IEdmType {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmType' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["typeKind"] = this.typeKind;
-        return data; 
-    }
-}
-
-export interface IIEdmType {
-    typeKind: EdmTypeKind;
-}
-
-export enum EdmTypeKind {
-    None = "None",
-    Primitive = "Primitive",
-    Entity = "Entity",
-    Complex = "Complex",
-    Collection = "Collection",
-    EntityReference = "EntityReference",
-    Enum = "Enum",
-    TypeDefinition = "TypeDefinition",
-    Untyped = "Untyped",
-    Path = "Path",
-}
-
-export abstract class IEdmNavigationSource implements IIEdmNavigationSource {
-    navigationPropertyBindings!: IEdmNavigationPropertyBinding[] | undefined;
-    path!: IEdmPathExpression | undefined;
-    type!: IEdmType | undefined;
-
-    constructor(data?: IIEdmNavigationSource) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["navigationPropertyBindings"])) {
-                this.navigationPropertyBindings = [] as any;
-                for (let item of _data["navigationPropertyBindings"])
-                    this.navigationPropertyBindings!.push(IEdmNavigationPropertyBinding.fromJS(item));
-            }
-            this.path = _data["path"] ? IEdmPathExpression.fromJS(_data["path"]) : <any>undefined;
-            this.type = _data["type"] ? IEdmType.fromJS(_data["type"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmNavigationSource {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmNavigationSource' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.navigationPropertyBindings)) {
-            data["navigationPropertyBindings"] = [];
-            for (let item of this.navigationPropertyBindings)
-                data["navigationPropertyBindings"].push(item.toJSON());
-        }
-        data["path"] = this.path ? this.path.toJSON() : <any>undefined;
-        data["type"] = this.type ? this.type.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmNavigationSource {
-    navigationPropertyBindings: IEdmNavigationPropertyBinding[] | undefined;
-    path: IEdmPathExpression | undefined;
-    type: IEdmType | undefined;
-}
-
-export abstract class IEdmNavigationPropertyBinding implements IIEdmNavigationPropertyBinding {
-    navigationProperty!: IEdmNavigationProperty | undefined;
-    target!: IEdmNavigationSource | undefined;
-    path!: IEdmPathExpression | undefined;
-
-    constructor(data?: IIEdmNavigationPropertyBinding) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.navigationProperty = _data["navigationProperty"] ? IEdmNavigationProperty.fromJS(_data["navigationProperty"]) : <any>undefined;
-            this.target = _data["target"] ? IEdmNavigationSource.fromJS(_data["target"]) : <any>undefined;
-            this.path = _data["path"] ? IEdmPathExpression.fromJS(_data["path"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmNavigationPropertyBinding {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmNavigationPropertyBinding' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["navigationProperty"] = this.navigationProperty ? this.navigationProperty.toJSON() : <any>undefined;
-        data["target"] = this.target ? this.target.toJSON() : <any>undefined;
-        data["path"] = this.path ? this.path.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmNavigationPropertyBinding {
-    navigationProperty: IEdmNavigationProperty | undefined;
-    target: IEdmNavigationSource | undefined;
-    path: IEdmPathExpression | undefined;
-}
-
-export abstract class IEdmNavigationProperty implements IIEdmNavigationProperty {
-    partner!: IEdmNavigationProperty | undefined;
-    onDelete!: EdmOnDeleteAction;
-    containsTarget!: boolean;
-    referentialConstraint!: IEdmReferentialConstraint | undefined;
-
-    constructor(data?: IIEdmNavigationProperty) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.partner = _data["partner"] ? IEdmNavigationProperty.fromJS(_data["partner"]) : <any>undefined;
-            this.onDelete = _data["onDelete"];
-            this.containsTarget = _data["containsTarget"];
-            this.referentialConstraint = _data["referentialConstraint"] ? IEdmReferentialConstraint.fromJS(_data["referentialConstraint"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmNavigationProperty {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmNavigationProperty' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["partner"] = this.partner ? this.partner.toJSON() : <any>undefined;
-        data["onDelete"] = this.onDelete;
-        data["containsTarget"] = this.containsTarget;
-        data["referentialConstraint"] = this.referentialConstraint ? this.referentialConstraint.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmNavigationProperty {
-    partner: IEdmNavigationProperty | undefined;
-    onDelete: EdmOnDeleteAction;
-    containsTarget: boolean;
-    referentialConstraint: IEdmReferentialConstraint | undefined;
-}
-
-export enum EdmOnDeleteAction {
-    None = "None",
-    Cascade = "Cascade",
-}
-
-export abstract class IEdmReferentialConstraint implements IIEdmReferentialConstraint {
-    propertyPairs!: EdmReferentialConstraintPropertyPair[] | undefined;
-
-    constructor(data?: IIEdmReferentialConstraint) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["propertyPairs"])) {
-                this.propertyPairs = [] as any;
-                for (let item of _data["propertyPairs"])
-                    this.propertyPairs!.push(EdmReferentialConstraintPropertyPair.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): IEdmReferentialConstraint {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmReferentialConstraint' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.propertyPairs)) {
-            data["propertyPairs"] = [];
-            for (let item of this.propertyPairs)
-                data["propertyPairs"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IIEdmReferentialConstraint {
-    propertyPairs: EdmReferentialConstraintPropertyPair[] | undefined;
-}
-
-export class EdmReferentialConstraintPropertyPair implements IEdmReferentialConstraintPropertyPair {
-    dependentProperty!: IEdmStructuralProperty | undefined;
-    principalProperty!: IEdmStructuralProperty | undefined;
-
-    constructor(data?: IEdmReferentialConstraintPropertyPair) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.dependentProperty = _data["dependentProperty"] ? IEdmStructuralProperty.fromJS(_data["dependentProperty"]) : <any>undefined;
-            this.principalProperty = _data["principalProperty"] ? IEdmStructuralProperty.fromJS(_data["principalProperty"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): EdmReferentialConstraintPropertyPair {
-        data = typeof data === 'object' ? data : {};
-        let result = new EdmReferentialConstraintPropertyPair();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["dependentProperty"] = this.dependentProperty ? this.dependentProperty.toJSON() : <any>undefined;
-        data["principalProperty"] = this.principalProperty ? this.principalProperty.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IEdmReferentialConstraintPropertyPair {
-    dependentProperty: IEdmStructuralProperty | undefined;
-    principalProperty: IEdmStructuralProperty | undefined;
-}
-
-export abstract class IEdmStructuralProperty implements IIEdmStructuralProperty {
-    defaultValueString!: string | undefined;
-
-    constructor(data?: IIEdmStructuralProperty) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.defaultValueString = _data["defaultValueString"];
-        }
-    }
-
-    static fromJS(data: any): IEdmStructuralProperty {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmStructuralProperty' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["defaultValueString"] = this.defaultValueString;
-        return data; 
-    }
-}
-
-export interface IIEdmStructuralProperty {
-    defaultValueString: string | undefined;
-}
-
-export abstract class IEdmPathExpression implements IIEdmPathExpression {
-    pathSegments!: string[] | undefined;
-    path!: string | undefined;
-
-    constructor(data?: IIEdmPathExpression) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["pathSegments"])) {
-                this.pathSegments = [] as any;
-                for (let item of _data["pathSegments"])
-                    this.pathSegments!.push(item);
-            }
-            this.path = _data["path"];
-        }
-    }
-
-    static fromJS(data: any): IEdmPathExpression {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmPathExpression' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.pathSegments)) {
-            data["pathSegments"] = [];
-            for (let item of this.pathSegments)
-                data["pathSegments"].push(item);
-        }
-        data["path"] = this.path;
-        return data; 
-    }
-}
-
-export interface IIEdmPathExpression {
-    pathSegments: string[] | undefined;
-    path: string | undefined;
-}
-
-export abstract class ODataPathSegment implements IODataPathSegment {
-    identifier!: string | undefined;
-
-    constructor(data?: IODataPathSegment) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.identifier = _data["identifier"];
-        }
-    }
-
-    static fromJS(data: any): ODataPathSegment {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ODataPathSegment' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["identifier"] = this.identifier;
-        return data; 
-    }
-}
-
-export interface IODataPathSegment {
-    identifier: string | undefined;
-}
-
-export class SelectExpandClause implements ISelectExpandClause {
-    selectedItems!: SelectItem[] | undefined;
-    allSelected!: boolean;
-
-    constructor(data?: ISelectExpandClause) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["selectedItems"])) {
-                this.selectedItems = [] as any;
-                for (let item of _data["selectedItems"])
-                    this.selectedItems!.push(SelectItem.fromJS(item));
-            }
-            this.allSelected = _data["allSelected"];
-        }
-    }
-
-    static fromJS(data: any): SelectExpandClause {
-        data = typeof data === 'object' ? data : {};
-        let result = new SelectExpandClause();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.selectedItems)) {
-            data["selectedItems"] = [];
-            for (let item of this.selectedItems)
-                data["selectedItems"].push(item.toJSON());
-        }
-        data["allSelected"] = this.allSelected;
-        return data; 
-    }
-}
-
-export interface ISelectExpandClause {
-    selectedItems: SelectItem[] | undefined;
-    allSelected: boolean;
-}
-
-export abstract class SelectItem implements ISelectItem {
-
-    constructor(data?: ISelectItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): SelectItem {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'SelectItem' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ISelectItem {
-}
-
-export class ODataQueryOptions implements IODataQueryOptions {
-    request!: HttpRequest | undefined;
-    context!: ODataQueryContext | undefined;
-    rawValues!: ODataRawQueryOptions | undefined;
-    selectExpand!: SelectExpandQueryOption | undefined;
-    apply!: ApplyQueryOption | undefined;
-    filter!: FilterQueryOption | undefined;
-    orderBy!: OrderByQueryOption | undefined;
-    skip!: SkipQueryOption | undefined;
-    skipToken!: SkipTokenQueryOption | undefined;
-    top!: TopQueryOption | undefined;
-    count!: CountQueryOption | undefined;
-    validator!: ODataQueryValidator | undefined;
-    ifMatch!: ETag | undefined;
-    ifNoneMatch!: ETag | undefined;
-
-    constructor(data?: IODataQueryOptions) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.request = _data["request"] ? HttpRequest.fromJS(_data["request"]) : <any>undefined;
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.rawValues = _data["rawValues"] ? ODataRawQueryOptions.fromJS(_data["rawValues"]) : <any>undefined;
-            this.selectExpand = _data["selectExpand"] ? SelectExpandQueryOption.fromJS(_data["selectExpand"]) : <any>undefined;
-            this.apply = _data["apply"] ? ApplyQueryOption.fromJS(_data["apply"]) : <any>undefined;
-            this.filter = _data["filter"] ? FilterQueryOption.fromJS(_data["filter"]) : <any>undefined;
-            this.orderBy = _data["orderBy"] ? OrderByQueryOption.fromJS(_data["orderBy"]) : <any>undefined;
-            this.skip = _data["skip"] ? SkipQueryOption.fromJS(_data["skip"]) : <any>undefined;
-            this.skipToken = _data["skipToken"] ? SkipTokenQueryOption.fromJS(_data["skipToken"]) : <any>undefined;
-            this.top = _data["top"] ? TopQueryOption.fromJS(_data["top"]) : <any>undefined;
-            this.count = _data["count"] ? CountQueryOption.fromJS(_data["count"]) : <any>undefined;
-            this.validator = _data["validator"] ? ODataQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-            this.ifMatch = _data["ifMatch"] ? ETag.fromJS(_data["ifMatch"]) : <any>undefined;
-            this.ifNoneMatch = _data["ifNoneMatch"] ? ETag.fromJS(_data["ifNoneMatch"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ODataQueryOptions {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataQueryOptions();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["request"] = this.request ? this.request.toJSON() : <any>undefined;
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["rawValues"] = this.rawValues ? this.rawValues.toJSON() : <any>undefined;
-        data["selectExpand"] = this.selectExpand ? this.selectExpand.toJSON() : <any>undefined;
-        data["apply"] = this.apply ? this.apply.toJSON() : <any>undefined;
-        data["filter"] = this.filter ? this.filter.toJSON() : <any>undefined;
-        data["orderBy"] = this.orderBy ? this.orderBy.toJSON() : <any>undefined;
-        data["skip"] = this.skip ? this.skip.toJSON() : <any>undefined;
-        data["skipToken"] = this.skipToken ? this.skipToken.toJSON() : <any>undefined;
-        data["top"] = this.top ? this.top.toJSON() : <any>undefined;
-        data["count"] = this.count ? this.count.toJSON() : <any>undefined;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        data["ifMatch"] = this.ifMatch ? this.ifMatch.toJSON() : <any>undefined;
-        data["ifNoneMatch"] = this.ifNoneMatch ? this.ifNoneMatch.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IODataQueryOptions {
-    request: HttpRequest | undefined;
-    context: ODataQueryContext | undefined;
-    rawValues: ODataRawQueryOptions | undefined;
-    selectExpand: SelectExpandQueryOption | undefined;
-    apply: ApplyQueryOption | undefined;
-    filter: FilterQueryOption | undefined;
-    orderBy: OrderByQueryOption | undefined;
-    skip: SkipQueryOption | undefined;
-    skipToken: SkipTokenQueryOption | undefined;
-    top: TopQueryOption | undefined;
-    count: CountQueryOption | undefined;
-    validator: ODataQueryValidator | undefined;
-    ifMatch: ETag | undefined;
-    ifNoneMatch: ETag | undefined;
-}
-
-export class ODataQueryContext implements IODataQueryContext {
-    defaultQuerySettings!: DefaultQuerySettings | undefined;
-    model!: IEdmModel | undefined;
-    elementType!: IEdmType | undefined;
-    navigationSource!: IEdmNavigationSource | undefined;
-    elementClrType!: string | undefined;
-    path!: ODataPath | undefined;
-    requestContainer!: IServiceProvider | undefined;
-
-    constructor(data?: IODataQueryContext) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.defaultQuerySettings = _data["defaultQuerySettings"] ? DefaultQuerySettings.fromJS(_data["defaultQuerySettings"]) : <any>undefined;
-            this.model = _data["model"] ? IEdmModel.fromJS(_data["model"]) : <any>undefined;
-            this.elementType = _data["elementType"] ? IEdmType.fromJS(_data["elementType"]) : <any>undefined;
-            this.navigationSource = _data["navigationSource"] ? IEdmNavigationSource.fromJS(_data["navigationSource"]) : <any>undefined;
-            this.elementClrType = _data["elementClrType"];
-            this.path = _data["path"] ? ODataPath.fromJS(_data["path"]) : <any>undefined;
-            this.requestContainer = _data["requestContainer"] ? IServiceProvider.fromJS(_data["requestContainer"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ODataQueryContext {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataQueryContext();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["defaultQuerySettings"] = this.defaultQuerySettings ? this.defaultQuerySettings.toJSON() : <any>undefined;
-        data["model"] = this.model ? this.model.toJSON() : <any>undefined;
-        data["elementType"] = this.elementType ? this.elementType.toJSON() : <any>undefined;
-        data["navigationSource"] = this.navigationSource ? this.navigationSource.toJSON() : <any>undefined;
-        data["elementClrType"] = this.elementClrType;
-        data["path"] = this.path ? this.path.toJSON() : <any>undefined;
-        data["requestContainer"] = this.requestContainer ? this.requestContainer.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IODataQueryContext {
-    defaultQuerySettings: DefaultQuerySettings | undefined;
-    model: IEdmModel | undefined;
-    elementType: IEdmType | undefined;
-    navigationSource: IEdmNavigationSource | undefined;
-    elementClrType: string | undefined;
-    path: ODataPath | undefined;
-    requestContainer: IServiceProvider | undefined;
-}
-
-export class DefaultQuerySettings implements IDefaultQuerySettings {
-    enableExpand!: boolean;
-    enableSelect!: boolean;
-    enableCount!: boolean;
-    enableOrderBy!: boolean;
-    enableFilter!: boolean;
-    maxTop!: number | undefined;
-    enableSkipToken!: boolean;
-
-    constructor(data?: IDefaultQuerySettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.enableExpand = _data["enableExpand"];
-            this.enableSelect = _data["enableSelect"];
-            this.enableCount = _data["enableCount"];
-            this.enableOrderBy = _data["enableOrderBy"];
-            this.enableFilter = _data["enableFilter"];
-            this.maxTop = _data["maxTop"];
-            this.enableSkipToken = _data["enableSkipToken"];
-        }
-    }
-
-    static fromJS(data: any): DefaultQuerySettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new DefaultQuerySettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["enableExpand"] = this.enableExpand;
-        data["enableSelect"] = this.enableSelect;
-        data["enableCount"] = this.enableCount;
-        data["enableOrderBy"] = this.enableOrderBy;
-        data["enableFilter"] = this.enableFilter;
-        data["maxTop"] = this.maxTop;
-        data["enableSkipToken"] = this.enableSkipToken;
-        return data; 
-    }
-}
-
-export interface IDefaultQuerySettings {
-    enableExpand: boolean;
-    enableSelect: boolean;
-    enableCount: boolean;
-    enableOrderBy: boolean;
-    enableFilter: boolean;
-    maxTop: number | undefined;
-    enableSkipToken: boolean;
-}
-
-export abstract class IEdmModel implements IIEdmModel {
-    schemaElements!: IEdmSchemaElement[] | undefined;
-    vocabularyAnnotations!: IEdmVocabularyAnnotation[] | undefined;
-    referencedModels!: IEdmModel[] | undefined;
-    declaredNamespaces!: string[] | undefined;
-    directValueAnnotationsManager!: IEdmDirectValueAnnotationsManager | undefined;
-    entityContainer!: IEdmEntityContainer | undefined;
-
-    constructor(data?: IIEdmModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["schemaElements"])) {
-                this.schemaElements = [] as any;
-                for (let item of _data["schemaElements"])
-                    this.schemaElements!.push(IEdmSchemaElement.fromJS(item));
-            }
-            if (Array.isArray(_data["vocabularyAnnotations"])) {
-                this.vocabularyAnnotations = [] as any;
-                for (let item of _data["vocabularyAnnotations"])
-                    this.vocabularyAnnotations!.push(IEdmVocabularyAnnotation.fromJS(item));
-            }
-            if (Array.isArray(_data["referencedModels"])) {
-                this.referencedModels = [] as any;
-                for (let item of _data["referencedModels"])
-                    this.referencedModels!.push(IEdmModel.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredNamespaces"])) {
-                this.declaredNamespaces = [] as any;
-                for (let item of _data["declaredNamespaces"])
-                    this.declaredNamespaces!.push(item);
-            }
-            this.directValueAnnotationsManager = _data["directValueAnnotationsManager"] ? IEdmDirectValueAnnotationsManager.fromJS(_data["directValueAnnotationsManager"]) : <any>undefined;
-            this.entityContainer = _data["entityContainer"] ? IEdmEntityContainer.fromJS(_data["entityContainer"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.schemaElements)) {
-            data["schemaElements"] = [];
-            for (let item of this.schemaElements)
-                data["schemaElements"].push(item.toJSON());
-        }
-        if (Array.isArray(this.vocabularyAnnotations)) {
-            data["vocabularyAnnotations"] = [];
-            for (let item of this.vocabularyAnnotations)
-                data["vocabularyAnnotations"].push(item.toJSON());
-        }
-        if (Array.isArray(this.referencedModels)) {
-            data["referencedModels"] = [];
-            for (let item of this.referencedModels)
-                data["referencedModels"].push(item.toJSON());
-        }
-        if (Array.isArray(this.declaredNamespaces)) {
-            data["declaredNamespaces"] = [];
-            for (let item of this.declaredNamespaces)
-                data["declaredNamespaces"].push(item);
-        }
-        data["directValueAnnotationsManager"] = this.directValueAnnotationsManager ? this.directValueAnnotationsManager.toJSON() : <any>undefined;
-        data["entityContainer"] = this.entityContainer ? this.entityContainer.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmModel {
-    schemaElements: IEdmSchemaElement[] | undefined;
-    vocabularyAnnotations: IEdmVocabularyAnnotation[] | undefined;
-    referencedModels: IEdmModel[] | undefined;
-    declaredNamespaces: string[] | undefined;
-    directValueAnnotationsManager: IEdmDirectValueAnnotationsManager | undefined;
-    entityContainer: IEdmEntityContainer | undefined;
-}
-
-export abstract class IEdmSchemaElement implements IIEdmSchemaElement {
-    schemaElementKind!: EdmSchemaElementKind;
-    namespace!: string | undefined;
-
-    constructor(data?: IIEdmSchemaElement) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.schemaElementKind = _data["schemaElementKind"];
-            this.namespace = _data["namespace"];
-        }
-    }
-
-    static fromJS(data: any): IEdmSchemaElement {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmSchemaElement' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["schemaElementKind"] = this.schemaElementKind;
-        data["namespace"] = this.namespace;
-        return data; 
-    }
-}
-
-export interface IIEdmSchemaElement {
-    schemaElementKind: EdmSchemaElementKind;
-    namespace: string | undefined;
-}
-
-export enum EdmSchemaElementKind {
-    None = "None",
-    TypeDefinition = "TypeDefinition",
-    Term = "Term",
-    Action = "Action",
-    EntityContainer = "EntityContainer",
-    Function = "Function",
-}
-
-export abstract class IEdmVocabularyAnnotation implements IIEdmVocabularyAnnotation {
-    qualifier!: string | undefined;
-    term!: IEdmTerm | undefined;
-    target!: IEdmVocabularyAnnotatable | undefined;
-    value!: IEdmExpression | undefined;
-
-    constructor(data?: IIEdmVocabularyAnnotation) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.qualifier = _data["qualifier"];
-            this.term = _data["term"] ? IEdmTerm.fromJS(_data["term"]) : <any>undefined;
-            this.target = _data["target"] ? IEdmVocabularyAnnotatable.fromJS(_data["target"]) : <any>undefined;
-            this.value = _data["value"] ? IEdmExpression.fromJS(_data["value"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmVocabularyAnnotation {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmVocabularyAnnotation' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["qualifier"] = this.qualifier;
-        data["term"] = this.term ? this.term.toJSON() : <any>undefined;
-        data["target"] = this.target ? this.target.toJSON() : <any>undefined;
-        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmVocabularyAnnotation {
-    qualifier: string | undefined;
-    term: IEdmTerm | undefined;
-    target: IEdmVocabularyAnnotatable | undefined;
-    value: IEdmExpression | undefined;
-}
-
-export abstract class IEdmTerm implements IIEdmTerm {
-    type!: IEdmTypeReference | undefined;
-    appliesTo!: string | undefined;
-    defaultValue!: string | undefined;
-
-    constructor(data?: IIEdmTerm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.type = _data["type"] ? IEdmTypeReference.fromJS(_data["type"]) : <any>undefined;
-            this.appliesTo = _data["appliesTo"];
-            this.defaultValue = _data["defaultValue"];
-        }
-    }
-
-    static fromJS(data: any): IEdmTerm {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmTerm' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["type"] = this.type ? this.type.toJSON() : <any>undefined;
-        data["appliesTo"] = this.appliesTo;
-        data["defaultValue"] = this.defaultValue;
-        return data; 
-    }
-}
-
-export interface IIEdmTerm {
-    type: IEdmTypeReference | undefined;
-    appliesTo: string | undefined;
-    defaultValue: string | undefined;
-}
-
-export abstract class IEdmTypeReference implements IIEdmTypeReference {
-    isNullable!: boolean;
-    definition!: IEdmType | undefined;
-
-    constructor(data?: IIEdmTypeReference) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.isNullable = _data["isNullable"];
-            this.definition = _data["definition"] ? IEdmType.fromJS(_data["definition"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmTypeReference {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmTypeReference' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isNullable"] = this.isNullable;
-        data["definition"] = this.definition ? this.definition.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmTypeReference {
-    isNullable: boolean;
-    definition: IEdmType | undefined;
-}
-
-export abstract class IEdmVocabularyAnnotatable implements IIEdmVocabularyAnnotatable {
-
-    constructor(data?: IIEdmVocabularyAnnotatable) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): IEdmVocabularyAnnotatable {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmVocabularyAnnotatable' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IIEdmVocabularyAnnotatable {
-}
-
-export abstract class IEdmExpression implements IIEdmExpression {
-    expressionKind!: EdmExpressionKind;
-
-    constructor(data?: IIEdmExpression) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.expressionKind = _data["expressionKind"];
-        }
-    }
-
-    static fromJS(data: any): IEdmExpression {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmExpression' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["expressionKind"] = this.expressionKind;
-        return data; 
-    }
-}
-
-export interface IIEdmExpression {
-    expressionKind: EdmExpressionKind;
-}
-
-export enum EdmExpressionKind {
-    None = "None",
-    BinaryConstant = "BinaryConstant",
-    BooleanConstant = "BooleanConstant",
-    DateTimeOffsetConstant = "DateTimeOffsetConstant",
-    DecimalConstant = "DecimalConstant",
-    FloatingConstant = "FloatingConstant",
-    GuidConstant = "GuidConstant",
-    IntegerConstant = "IntegerConstant",
-    StringConstant = "StringConstant",
-    DurationConstant = "DurationConstant",
-    Null = "Null",
-    Record = "Record",
-    Collection = "Collection",
-    Path = "Path",
-    If = "If",
-    Cast = "Cast",
-    IsType = "IsType",
-    FunctionApplication = "FunctionApplication",
-    LabeledExpressionReference = "LabeledExpressionReference",
-    Labeled = "Labeled",
-    PropertyPath = "PropertyPath",
-    NavigationPropertyPath = "NavigationPropertyPath",
-    DateConstant = "DateConstant",
-    TimeOfDayConstant = "TimeOfDayConstant",
-    EnumMember = "EnumMember",
-    AnnotationPath = "AnnotationPath",
-}
-
-export abstract class IEdmDirectValueAnnotationsManager implements IIEdmDirectValueAnnotationsManager {
-
-    constructor(data?: IIEdmDirectValueAnnotationsManager) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): IEdmDirectValueAnnotationsManager {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmDirectValueAnnotationsManager' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IIEdmDirectValueAnnotationsManager {
-}
-
-export abstract class IEdmEntityContainer implements IIEdmEntityContainer {
-    elements!: IEdmEntityContainerElement[] | undefined;
-
-    constructor(data?: IIEdmEntityContainer) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["elements"])) {
-                this.elements = [] as any;
-                for (let item of _data["elements"])
-                    this.elements!.push(IEdmEntityContainerElement.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): IEdmEntityContainer {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmEntityContainer' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.elements)) {
-            data["elements"] = [];
-            for (let item of this.elements)
-                data["elements"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IIEdmEntityContainer {
-    elements: IEdmEntityContainerElement[] | undefined;
-}
-
-export abstract class IEdmEntityContainerElement implements IIEdmEntityContainerElement {
-    containerElementKind!: EdmContainerElementKind;
-    container!: IEdmEntityContainer | undefined;
-
-    constructor(data?: IIEdmEntityContainerElement) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.containerElementKind = _data["containerElementKind"];
-            this.container = _data["container"] ? IEdmEntityContainer.fromJS(_data["container"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IEdmEntityContainerElement {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IEdmEntityContainerElement' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["containerElementKind"] = this.containerElementKind;
-        data["container"] = this.container ? this.container.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIEdmEntityContainerElement {
-    containerElementKind: EdmContainerElementKind;
-    container: IEdmEntityContainer | undefined;
-}
-
-export enum EdmContainerElementKind {
-    None = "None",
-    EntitySet = "EntitySet",
-    ActionImport = "ActionImport",
-    FunctionImport = "FunctionImport",
-    Singleton = "Singleton",
-}
-
-export abstract class IServiceProvider implements IIServiceProvider {
-
-    constructor(data?: IIServiceProvider) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): IServiceProvider {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IServiceProvider' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IIServiceProvider {
-}
-
-export class ODataRawQueryOptions implements IODataRawQueryOptions {
-    filter!: string | undefined;
-    apply!: string | undefined;
-    orderBy!: string | undefined;
-    top!: string | undefined;
-    skip!: string | undefined;
-    select!: string | undefined;
-    expand!: string | undefined;
-    count!: string | undefined;
-    format!: string | undefined;
-    skipToken!: string | undefined;
-    deltaToken!: string | undefined;
-
-    constructor(data?: IODataRawQueryOptions) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.filter = _data["filter"];
-            this.apply = _data["apply"];
-            this.orderBy = _data["orderBy"];
-            this.top = _data["top"];
-            this.skip = _data["skip"];
-            this.select = _data["select"];
-            this.expand = _data["expand"];
-            this.count = _data["count"];
-            this.format = _data["format"];
-            this.skipToken = _data["skipToken"];
-            this.deltaToken = _data["deltaToken"];
-        }
-    }
-
-    static fromJS(data: any): ODataRawQueryOptions {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataRawQueryOptions();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["filter"] = this.filter;
-        data["apply"] = this.apply;
-        data["orderBy"] = this.orderBy;
-        data["top"] = this.top;
-        data["skip"] = this.skip;
-        data["select"] = this.select;
-        data["expand"] = this.expand;
-        data["count"] = this.count;
-        data["format"] = this.format;
-        data["skipToken"] = this.skipToken;
-        data["deltaToken"] = this.deltaToken;
-        return data; 
-    }
-}
-
-export interface IODataRawQueryOptions {
-    filter: string | undefined;
-    apply: string | undefined;
-    orderBy: string | undefined;
-    top: string | undefined;
-    skip: string | undefined;
-    select: string | undefined;
-    expand: string | undefined;
-    count: string | undefined;
-    format: string | undefined;
-    skipToken: string | undefined;
-    deltaToken: string | undefined;
-}
-
-export class SelectExpandQueryOption implements ISelectExpandQueryOption {
-    context!: ODataQueryContext | undefined;
-    rawSelect!: string | undefined;
-    rawExpand!: string | undefined;
-    validator!: SelectExpandQueryValidator | undefined;
-    selectExpandClause!: SelectExpandClause | undefined;
-    levelsMaxLiteralExpansionDepth!: number;
-
-    constructor(data?: ISelectExpandQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.rawSelect = _data["rawSelect"];
-            this.rawExpand = _data["rawExpand"];
-            this.validator = _data["validator"] ? SelectExpandQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-            this.selectExpandClause = _data["selectExpandClause"] ? SelectExpandClause.fromJS(_data["selectExpandClause"]) : <any>undefined;
-            this.levelsMaxLiteralExpansionDepth = _data["levelsMaxLiteralExpansionDepth"];
-        }
-    }
-
-    static fromJS(data: any): SelectExpandQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new SelectExpandQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["rawSelect"] = this.rawSelect;
-        data["rawExpand"] = this.rawExpand;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        data["selectExpandClause"] = this.selectExpandClause ? this.selectExpandClause.toJSON() : <any>undefined;
-        data["levelsMaxLiteralExpansionDepth"] = this.levelsMaxLiteralExpansionDepth;
-        return data; 
-    }
-}
-
-export interface ISelectExpandQueryOption {
-    context: ODataQueryContext | undefined;
-    rawSelect: string | undefined;
-    rawExpand: string | undefined;
-    validator: SelectExpandQueryValidator | undefined;
-    selectExpandClause: SelectExpandClause | undefined;
-    levelsMaxLiteralExpansionDepth: number;
-}
-
-export class SelectExpandQueryValidator implements ISelectExpandQueryValidator {
-
-    constructor(data?: ISelectExpandQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): SelectExpandQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new SelectExpandQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ISelectExpandQueryValidator {
-}
-
-export class ApplyQueryOption implements IApplyQueryOption {
-    context!: ODataQueryContext | undefined;
-    resultClrType!: string | undefined;
-    applyClause!: ApplyClause | undefined;
-    rawValue!: string | undefined;
-
-    constructor(data?: IApplyQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.resultClrType = _data["resultClrType"];
-            this.applyClause = _data["applyClause"] ? ApplyClause.fromJS(_data["applyClause"]) : <any>undefined;
-            this.rawValue = _data["rawValue"];
-        }
-    }
-
-    static fromJS(data: any): ApplyQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplyQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["resultClrType"] = this.resultClrType;
-        data["applyClause"] = this.applyClause ? this.applyClause.toJSON() : <any>undefined;
-        data["rawValue"] = this.rawValue;
-        return data; 
-    }
-}
-
-export interface IApplyQueryOption {
-    context: ODataQueryContext | undefined;
-    resultClrType: string | undefined;
-    applyClause: ApplyClause | undefined;
-    rawValue: string | undefined;
-}
-
-export class FilterQueryOption implements IFilterQueryOption {
-    context!: ODataQueryContext | undefined;
-    validator!: FilterQueryValidator | undefined;
-    filterClause!: FilterClause | undefined;
-    rawValue!: string | undefined;
-
-    constructor(data?: IFilterQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.validator = _data["validator"] ? FilterQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-            this.filterClause = _data["filterClause"] ? FilterClause.fromJS(_data["filterClause"]) : <any>undefined;
-            this.rawValue = _data["rawValue"];
-        }
-    }
-
-    static fromJS(data: any): FilterQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new FilterQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        data["filterClause"] = this.filterClause ? this.filterClause.toJSON() : <any>undefined;
-        data["rawValue"] = this.rawValue;
-        return data; 
-    }
-}
-
-export interface IFilterQueryOption {
-    context: ODataQueryContext | undefined;
-    validator: FilterQueryValidator | undefined;
-    filterClause: FilterClause | undefined;
-    rawValue: string | undefined;
-}
-
-export class FilterQueryValidator implements IFilterQueryValidator {
-
-    constructor(data?: IFilterQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): FilterQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new FilterQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IFilterQueryValidator {
-}
-
-export class FilterClause implements IFilterClause {
-    expression!: SingleValueNode | undefined;
-    rangeVariable!: RangeVariable | undefined;
-    itemType!: IEdmTypeReference | undefined;
-
-    constructor(data?: IFilterClause) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.expression = _data["expression"] ? SingleValueNode.fromJS(_data["expression"]) : <any>undefined;
-            this.rangeVariable = _data["rangeVariable"] ? RangeVariable.fromJS(_data["rangeVariable"]) : <any>undefined;
-            this.itemType = _data["itemType"] ? IEdmTypeReference.fromJS(_data["itemType"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FilterClause {
-        data = typeof data === 'object' ? data : {};
-        let result = new FilterClause();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["expression"] = this.expression ? this.expression.toJSON() : <any>undefined;
-        data["rangeVariable"] = this.rangeVariable ? this.rangeVariable.toJSON() : <any>undefined;
-        data["itemType"] = this.itemType ? this.itemType.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFilterClause {
-    expression: SingleValueNode | undefined;
-    rangeVariable: RangeVariable | undefined;
-    itemType: IEdmTypeReference | undefined;
-}
-
-export abstract class SingleValueNode implements ISingleValueNode {
-    kind!: QueryNodeKind;
-
-    constructor(data?: ISingleValueNode) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.kind = _data["kind"];
-        }
-    }
-
-    static fromJS(data: any): SingleValueNode {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'SingleValueNode' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["kind"] = this.kind;
-        return data; 
-    }
-}
-
-export interface ISingleValueNode {
-    kind: QueryNodeKind;
-}
-
-export enum QueryNodeKind {
-    None = "None",
-    Constant = "Constant",
-    Convert = "Convert",
-    NonResourceRangeVariableReference = "NonResourceRangeVariableReference",
-    BinaryOperator = "BinaryOperator",
-    UnaryOperator = "UnaryOperator",
-    SingleValuePropertyAccess = "SingleValuePropertyAccess",
-    CollectionPropertyAccess = "CollectionPropertyAccess",
-    SingleValueFunctionCall = "SingleValueFunctionCall",
-    Any = "Any",
-    CollectionNavigationNode = "CollectionNavigationNode",
-    SingleNavigationNode = "SingleNavigationNode",
-    SingleValueOpenPropertyAccess = "SingleValueOpenPropertyAccess",
-    SingleResourceCast = "SingleResourceCast",
-    All = "All",
-    CollectionResourceCast = "CollectionResourceCast",
-    ResourceRangeVariableReference = "ResourceRangeVariableReference",
-    SingleResourceFunctionCall = "SingleResourceFunctionCall",
-    CollectionFunctionCall = "CollectionFunctionCall",
-    CollectionResourceFunctionCall = "CollectionResourceFunctionCall",
-    NamedFunctionParameter = "NamedFunctionParameter",
-    ParameterAlias = "ParameterAlias",
-    EntitySet = "EntitySet",
-    KeyLookup = "KeyLookup",
-    SearchTerm = "SearchTerm",
-    CollectionOpenPropertyAccess = "CollectionOpenPropertyAccess",
-    CollectionComplexNode = "CollectionComplexNode",
-    SingleComplexNode = "SingleComplexNode",
-    Count = "Count",
-    SingleValueCast = "SingleValueCast",
-    CollectionPropertyNode = "CollectionPropertyNode",
-    AggregatedCollectionPropertyNode = "AggregatedCollectionPropertyNode",
-    In = "In",
-    CollectionConstant = "CollectionConstant",
-}
-
-export abstract class RangeVariable implements IRangeVariable {
-
-    constructor(data?: IRangeVariable) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): RangeVariable {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'RangeVariable' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IRangeVariable {
-}
-
-export class OrderByQueryOption implements IOrderByQueryOption {
-    context!: ODataQueryContext | undefined;
-    orderByNodes!: OrderByNode[] | undefined;
-    rawValue!: string | undefined;
-    validator!: OrderByQueryValidator | undefined;
-    orderByClause!: OrderByClause | undefined;
-
-    constructor(data?: IOrderByQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            if (Array.isArray(_data["orderByNodes"])) {
-                this.orderByNodes = [] as any;
-                for (let item of _data["orderByNodes"])
-                    this.orderByNodes!.push(OrderByNode.fromJS(item));
-            }
-            this.rawValue = _data["rawValue"];
-            this.validator = _data["validator"] ? OrderByQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-            this.orderByClause = _data["orderByClause"] ? OrderByClause.fromJS(_data["orderByClause"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): OrderByQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new OrderByQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        if (Array.isArray(this.orderByNodes)) {
-            data["orderByNodes"] = [];
-            for (let item of this.orderByNodes)
-                data["orderByNodes"].push(item.toJSON());
-        }
-        data["rawValue"] = this.rawValue;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        data["orderByClause"] = this.orderByClause ? this.orderByClause.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IOrderByQueryOption {
-    context: ODataQueryContext | undefined;
-    orderByNodes: OrderByNode[] | undefined;
-    rawValue: string | undefined;
-    validator: OrderByQueryValidator | undefined;
-    orderByClause: OrderByClause | undefined;
-}
-
-export abstract class OrderByNode implements IOrderByNode {
-    direction!: OrderByDirection;
-
-    constructor(data?: IOrderByNode) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.direction = _data["direction"];
-        }
-    }
-
-    static fromJS(data: any): OrderByNode {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'OrderByNode' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["direction"] = this.direction;
-        return data; 
-    }
-}
-
-export interface IOrderByNode {
-    direction: OrderByDirection;
-}
-
-export enum OrderByDirection {
-    Ascending = "Ascending",
-    Descending = "Descending",
-}
-
-export class OrderByQueryValidator implements IOrderByQueryValidator {
-
-    constructor(data?: IOrderByQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): OrderByQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new OrderByQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IOrderByQueryValidator {
-}
-
-export class OrderByClause implements IOrderByClause {
-    thenBy!: OrderByClause | undefined;
-    expression!: SingleValueNode | undefined;
-    direction!: OrderByDirection;
-    rangeVariable!: RangeVariable | undefined;
-    itemType!: IEdmTypeReference | undefined;
-
-    constructor(data?: IOrderByClause) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.thenBy = _data["thenBy"] ? OrderByClause.fromJS(_data["thenBy"]) : <any>undefined;
-            this.expression = _data["expression"] ? SingleValueNode.fromJS(_data["expression"]) : <any>undefined;
-            this.direction = _data["direction"];
-            this.rangeVariable = _data["rangeVariable"] ? RangeVariable.fromJS(_data["rangeVariable"]) : <any>undefined;
-            this.itemType = _data["itemType"] ? IEdmTypeReference.fromJS(_data["itemType"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): OrderByClause {
-        data = typeof data === 'object' ? data : {};
-        let result = new OrderByClause();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["thenBy"] = this.thenBy ? this.thenBy.toJSON() : <any>undefined;
-        data["expression"] = this.expression ? this.expression.toJSON() : <any>undefined;
-        data["direction"] = this.direction;
-        data["rangeVariable"] = this.rangeVariable ? this.rangeVariable.toJSON() : <any>undefined;
-        data["itemType"] = this.itemType ? this.itemType.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IOrderByClause {
-    thenBy: OrderByClause | undefined;
-    expression: SingleValueNode | undefined;
-    direction: OrderByDirection;
-    rangeVariable: RangeVariable | undefined;
-    itemType: IEdmTypeReference | undefined;
-}
-
-export class SkipQueryOption implements ISkipQueryOption {
-    context!: ODataQueryContext | undefined;
-    rawValue!: string | undefined;
-    value!: number;
-    validator!: SkipQueryValidator | undefined;
-
-    constructor(data?: ISkipQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.rawValue = _data["rawValue"];
-            this.value = _data["value"];
-            this.validator = _data["validator"] ? SkipQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): SkipQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new SkipQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["rawValue"] = this.rawValue;
-        data["value"] = this.value;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ISkipQueryOption {
-    context: ODataQueryContext | undefined;
-    rawValue: string | undefined;
-    value: number;
-    validator: SkipQueryValidator | undefined;
-}
-
-export class SkipQueryValidator implements ISkipQueryValidator {
-
-    constructor(data?: ISkipQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): SkipQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new SkipQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ISkipQueryValidator {
-}
-
-export class SkipTokenQueryOption implements ISkipTokenQueryOption {
-    rawValue!: string | undefined;
-    context!: ODataQueryContext | undefined;
-    validator!: SkipTokenQueryValidator | undefined;
-    querySettings!: ODataQuerySettings | undefined;
-    queryOptions!: ODataQueryOptions | undefined;
-
-    constructor(data?: ISkipTokenQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.rawValue = _data["rawValue"];
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.validator = _data["validator"] ? SkipTokenQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-            this.querySettings = _data["querySettings"] ? ODataQuerySettings.fromJS(_data["querySettings"]) : <any>undefined;
-            this.queryOptions = _data["queryOptions"] ? ODataQueryOptions.fromJS(_data["queryOptions"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): SkipTokenQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new SkipTokenQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["rawValue"] = this.rawValue;
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        data["querySettings"] = this.querySettings ? this.querySettings.toJSON() : <any>undefined;
-        data["queryOptions"] = this.queryOptions ? this.queryOptions.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ISkipTokenQueryOption {
-    rawValue: string | undefined;
-    context: ODataQueryContext | undefined;
-    validator: SkipTokenQueryValidator | undefined;
-    querySettings: ODataQuerySettings | undefined;
-    queryOptions: ODataQueryOptions | undefined;
-}
-
-export class SkipTokenQueryValidator implements ISkipTokenQueryValidator {
-
-    constructor(data?: ISkipTokenQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): SkipTokenQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new SkipTokenQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ISkipTokenQueryValidator {
-}
-
-export class ODataQuerySettings implements IODataQuerySettings {
-    ensureStableOrdering!: boolean;
-    handleNullPropagation!: HandleNullPropagationOption;
-    enableConstantParameterization!: boolean;
-    enableCorrelatedSubqueryBuffering!: boolean;
-    pageSize!: number | undefined;
-    handleReferenceNavigationPropertyExpandFilter!: boolean;
-
-    constructor(data?: IODataQuerySettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.ensureStableOrdering = _data["ensureStableOrdering"];
-            this.handleNullPropagation = _data["handleNullPropagation"];
-            this.enableConstantParameterization = _data["enableConstantParameterization"];
-            this.enableCorrelatedSubqueryBuffering = _data["enableCorrelatedSubqueryBuffering"];
-            this.pageSize = _data["pageSize"];
-            this.handleReferenceNavigationPropertyExpandFilter = _data["handleReferenceNavigationPropertyExpandFilter"];
-        }
-    }
-
-    static fromJS(data: any): ODataQuerySettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataQuerySettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ensureStableOrdering"] = this.ensureStableOrdering;
-        data["handleNullPropagation"] = this.handleNullPropagation;
-        data["enableConstantParameterization"] = this.enableConstantParameterization;
-        data["enableCorrelatedSubqueryBuffering"] = this.enableCorrelatedSubqueryBuffering;
-        data["pageSize"] = this.pageSize;
-        data["handleReferenceNavigationPropertyExpandFilter"] = this.handleReferenceNavigationPropertyExpandFilter;
-        return data; 
-    }
-}
-
-export interface IODataQuerySettings {
-    ensureStableOrdering: boolean;
-    handleNullPropagation: HandleNullPropagationOption;
-    enableConstantParameterization: boolean;
-    enableCorrelatedSubqueryBuffering: boolean;
-    pageSize: number | undefined;
-    handleReferenceNavigationPropertyExpandFilter: boolean;
-}
-
-export enum HandleNullPropagationOption {
-    Default = "Default",
-    True = "True",
-    False = "False",
-}
-
-export class TopQueryOption implements ITopQueryOption {
-    context!: ODataQueryContext | undefined;
-    rawValue!: string | undefined;
-    value!: number;
-    validator!: TopQueryValidator | undefined;
-
-    constructor(data?: ITopQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.rawValue = _data["rawValue"];
-            this.value = _data["value"];
-            this.validator = _data["validator"] ? TopQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): TopQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new TopQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["rawValue"] = this.rawValue;
-        data["value"] = this.value;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ITopQueryOption {
-    context: ODataQueryContext | undefined;
-    rawValue: string | undefined;
-    value: number;
-    validator: TopQueryValidator | undefined;
-}
-
-export class TopQueryValidator implements ITopQueryValidator {
-
-    constructor(data?: ITopQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): TopQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new TopQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ITopQueryValidator {
-}
-
-export class CountQueryOption implements ICountQueryOption {
-    context!: ODataQueryContext | undefined;
-    rawValue!: string | undefined;
-    value!: boolean;
-    validator!: CountQueryValidator | undefined;
-
-    constructor(data?: ICountQueryOption) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.context = _data["context"] ? ODataQueryContext.fromJS(_data["context"]) : <any>undefined;
-            this.rawValue = _data["rawValue"];
-            this.value = _data["value"];
-            this.validator = _data["validator"] ? CountQueryValidator.fromJS(_data["validator"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): CountQueryOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new CountQueryOption();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["context"] = this.context ? this.context.toJSON() : <any>undefined;
-        data["rawValue"] = this.rawValue;
-        data["value"] = this.value;
-        data["validator"] = this.validator ? this.validator.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ICountQueryOption {
-    context: ODataQueryContext | undefined;
-    rawValue: string | undefined;
-    value: boolean;
-    validator: CountQueryValidator | undefined;
-}
-
-export class CountQueryValidator implements ICountQueryValidator {
-
-    constructor(data?: ICountQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): CountQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new CountQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ICountQueryValidator {
-}
-
-export class ODataQueryValidator implements IODataQueryValidator {
-
-    constructor(data?: IODataQueryValidator) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ODataQueryValidator {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataQueryValidator();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IODataQueryValidator {
-}
-
-export class ETag implements IETag {
-    item!: any | undefined;
-    isWellFormed!: boolean;
-    entityType!: string | undefined;
-    isAny!: boolean;
-    isIfNoneMatch!: boolean;
-    concurrencyProperties!: { [key: string]: any; } | undefined;
-
-    constructor(data?: IETag) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.item = _data["Item"];
-            this.isWellFormed = _data["IsWellFormed"];
-            this.entityType = _data["EntityType"];
-            this.isAny = _data["IsAny"];
-            this.isIfNoneMatch = _data["IsIfNoneMatch"];
-            if (_data["ConcurrencyProperties"]) {
-                this.concurrencyProperties = {} as any;
-                for (let key in _data["ConcurrencyProperties"]) {
-                    if (_data["ConcurrencyProperties"].hasOwnProperty(key))
-                        this.concurrencyProperties![key] = _data["ConcurrencyProperties"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): ETag {
-        data = typeof data === 'object' ? data : {};
-        let result = new ETag();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Item"] = this.item;
-        data["IsWellFormed"] = this.isWellFormed;
-        data["EntityType"] = this.entityType;
-        data["IsAny"] = this.isAny;
-        data["IsIfNoneMatch"] = this.isIfNoneMatch;
-        if (this.concurrencyProperties) {
-            data["ConcurrencyProperties"] = {};
-            for (let key in this.concurrencyProperties) {
-                if (this.concurrencyProperties.hasOwnProperty(key))
-                    data["ConcurrencyProperties"][key] = this.concurrencyProperties[key];
-            }
-        }
-        return data; 
-    }
-}
-
-export interface IETag {
-    item: any | undefined;
-    isWellFormed: boolean;
-    entityType: string | undefined;
-    isAny: boolean;
-    isIfNoneMatch: boolean;
-    concurrencyProperties: { [key: string]: any; } | undefined;
-}
-
-export class FuncOfLong implements IFuncOfLong {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IFuncOfLong) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FuncOfLong {
-        data = typeof data === 'object' ? data : {};
-        let result = new FuncOfLong();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFuncOfLong {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export enum ODataRequestMethod {
-    Get = "Get",
-    Delete = "Delete",
-    Merge = "Merge",
-    Patch = "Patch",
-    Post = "Post",
-    Put = "Put",
-    Head = "Head",
-    Options = "Options",
-    Unknown = "Unknown",
-}
-
-export abstract class IWebApiOptions implements IIWebApiOptions {
-    urlKeyDelimiter!: ODataUrlKeyDelimiter | undefined;
-    nullDynamicPropertyIsEnabled!: boolean;
-
-    constructor(data?: IIWebApiOptions) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.urlKeyDelimiter = _data["urlKeyDelimiter"] ? ODataUrlKeyDelimiter.fromJS(_data["urlKeyDelimiter"]) : <any>undefined;
-            this.nullDynamicPropertyIsEnabled = _data["nullDynamicPropertyIsEnabled"];
-        }
-    }
-
-    static fromJS(data: any): IWebApiOptions {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IWebApiOptions' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["urlKeyDelimiter"] = this.urlKeyDelimiter ? this.urlKeyDelimiter.toJSON() : <any>undefined;
-        data["nullDynamicPropertyIsEnabled"] = this.nullDynamicPropertyIsEnabled;
-        return data; 
-    }
-}
-
-export interface IIWebApiOptions {
-    urlKeyDelimiter: ODataUrlKeyDelimiter | undefined;
-    nullDynamicPropertyIsEnabled: boolean;
-}
-
-export class ODataUrlKeyDelimiter implements IODataUrlKeyDelimiter {
-
-    constructor(data?: IODataUrlKeyDelimiter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ODataUrlKeyDelimiter {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataUrlKeyDelimiter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IODataUrlKeyDelimiter {
-}
-
-export abstract class IWebApiHeaders implements IIWebApiHeaders {
-
-    constructor(data?: IIWebApiHeaders) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): IWebApiHeaders {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IWebApiHeaders' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IIWebApiHeaders {
-}
-
-export abstract class ODataDeserializerProvider implements IODataDeserializerProvider {
-
-    constructor(data?: IODataDeserializerProvider) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ODataDeserializerProvider {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ODataDeserializerProvider' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IODataDeserializerProvider {
-}
-
-export abstract class IODataPathHandler implements IIODataPathHandler {
-    urlKeyDelimiter!: ODataUrlKeyDelimiter | undefined;
-
-    constructor(data?: IIODataPathHandler) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.urlKeyDelimiter = _data["urlKeyDelimiter"] ? ODataUrlKeyDelimiter.fromJS(_data["urlKeyDelimiter"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): IODataPathHandler {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IODataPathHandler' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["urlKeyDelimiter"] = this.urlKeyDelimiter ? this.urlKeyDelimiter.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IIODataPathHandler {
-    urlKeyDelimiter: ODataUrlKeyDelimiter | undefined;
-}
-
-export class ODataMessageReaderSettings implements IODataMessageReaderSettings {
-    libraryCompatibility!: ODataLibraryCompatibility;
-    version!: ODataVersion | undefined;
-    arrayPool!: ICharArrayPool | undefined;
-    validations!: ValidationKinds;
-    baseUri!: string | undefined;
-    clientCustomTypeResolver!: FuncOfIEdmTypeAndStringAndIEdmType | undefined;
-    primitiveTypeResolver!: FuncOfObjectAndStringAndIEdmTypeReference | undefined;
-    enablePrimitiveTypeConversion!: boolean;
-    enableMessageStreamDisposal!: boolean;
-    enableCharactersCheck!: boolean;
-    maxProtocolVersion!: ODataVersion;
-    messageQuotas!: ODataMessageQuotas | undefined;
-    readUntypedAsString!: boolean;
-    readAsStreamFunc!: FuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean | undefined;
-    shouldIncludeAnnotation!: FuncOfStringAndBoolean | undefined;
-
-    constructor(data?: IODataMessageReaderSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.libraryCompatibility = _data["libraryCompatibility"];
-            this.version = _data["version"];
-            this.arrayPool = _data["arrayPool"] ? ICharArrayPool.fromJS(_data["arrayPool"]) : <any>undefined;
-            this.validations = _data["validations"];
-            this.baseUri = _data["baseUri"];
-            this.clientCustomTypeResolver = _data["clientCustomTypeResolver"] ? FuncOfIEdmTypeAndStringAndIEdmType.fromJS(_data["clientCustomTypeResolver"]) : <any>undefined;
-            this.primitiveTypeResolver = _data["primitiveTypeResolver"] ? FuncOfObjectAndStringAndIEdmTypeReference.fromJS(_data["primitiveTypeResolver"]) : <any>undefined;
-            this.enablePrimitiveTypeConversion = _data["enablePrimitiveTypeConversion"];
-            this.enableMessageStreamDisposal = _data["enableMessageStreamDisposal"];
-            this.enableCharactersCheck = _data["enableCharactersCheck"];
-            this.maxProtocolVersion = _data["maxProtocolVersion"];
-            this.messageQuotas = _data["messageQuotas"] ? ODataMessageQuotas.fromJS(_data["messageQuotas"]) : <any>undefined;
-            this.readUntypedAsString = _data["readUntypedAsString"];
-            this.readAsStreamFunc = _data["readAsStreamFunc"] ? FuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean.fromJS(_data["readAsStreamFunc"]) : <any>undefined;
-            this.shouldIncludeAnnotation = _data["shouldIncludeAnnotation"] ? FuncOfStringAndBoolean.fromJS(_data["shouldIncludeAnnotation"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ODataMessageReaderSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataMessageReaderSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["libraryCompatibility"] = this.libraryCompatibility;
-        data["version"] = this.version;
-        data["arrayPool"] = this.arrayPool ? this.arrayPool.toJSON() : <any>undefined;
-        data["validations"] = this.validations;
-        data["baseUri"] = this.baseUri;
-        data["clientCustomTypeResolver"] = this.clientCustomTypeResolver ? this.clientCustomTypeResolver.toJSON() : <any>undefined;
-        data["primitiveTypeResolver"] = this.primitiveTypeResolver ? this.primitiveTypeResolver.toJSON() : <any>undefined;
-        data["enablePrimitiveTypeConversion"] = this.enablePrimitiveTypeConversion;
-        data["enableMessageStreamDisposal"] = this.enableMessageStreamDisposal;
-        data["enableCharactersCheck"] = this.enableCharactersCheck;
-        data["maxProtocolVersion"] = this.maxProtocolVersion;
-        data["messageQuotas"] = this.messageQuotas ? this.messageQuotas.toJSON() : <any>undefined;
-        data["readUntypedAsString"] = this.readUntypedAsString;
-        data["readAsStreamFunc"] = this.readAsStreamFunc ? this.readAsStreamFunc.toJSON() : <any>undefined;
-        data["shouldIncludeAnnotation"] = this.shouldIncludeAnnotation ? this.shouldIncludeAnnotation.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IODataMessageReaderSettings {
-    libraryCompatibility: ODataLibraryCompatibility;
-    version: ODataVersion | undefined;
-    arrayPool: ICharArrayPool | undefined;
-    validations: ValidationKinds;
-    baseUri: string | undefined;
-    clientCustomTypeResolver: FuncOfIEdmTypeAndStringAndIEdmType | undefined;
-    primitiveTypeResolver: FuncOfObjectAndStringAndIEdmTypeReference | undefined;
-    enablePrimitiveTypeConversion: boolean;
-    enableMessageStreamDisposal: boolean;
-    enableCharactersCheck: boolean;
-    maxProtocolVersion: ODataVersion;
-    messageQuotas: ODataMessageQuotas | undefined;
-    readUntypedAsString: boolean;
-    readAsStreamFunc: FuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean | undefined;
-    shouldIncludeAnnotation: FuncOfStringAndBoolean | undefined;
-}
-
-export enum ODataLibraryCompatibility {
-    Version6 = "Version6",
-    Version7 = "Version7",
-    Latest = "Latest",
-}
-
-export enum ODataVersion {
-    V4 = "V4",
-    V401 = "V401",
-}
-
-export abstract class ICharArrayPool implements IICharArrayPool {
-
-    constructor(data?: IICharArrayPool) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ICharArrayPool {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ICharArrayPool' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IICharArrayPool {
-}
-
-export enum ValidationKinds {
-    None = "None",
-    ThrowOnDuplicatePropertyNames = "ThrowOnDuplicatePropertyNames",
-    ThrowOnUndeclaredPropertyForNonOpenType = "ThrowOnUndeclaredPropertyForNonOpenType",
-    ThrowIfTypeConflictsWithMetadata = "ThrowIfTypeConflictsWithMetadata",
-    All = "All",
-}
-
-export class FuncOfIEdmTypeAndStringAndIEdmType implements IFuncOfIEdmTypeAndStringAndIEdmType {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IFuncOfIEdmTypeAndStringAndIEdmType) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FuncOfIEdmTypeAndStringAndIEdmType {
-        data = typeof data === 'object' ? data : {};
-        let result = new FuncOfIEdmTypeAndStringAndIEdmType();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFuncOfIEdmTypeAndStringAndIEdmType {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export class FuncOfObjectAndStringAndIEdmTypeReference implements IFuncOfObjectAndStringAndIEdmTypeReference {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IFuncOfObjectAndStringAndIEdmTypeReference) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FuncOfObjectAndStringAndIEdmTypeReference {
-        data = typeof data === 'object' ? data : {};
-        let result = new FuncOfObjectAndStringAndIEdmTypeReference();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFuncOfObjectAndStringAndIEdmTypeReference {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export class ODataMessageQuotas implements IODataMessageQuotas {
-    maxPartsPerBatch!: number;
-    maxOperationsPerChangeset!: number;
-    maxNestingDepth!: number;
-    maxReceivedMessageSize!: number;
-
-    constructor(data?: IODataMessageQuotas) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.maxPartsPerBatch = _data["maxPartsPerBatch"];
-            this.maxOperationsPerChangeset = _data["maxOperationsPerChangeset"];
-            this.maxNestingDepth = _data["maxNestingDepth"];
-            this.maxReceivedMessageSize = _data["maxReceivedMessageSize"];
-        }
-    }
-
-    static fromJS(data: any): ODataMessageQuotas {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataMessageQuotas();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["maxPartsPerBatch"] = this.maxPartsPerBatch;
-        data["maxOperationsPerChangeset"] = this.maxOperationsPerChangeset;
-        data["maxNestingDepth"] = this.maxNestingDepth;
-        data["maxReceivedMessageSize"] = this.maxReceivedMessageSize;
-        return data; 
-    }
-}
-
-export interface IODataMessageQuotas {
-    maxPartsPerBatch: number;
-    maxOperationsPerChangeset: number;
-    maxNestingDepth: number;
-    maxReceivedMessageSize: number;
-}
-
-export class FuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean implements IFuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IFuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean {
-        data = typeof data === 'object' ? data : {};
-        let result = new FuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFuncOfIEdmPrimitiveTypeAndBooleanAndStringAndIEdmPropertyAndBoolean {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export class FuncOfStringAndBoolean implements IFuncOfStringAndBoolean {
-    target!: any | undefined;
-    method!: MethodInfo;
-
-    constructor(data?: IFuncOfStringAndBoolean) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.target = _data["target"];
-            this.method = _data["method"] ? MethodInfo.fromJS(_data["method"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FuncOfStringAndBoolean {
-        data = typeof data === 'object' ? data : {};
-        let result = new FuncOfStringAndBoolean();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["target"] = this.target;
-        data["method"] = this.method ? this.method.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IFuncOfStringAndBoolean {
-    target: any | undefined;
-    method: MethodInfo;
-}
-
-export class ODataMessageWriterSettings implements IODataMessageWriterSettings {
-    libraryCompatibility!: ODataLibraryCompatibility;
-    validations!: ValidationKinds;
-    baseUri!: string | undefined;
-    enableMessageStreamDisposal!: boolean;
-    enableCharactersCheck!: boolean;
-    jsonPCallback!: string | undefined;
-    arrayPool!: ICharArrayPool | undefined;
-    messageQuotas!: ODataMessageQuotas | undefined;
-    oDataUri!: ODataUri | undefined;
-    version!: ODataVersion | undefined;
-    metadataSelector!: ODataMetadataSelector | undefined;
-    multipartNewLine!: string | undefined;
-    alwaysAddTypeAnnotationsForDerivedTypes!: boolean;
-
-    constructor(data?: IODataMessageWriterSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.libraryCompatibility = _data["libraryCompatibility"];
-            this.validations = _data["validations"];
-            this.baseUri = _data["baseUri"];
-            this.enableMessageStreamDisposal = _data["enableMessageStreamDisposal"];
-            this.enableCharactersCheck = _data["enableCharactersCheck"];
-            this.jsonPCallback = _data["jsonPCallback"];
-            this.arrayPool = _data["arrayPool"] ? ICharArrayPool.fromJS(_data["arrayPool"]) : <any>undefined;
-            this.messageQuotas = _data["messageQuotas"] ? ODataMessageQuotas.fromJS(_data["messageQuotas"]) : <any>undefined;
-            this.oDataUri = _data["oDataUri"] ? ODataUri.fromJS(_data["oDataUri"]) : <any>undefined;
-            this.version = _data["version"];
-            this.metadataSelector = _data["metadataSelector"] ? ODataMetadataSelector.fromJS(_data["metadataSelector"]) : <any>undefined;
-            this.multipartNewLine = _data["multipartNewLine"];
-            this.alwaysAddTypeAnnotationsForDerivedTypes = _data["alwaysAddTypeAnnotationsForDerivedTypes"];
-        }
-    }
-
-    static fromJS(data: any): ODataMessageWriterSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataMessageWriterSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["libraryCompatibility"] = this.libraryCompatibility;
-        data["validations"] = this.validations;
-        data["baseUri"] = this.baseUri;
-        data["enableMessageStreamDisposal"] = this.enableMessageStreamDisposal;
-        data["enableCharactersCheck"] = this.enableCharactersCheck;
-        data["jsonPCallback"] = this.jsonPCallback;
-        data["arrayPool"] = this.arrayPool ? this.arrayPool.toJSON() : <any>undefined;
-        data["messageQuotas"] = this.messageQuotas ? this.messageQuotas.toJSON() : <any>undefined;
-        data["oDataUri"] = this.oDataUri ? this.oDataUri.toJSON() : <any>undefined;
-        data["version"] = this.version;
-        data["metadataSelector"] = this.metadataSelector ? this.metadataSelector.toJSON() : <any>undefined;
-        data["multipartNewLine"] = this.multipartNewLine;
-        data["alwaysAddTypeAnnotationsForDerivedTypes"] = this.alwaysAddTypeAnnotationsForDerivedTypes;
-        return data; 
-    }
-}
-
-export interface IODataMessageWriterSettings {
-    libraryCompatibility: ODataLibraryCompatibility;
-    validations: ValidationKinds;
-    baseUri: string | undefined;
-    enableMessageStreamDisposal: boolean;
-    enableCharactersCheck: boolean;
-    jsonPCallback: string | undefined;
-    arrayPool: ICharArrayPool | undefined;
-    messageQuotas: ODataMessageQuotas | undefined;
-    oDataUri: ODataUri | undefined;
-    version: ODataVersion | undefined;
-    metadataSelector: ODataMetadataSelector | undefined;
-    multipartNewLine: string | undefined;
-    alwaysAddTypeAnnotationsForDerivedTypes: boolean;
-}
-
-export class ODataUri implements IODataUri {
-    requestUri!: string | undefined;
-    serviceRoot!: string | undefined;
-    parameterAliasNodes!: { [key: string]: SingleValueNode; } | undefined;
-    path!: ODataPathSegment[] | undefined;
-    customQueryOptions!: QueryNode[] | undefined;
-    selectAndExpand!: SelectExpandClause | undefined;
-    filter!: FilterClause | undefined;
-    orderBy!: OrderByClause | undefined;
-    search!: SearchClause | undefined;
-    apply!: ApplyClause | undefined;
-    compute!: ComputeClause | undefined;
-    skip!: number | undefined;
-    top!: number | undefined;
-    index!: number | undefined;
-    queryCount!: boolean | undefined;
-    skipToken!: string | undefined;
-    deltaToken!: string | undefined;
-
-    constructor(data?: IODataUri) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.requestUri = _data["requestUri"];
-            this.serviceRoot = _data["serviceRoot"];
-            if (_data["parameterAliasNodes"]) {
-                this.parameterAliasNodes = {} as any;
-                for (let key in _data["parameterAliasNodes"]) {
-                    if (_data["parameterAliasNodes"].hasOwnProperty(key))
-                        this.parameterAliasNodes![key] = _data["parameterAliasNodes"][key] ? SingleValueNode.fromJS(_data["parameterAliasNodes"][key]) : <any>undefined;
-                }
-            }
-            if (Array.isArray(_data["path"])) {
-                this.path = [] as any;
-                for (let item of _data["path"])
-                    this.path!.push(ODataPathSegment.fromJS(item));
-            }
-            if (Array.isArray(_data["customQueryOptions"])) {
-                this.customQueryOptions = [] as any;
-                for (let item of _data["customQueryOptions"])
-                    this.customQueryOptions!.push(QueryNode.fromJS(item));
-            }
-            this.selectAndExpand = _data["selectAndExpand"] ? SelectExpandClause.fromJS(_data["selectAndExpand"]) : <any>undefined;
-            this.filter = _data["filter"] ? FilterClause.fromJS(_data["filter"]) : <any>undefined;
-            this.orderBy = _data["orderBy"] ? OrderByClause.fromJS(_data["orderBy"]) : <any>undefined;
-            this.search = _data["search"] ? SearchClause.fromJS(_data["search"]) : <any>undefined;
-            this.apply = _data["apply"] ? ApplyClause.fromJS(_data["apply"]) : <any>undefined;
-            this.compute = _data["compute"] ? ComputeClause.fromJS(_data["compute"]) : <any>undefined;
-            this.skip = _data["skip"];
-            this.top = _data["top"];
-            this.index = _data["index"];
-            this.queryCount = _data["queryCount"];
-            this.skipToken = _data["skipToken"];
-            this.deltaToken = _data["deltaToken"];
-        }
-    }
-
-    static fromJS(data: any): ODataUri {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataUri();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["requestUri"] = this.requestUri;
-        data["serviceRoot"] = this.serviceRoot;
-        if (this.parameterAliasNodes) {
-            data["parameterAliasNodes"] = {};
-            for (let key in this.parameterAliasNodes) {
-                if (this.parameterAliasNodes.hasOwnProperty(key))
-                    data["parameterAliasNodes"][key] = this.parameterAliasNodes[key] ? this.parameterAliasNodes[key].toJSON() : <any>undefined;
-            }
-        }
-        if (Array.isArray(this.path)) {
-            data["path"] = [];
-            for (let item of this.path)
-                data["path"].push(item.toJSON());
-        }
-        if (Array.isArray(this.customQueryOptions)) {
-            data["customQueryOptions"] = [];
-            for (let item of this.customQueryOptions)
-                data["customQueryOptions"].push(item.toJSON());
-        }
-        data["selectAndExpand"] = this.selectAndExpand ? this.selectAndExpand.toJSON() : <any>undefined;
-        data["filter"] = this.filter ? this.filter.toJSON() : <any>undefined;
-        data["orderBy"] = this.orderBy ? this.orderBy.toJSON() : <any>undefined;
-        data["search"] = this.search ? this.search.toJSON() : <any>undefined;
-        data["apply"] = this.apply ? this.apply.toJSON() : <any>undefined;
-        data["compute"] = this.compute ? this.compute.toJSON() : <any>undefined;
-        data["skip"] = this.skip;
-        data["top"] = this.top;
-        data["index"] = this.index;
-        data["queryCount"] = this.queryCount;
-        data["skipToken"] = this.skipToken;
-        data["deltaToken"] = this.deltaToken;
-        return data; 
-    }
-}
-
-export interface IODataUri {
-    requestUri: string | undefined;
-    serviceRoot: string | undefined;
-    parameterAliasNodes: { [key: string]: SingleValueNode; } | undefined;
-    path: ODataPathSegment[] | undefined;
-    customQueryOptions: QueryNode[] | undefined;
-    selectAndExpand: SelectExpandClause | undefined;
-    filter: FilterClause | undefined;
-    orderBy: OrderByClause | undefined;
-    search: SearchClause | undefined;
-    apply: ApplyClause | undefined;
-    compute: ComputeClause | undefined;
-    skip: number | undefined;
-    top: number | undefined;
-    index: number | undefined;
-    queryCount: boolean | undefined;
-    skipToken: string | undefined;
-    deltaToken: string | undefined;
-}
-
-export abstract class QueryNode implements IQueryNode {
-
-    constructor(data?: IQueryNode) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): QueryNode {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'QueryNode' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IQueryNode {
-}
-
-export class SearchClause implements ISearchClause {
-    expression!: SingleValueNode | undefined;
-
-    constructor(data?: ISearchClause) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.expression = _data["expression"] ? SingleValueNode.fromJS(_data["expression"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): SearchClause {
-        data = typeof data === 'object' ? data : {};
-        let result = new SearchClause();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["expression"] = this.expression ? this.expression.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ISearchClause {
-    expression: SingleValueNode | undefined;
-}
-
-export class ComputeClause implements IComputeClause {
-    computedItems!: ComputeExpression[] | undefined;
-
-    constructor(data?: IComputeClause) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["computedItems"])) {
-                this.computedItems = [] as any;
-                for (let item of _data["computedItems"])
-                    this.computedItems!.push(ComputeExpression.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ComputeClause {
-        data = typeof data === 'object' ? data : {};
-        let result = new ComputeClause();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.computedItems)) {
-            data["computedItems"] = [];
-            for (let item of this.computedItems)
-                data["computedItems"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IComputeClause {
-    computedItems: ComputeExpression[] | undefined;
-}
-
-export class ComputeExpression implements IComputeExpression {
-    expression!: SingleValueNode | undefined;
-    alias!: string | undefined;
-    typeReference!: IEdmTypeReference | undefined;
-
-    constructor(data?: IComputeExpression) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.expression = _data["expression"] ? SingleValueNode.fromJS(_data["expression"]) : <any>undefined;
-            this.alias = _data["alias"];
-            this.typeReference = _data["typeReference"] ? IEdmTypeReference.fromJS(_data["typeReference"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ComputeExpression {
-        data = typeof data === 'object' ? data : {};
-        let result = new ComputeExpression();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["expression"] = this.expression ? this.expression.toJSON() : <any>undefined;
-        data["alias"] = this.alias;
-        data["typeReference"] = this.typeReference ? this.typeReference.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IComputeExpression {
-    expression: SingleValueNode | undefined;
-    alias: string | undefined;
-    typeReference: IEdmTypeReference | undefined;
-}
-
-export abstract class ODataMetadataSelector implements IODataMetadataSelector {
-
-    constructor(data?: IODataMetadataSelector) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ODataMetadataSelector {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ODataMetadataSelector' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IODataMetadataSelector {
-}
-
-export class AppUser implements IAppUser {
+export class User implements IUser {
     id!: number;
-    hash!: string | undefined;
-    salt!: string | undefined;
+    firstName!: string | undefined;
+    lastName!: string | undefined;
+    telephoneNumber!: string | undefined;
+    email!: string | undefined;
+    accountCreationDate!: moment.Moment;
     token!: string | undefined;
+    isAdmin!: boolean;
+    reservationsxd!: Reservation[] | undefined;
 
-    constructor(data?: IAppUser) {
+    constructor(data?: IUser) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5350,15 +307,24 @@ export class AppUser implements IAppUser {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.hash = _data["hash"];
-            this.salt = _data["salt"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.telephoneNumber = _data["telephoneNumber"];
+            this.email = _data["email"];
+            this.accountCreationDate = _data["accountCreationDate"] ? moment(_data["accountCreationDate"].toString()) : <any>undefined;
             this.token = _data["token"];
+            this.isAdmin = _data["isAdmin"];
+            if (Array.isArray(_data["reservationsxd"])) {
+                this.reservationsxd = [] as any;
+                for (let item of _data["reservationsxd"])
+                    this.reservationsxd!.push(Reservation.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): AppUser {
+    static fromJS(data: any): User {
         data = typeof data === 'object' ? data : {};
-        let result = new AppUser();
+        let result = new User();
         result.init(data);
         return result;
     }
@@ -5366,18 +332,1134 @@ export class AppUser implements IAppUser {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["hash"] = this.hash;
-        data["salt"] = this.salt;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["telephoneNumber"] = this.telephoneNumber;
+        data["email"] = this.email;
+        data["accountCreationDate"] = this.accountCreationDate ? this.accountCreationDate.toISOString() : <any>undefined;
         data["token"] = this.token;
+        data["isAdmin"] = this.isAdmin;
+        if (Array.isArray(this.reservationsxd)) {
+            data["reservationsxd"] = [];
+            for (let item of this.reservationsxd)
+                data["reservationsxd"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
-export interface IAppUser {
+export interface IUser {
     id: number;
-    hash: string | undefined;
-    salt: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    telephoneNumber: string | undefined;
+    email: string | undefined;
+    accountCreationDate: moment.Moment;
     token: string | undefined;
+    isAdmin: boolean;
+    reservationsxd: Reservation[] | undefined;
+}
+
+export class Reservation implements IReservation {
+    id!: number;
+    offerId!: number;
+    userId!: number;
+    reservationDate!: moment.Moment;
+    isPaid!: boolean;
+    offer!: Offer | undefined;
+    user!: User | undefined;
+
+    constructor(data?: IReservation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.offerId = _data["offerId"];
+            this.userId = _data["userId"];
+            this.reservationDate = _data["reservationDate"] ? moment(_data["reservationDate"].toString()) : <any>undefined;
+            this.isPaid = _data["isPaid"];
+            this.offer = _data["offer"] ? Offer.fromJS(_data["offer"]) : <any>undefined;
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Reservation {
+        data = typeof data === 'object' ? data : {};
+        let result = new Reservation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["offerId"] = this.offerId;
+        data["userId"] = this.userId;
+        data["reservationDate"] = this.reservationDate ? this.reservationDate.toISOString() : <any>undefined;
+        data["isPaid"] = this.isPaid;
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IReservation {
+    id: number;
+    offerId: number;
+    userId: number;
+    reservationDate: moment.Moment;
+    isPaid: boolean;
+    offer: Offer | undefined;
+    user: User | undefined;
+}
+
+export class Offer implements IOffer {
+    id!: number;
+    name!: string | undefined;
+    stars!: number;
+    cityId!: number;
+    dateFrom!: moment.Moment;
+    dateTo!: moment.Moment;
+    price!: number;
+    numberOfPeople!: number;
+    photoPaths!: string | undefined;
+    description!: string | undefined;
+    mealsId!: number | undefined;
+    city!: City | undefined;
+    meals!: Meal | undefined;
+    reservations!: Reservation[] | undefined;
+
+    constructor(data?: IOffer) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.stars = _data["stars"];
+            this.cityId = _data["cityId"];
+            this.dateFrom = _data["dateFrom"] ? moment(_data["dateFrom"].toString()) : <any>undefined;
+            this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
+            this.price = _data["price"];
+            this.numberOfPeople = _data["numberOfPeople"];
+            this.photoPaths = _data["photoPaths"];
+            this.description = _data["description"];
+            this.mealsId = _data["mealsId"];
+            this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
+            this.meals = _data["meals"] ? Meal.fromJS(_data["meals"]) : <any>undefined;
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Offer {
+        data = typeof data === 'object' ? data : {};
+        let result = new Offer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["stars"] = this.stars;
+        data["cityId"] = this.cityId;
+        data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>undefined;
+        data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
+        data["price"] = this.price;
+        data["numberOfPeople"] = this.numberOfPeople;
+        data["photoPaths"] = this.photoPaths;
+        data["description"] = this.description;
+        data["mealsId"] = this.mealsId;
+        data["city"] = this.city ? this.city.toJSON() : <any>undefined;
+        data["meals"] = this.meals ? this.meals.toJSON() : <any>undefined;
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IOffer {
+    id: number;
+    name: string | undefined;
+    stars: number;
+    cityId: number;
+    dateFrom: moment.Moment;
+    dateTo: moment.Moment;
+    price: number;
+    numberOfPeople: number;
+    photoPaths: string | undefined;
+    description: string | undefined;
+    mealsId: number | undefined;
+    city: City | undefined;
+    meals: Meal | undefined;
+    reservations: Reservation[] | undefined;
+}
+
+export class City implements ICity {
+    id!: number;
+    name!: string | undefined;
+    countryId!: number;
+    position!: Geometry | undefined;
+    isAirport!: boolean;
+    idNavigation!: Country | undefined;
+    offers!: Offer[] | undefined;
+
+    constructor(data?: ICity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.countryId = _data["countryId"];
+            this.position = _data["position"] ? Geometry.fromJS(_data["position"]) : <any>undefined;
+            this.isAirport = _data["isAirport"];
+            this.idNavigation = _data["idNavigation"] ? Country.fromJS(_data["idNavigation"]) : <any>undefined;
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): City {
+        data = typeof data === 'object' ? data : {};
+        let result = new City();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["countryId"] = this.countryId;
+        data["position"] = this.position ? this.position.toJSON() : <any>undefined;
+        data["isAirport"] = this.isAirport;
+        data["idNavigation"] = this.idNavigation ? this.idNavigation.toJSON() : <any>undefined;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICity {
+    id: number;
+    name: string | undefined;
+    countryId: number;
+    position: Geometry | undefined;
+    isAirport: boolean;
+    idNavigation: Country | undefined;
+    offers: Offer[] | undefined;
+}
+
+export abstract class Geometry implements IGeometry {
+    factory!: GeometryFactory | undefined;
+    userData!: any | undefined;
+    srid!: number;
+    precisionModel!: PrecisionModel | undefined;
+    numGeometries!: number;
+    isSimple!: boolean;
+    isValid!: boolean;
+    area!: number;
+    length!: number;
+    centroid!: Point | undefined;
+    interiorPoint!: Point | undefined;
+    pointOnSurface!: Point | undefined;
+    envelope!: Geometry | undefined;
+    envelopeInternal!: Envelope | undefined;
+    isRectangle!: boolean;
+
+    constructor(data?: IGeometry) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.factory = _data["factory"] ? GeometryFactory.fromJS(_data["factory"]) : <any>undefined;
+            this.userData = _data["userData"];
+            this.srid = _data["srid"];
+            this.precisionModel = _data["precisionModel"] ? PrecisionModel.fromJS(_data["precisionModel"]) : <any>undefined;
+            this.numGeometries = _data["numGeometries"];
+            this.isSimple = _data["isSimple"];
+            this.isValid = _data["isValid"];
+            this.area = _data["area"];
+            this.length = _data["length"];
+            this.centroid = _data["centroid"] ? Point.fromJS(_data["centroid"]) : <any>undefined;
+            this.interiorPoint = _data["interiorPoint"] ? Point.fromJS(_data["interiorPoint"]) : <any>undefined;
+            this.pointOnSurface = _data["pointOnSurface"] ? Point.fromJS(_data["pointOnSurface"]) : <any>undefined;
+            this.envelope = _data["envelope"] ? Geometry.fromJS(_data["envelope"]) : <any>undefined;
+            this.envelopeInternal = _data["envelopeInternal"] ? Envelope.fromJS(_data["envelopeInternal"]) : <any>undefined;
+            this.isRectangle = _data["isRectangle"];
+        }
+    }
+
+    static fromJS(data: any): Geometry {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'Geometry' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["factory"] = this.factory ? this.factory.toJSON() : <any>undefined;
+        data["userData"] = this.userData;
+        data["srid"] = this.srid;
+        data["precisionModel"] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
+        data["numGeometries"] = this.numGeometries;
+        data["isSimple"] = this.isSimple;
+        data["isValid"] = this.isValid;
+        data["area"] = this.area;
+        data["length"] = this.length;
+        data["centroid"] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+        data["interiorPoint"] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+        data["pointOnSurface"] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+        data["envelope"] = this.envelope ? this.envelope.toJSON() : <any>undefined;
+        data["envelopeInternal"] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
+        data["isRectangle"] = this.isRectangle;
+        return data; 
+    }
+}
+
+export interface IGeometry {
+    factory: GeometryFactory | undefined;
+    userData: any | undefined;
+    srid: number;
+    precisionModel: PrecisionModel | undefined;
+    numGeometries: number;
+    isSimple: boolean;
+    isValid: boolean;
+    area: number;
+    length: number;
+    centroid: Point | undefined;
+    interiorPoint: Point | undefined;
+    pointOnSurface: Point | undefined;
+    envelope: Geometry | undefined;
+    envelopeInternal: Envelope | undefined;
+    isRectangle: boolean;
+}
+
+export class GeometryFactory implements IGeometryFactory {
+    precisionModel!: PrecisionModel | undefined;
+    coordinateSequenceFactory!: CoordinateSequenceFactory | undefined;
+    srid!: number;
+    geometryServices!: NtsGeometryServices | undefined;
+
+    constructor(data?: IGeometryFactory) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.precisionModel = _data["precisionModel"] ? PrecisionModel.fromJS(_data["precisionModel"]) : <any>undefined;
+            this.coordinateSequenceFactory = _data["coordinateSequenceFactory"] ? CoordinateSequenceFactory.fromJS(_data["coordinateSequenceFactory"]) : <any>undefined;
+            this.srid = _data["srid"];
+            this.geometryServices = _data["geometryServices"] ? NtsGeometryServices.fromJS(_data["geometryServices"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GeometryFactory {
+        data = typeof data === 'object' ? data : {};
+        let result = new GeometryFactory();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["precisionModel"] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
+        data["coordinateSequenceFactory"] = this.coordinateSequenceFactory ? this.coordinateSequenceFactory.toJSON() : <any>undefined;
+        data["srid"] = this.srid;
+        data["geometryServices"] = this.geometryServices ? this.geometryServices.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IGeometryFactory {
+    precisionModel: PrecisionModel | undefined;
+    coordinateSequenceFactory: CoordinateSequenceFactory | undefined;
+    srid: number;
+    geometryServices: NtsGeometryServices | undefined;
+}
+
+export class PrecisionModel implements IPrecisionModel {
+    isFloating!: boolean;
+    maximumSignificantDigits!: number;
+    scale!: number;
+    precisionModelType!: PrecisionModels;
+
+    constructor(data?: IPrecisionModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isFloating = _data["isFloating"];
+            this.maximumSignificantDigits = _data["maximumSignificantDigits"];
+            this.scale = _data["scale"];
+            this.precisionModelType = _data["precisionModelType"];
+        }
+    }
+
+    static fromJS(data: any): PrecisionModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrecisionModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isFloating"] = this.isFloating;
+        data["maximumSignificantDigits"] = this.maximumSignificantDigits;
+        data["scale"] = this.scale;
+        data["precisionModelType"] = this.precisionModelType;
+        return data; 
+    }
+}
+
+export interface IPrecisionModel {
+    isFloating: boolean;
+    maximumSignificantDigits: number;
+    scale: number;
+    precisionModelType: PrecisionModels;
+}
+
+export enum PrecisionModels {
+    Floating = "Floating",
+    FloatingSingle = "FloatingSingle",
+    Fixed = "Fixed",
+}
+
+export abstract class CoordinateSequenceFactory implements ICoordinateSequenceFactory {
+    ordinates!: Ordinates;
+
+    constructor(data?: ICoordinateSequenceFactory) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.ordinates = _data["ordinates"];
+        }
+    }
+
+    static fromJS(data: any): CoordinateSequenceFactory {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'CoordinateSequenceFactory' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ordinates"] = this.ordinates;
+        return data; 
+    }
+}
+
+export interface ICoordinateSequenceFactory {
+    ordinates: Ordinates;
+}
+
+export enum Ordinates {
+    None = "None",
+    X = "Spatial1",
+    Spatial1 = "Spatial1",
+    Y = "Spatial2",
+    Spatial2 = "Spatial2",
+    XY = "XY",
+    Spatial3 = "Z",
+    Z = "Z",
+    XYZ = "XYZ",
+    Spatial4 = "Spatial4",
+    Spatial5 = "Spatial5",
+    Spatial6 = "Spatial6",
+    Spatial7 = "Spatial7",
+    Spatial8 = "Spatial8",
+    Spatial9 = "Spatial9",
+    Spatial10 = "Spatial10",
+    Spatial11 = "Spatial11",
+    Spatial12 = "Spatial12",
+    Spatial13 = "Spatial13",
+    Spatial14 = "Spatial14",
+    Spatial15 = "Spatial15",
+    Spatial16 = "Spatial16",
+    AllSpatialOrdinates = "AllSpatialOrdinates",
+    Measure1 = "M",
+    M = "M",
+    XYM = "XYM",
+    XYZM = "XYZM",
+    Measure2 = "Measure2",
+    Measure3 = "Measure3",
+    Measure4 = "Measure4",
+    Measure5 = "Measure5",
+    Measure6 = "Measure6",
+    Measure7 = "Measure7",
+    Measure8 = "Measure8",
+    Measure9 = "Measure9",
+    Measure10 = "Measure10",
+    Measure11 = "Measure11",
+    Measure12 = "Measure12",
+    Measure13 = "Measure13",
+    Measure14 = "Measure14",
+    Measure15 = "Measure15",
+    Measure16 = "Measure16",
+    AllMeasureOrdinates = "AllMeasureOrdinates",
+    AllOrdinates = "AllOrdinates",
+}
+
+export class NtsGeometryServices implements INtsGeometryServices {
+    geometryOverlay!: GeometryOverlay | undefined;
+    coordinateEqualityComparer!: CoordinateEqualityComparer | undefined;
+    defaultSRID!: number;
+    defaultCoordinateSequenceFactory!: CoordinateSequenceFactory | undefined;
+    defaultPrecisionModel!: PrecisionModel | undefined;
+
+    constructor(data?: INtsGeometryServices) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.geometryOverlay = _data["geometryOverlay"] ? GeometryOverlay.fromJS(_data["geometryOverlay"]) : <any>undefined;
+            this.coordinateEqualityComparer = _data["coordinateEqualityComparer"] ? CoordinateEqualityComparer.fromJS(_data["coordinateEqualityComparer"]) : <any>undefined;
+            this.defaultSRID = _data["defaultSRID"];
+            this.defaultCoordinateSequenceFactory = _data["defaultCoordinateSequenceFactory"] ? CoordinateSequenceFactory.fromJS(_data["defaultCoordinateSequenceFactory"]) : <any>undefined;
+            this.defaultPrecisionModel = _data["defaultPrecisionModel"] ? PrecisionModel.fromJS(_data["defaultPrecisionModel"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NtsGeometryServices {
+        data = typeof data === 'object' ? data : {};
+        let result = new NtsGeometryServices();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["geometryOverlay"] = this.geometryOverlay ? this.geometryOverlay.toJSON() : <any>undefined;
+        data["coordinateEqualityComparer"] = this.coordinateEqualityComparer ? this.coordinateEqualityComparer.toJSON() : <any>undefined;
+        data["defaultSRID"] = this.defaultSRID;
+        data["defaultCoordinateSequenceFactory"] = this.defaultCoordinateSequenceFactory ? this.defaultCoordinateSequenceFactory.toJSON() : <any>undefined;
+        data["defaultPrecisionModel"] = this.defaultPrecisionModel ? this.defaultPrecisionModel.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface INtsGeometryServices {
+    geometryOverlay: GeometryOverlay | undefined;
+    coordinateEqualityComparer: CoordinateEqualityComparer | undefined;
+    defaultSRID: number;
+    defaultCoordinateSequenceFactory: CoordinateSequenceFactory | undefined;
+    defaultPrecisionModel: PrecisionModel | undefined;
+}
+
+export abstract class GeometryOverlay implements IGeometryOverlay {
+
+    constructor(data?: IGeometryOverlay) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GeometryOverlay {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'GeometryOverlay' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data; 
+    }
+}
+
+export interface IGeometryOverlay {
+}
+
+export class CoordinateEqualityComparer implements ICoordinateEqualityComparer {
+
+    constructor(data?: ICoordinateEqualityComparer) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): CoordinateEqualityComparer {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoordinateEqualityComparer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data; 
+    }
+}
+
+export interface ICoordinateEqualityComparer {
+}
+
+export class Point implements IPoint {
+    factory!: GeometryFactory | undefined;
+    userData!: any | undefined;
+    srid!: number;
+    precisionModel!: PrecisionModel | undefined;
+    numGeometries!: number;
+    isSimple!: boolean;
+    isValid!: boolean;
+    area!: number;
+    length!: number;
+    centroid!: Point | undefined;
+    interiorPoint!: Point | undefined;
+    pointOnSurface!: Point | undefined;
+    envelope!: Geometry | undefined;
+    envelopeInternal!: Envelope | undefined;
+    isRectangle!: boolean;
+    coordinateSequence!: CoordinateSequence | undefined;
+    coordinates!: Coordinate[] | undefined;
+    numPoints!: number;
+    isEmpty!: boolean;
+    dimension!: Dimension;
+    boundaryDimension!: Dimension;
+    x!: number;
+    y!: number;
+    coordinate!: Coordinate | undefined;
+    geometryType!: string | undefined;
+    ogcGeometryType!: OgcGeometryType;
+    boundary!: Geometry | undefined;
+    z!: number;
+    m!: number;
+
+    constructor(data?: IPoint) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.factory = _data["factory"] ? GeometryFactory.fromJS(_data["factory"]) : <any>undefined;
+            this.userData = _data["userData"];
+            this.srid = _data["srid"];
+            this.precisionModel = _data["precisionModel"] ? PrecisionModel.fromJS(_data["precisionModel"]) : <any>undefined;
+            this.numGeometries = _data["numGeometries"];
+            this.isSimple = _data["isSimple"];
+            this.isValid = _data["isValid"];
+            this.area = _data["area"];
+            this.length = _data["length"];
+            this.centroid = _data["centroid"] ? Point.fromJS(_data["centroid"]) : <any>undefined;
+            this.interiorPoint = _data["interiorPoint"] ? Point.fromJS(_data["interiorPoint"]) : <any>undefined;
+            this.pointOnSurface = _data["pointOnSurface"] ? Point.fromJS(_data["pointOnSurface"]) : <any>undefined;
+            this.envelope = _data["envelope"] ? Geometry.fromJS(_data["envelope"]) : <any>undefined;
+            this.envelopeInternal = _data["envelopeInternal"] ? Envelope.fromJS(_data["envelopeInternal"]) : <any>undefined;
+            this.isRectangle = _data["isRectangle"];
+            this.coordinateSequence = _data["coordinateSequence"] ? CoordinateSequence.fromJS(_data["coordinateSequence"]) : <any>undefined;
+            if (Array.isArray(_data["coordinates"])) {
+                this.coordinates = [] as any;
+                for (let item of _data["coordinates"])
+                    this.coordinates!.push(Coordinate.fromJS(item));
+            }
+            this.numPoints = _data["numPoints"];
+            this.isEmpty = _data["isEmpty"];
+            this.dimension = _data["dimension"];
+            this.boundaryDimension = _data["boundaryDimension"];
+            this.x = _data["x"];
+            this.y = _data["y"];
+            this.coordinate = _data["coordinate"] ? Coordinate.fromJS(_data["coordinate"]) : <any>undefined;
+            this.geometryType = _data["geometryType"];
+            this.ogcGeometryType = _data["ogcGeometryType"];
+            this.boundary = _data["boundary"] ? Geometry.fromJS(_data["boundary"]) : <any>undefined;
+            this.z = _data["z"];
+            this.m = _data["m"];
+        }
+    }
+
+    static fromJS(data: any): Point {
+        data = typeof data === 'object' ? data : {};
+        let result = new Point();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["factory"] = this.factory ? this.factory.toJSON() : <any>undefined;
+        data["userData"] = this.userData;
+        data["srid"] = this.srid;
+        data["precisionModel"] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
+        data["numGeometries"] = this.numGeometries;
+        data["isSimple"] = this.isSimple;
+        data["isValid"] = this.isValid;
+        data["area"] = this.area;
+        data["length"] = this.length;
+        data["centroid"] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+        data["interiorPoint"] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+        data["pointOnSurface"] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+        data["envelope"] = this.envelope ? this.envelope.toJSON() : <any>undefined;
+        data["envelopeInternal"] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
+        data["isRectangle"] = this.isRectangle;
+        data["coordinateSequence"] = this.coordinateSequence ? this.coordinateSequence.toJSON() : <any>undefined;
+        if (Array.isArray(this.coordinates)) {
+            data["coordinates"] = [];
+            for (let item of this.coordinates)
+                data["coordinates"].push(item.toJSON());
+        }
+        data["numPoints"] = this.numPoints;
+        data["isEmpty"] = this.isEmpty;
+        data["dimension"] = this.dimension;
+        data["boundaryDimension"] = this.boundaryDimension;
+        data["x"] = this.x;
+        data["y"] = this.y;
+        data["coordinate"] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
+        data["geometryType"] = this.geometryType;
+        data["ogcGeometryType"] = this.ogcGeometryType;
+        data["boundary"] = this.boundary ? this.boundary.toJSON() : <any>undefined;
+        data["z"] = this.z;
+        data["m"] = this.m;
+        return data; 
+    }
+}
+
+export interface IPoint {
+    factory: GeometryFactory | undefined;
+    userData: any | undefined;
+    srid: number;
+    precisionModel: PrecisionModel | undefined;
+    numGeometries: number;
+    isSimple: boolean;
+    isValid: boolean;
+    area: number;
+    length: number;
+    centroid: Point | undefined;
+    interiorPoint: Point | undefined;
+    pointOnSurface: Point | undefined;
+    envelope: Geometry | undefined;
+    envelopeInternal: Envelope | undefined;
+    isRectangle: boolean;
+    coordinateSequence: CoordinateSequence | undefined;
+    coordinates: Coordinate[] | undefined;
+    numPoints: number;
+    isEmpty: boolean;
+    dimension: Dimension;
+    boundaryDimension: Dimension;
+    x: number;
+    y: number;
+    coordinate: Coordinate | undefined;
+    geometryType: string | undefined;
+    ogcGeometryType: OgcGeometryType;
+    boundary: Geometry | undefined;
+    z: number;
+    m: number;
+}
+
+export class Envelope implements IEnvelope {
+    isNull!: boolean;
+    width!: number;
+    height!: number;
+    diameter!: number;
+    minX!: number;
+    maxX!: number;
+    minY!: number;
+    maxY!: number;
+    area!: number;
+    minExtent!: number;
+    maxExtent!: number;
+    centre!: Coordinate | undefined;
+
+    constructor(data?: IEnvelope) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isNull = _data["isNull"];
+            this.width = _data["width"];
+            this.height = _data["height"];
+            this.diameter = _data["diameter"];
+            this.minX = _data["minX"];
+            this.maxX = _data["maxX"];
+            this.minY = _data["minY"];
+            this.maxY = _data["maxY"];
+            this.area = _data["area"];
+            this.minExtent = _data["minExtent"];
+            this.maxExtent = _data["maxExtent"];
+            this.centre = _data["centre"] ? Coordinate.fromJS(_data["centre"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Envelope {
+        data = typeof data === 'object' ? data : {};
+        let result = new Envelope();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isNull"] = this.isNull;
+        data["width"] = this.width;
+        data["height"] = this.height;
+        data["diameter"] = this.diameter;
+        data["minX"] = this.minX;
+        data["maxX"] = this.maxX;
+        data["minY"] = this.minY;
+        data["maxY"] = this.maxY;
+        data["area"] = this.area;
+        data["minExtent"] = this.minExtent;
+        data["maxExtent"] = this.maxExtent;
+        data["centre"] = this.centre ? this.centre.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IEnvelope {
+    isNull: boolean;
+    width: number;
+    height: number;
+    diameter: number;
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+    area: number;
+    minExtent: number;
+    maxExtent: number;
+    centre: Coordinate | undefined;
+}
+
+export class Coordinate implements ICoordinate {
+    x!: number;
+    y!: number;
+    z!: number;
+    m!: number;
+    coordinateValue!: Coordinate | undefined;
+    isValid!: boolean;
+
+    constructor(data?: ICoordinate) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.x = _data["x"];
+            this.y = _data["y"];
+            this.z = _data["z"];
+            this.m = _data["m"];
+            this.coordinateValue = _data["coordinateValue"] ? Coordinate.fromJS(_data["coordinateValue"]) : <any>undefined;
+            this.isValid = _data["isValid"];
+        }
+    }
+
+    static fromJS(data: any): Coordinate {
+        data = typeof data === 'object' ? data : {};
+        let result = new Coordinate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["x"] = this.x;
+        data["y"] = this.y;
+        data["z"] = this.z;
+        data["m"] = this.m;
+        data["coordinateValue"] = this.coordinateValue ? this.coordinateValue.toJSON() : <any>undefined;
+        data["isValid"] = this.isValid;
+        return data; 
+    }
+}
+
+export interface ICoordinate {
+    x: number;
+    y: number;
+    z: number;
+    m: number;
+    coordinateValue: Coordinate | undefined;
+    isValid: boolean;
+}
+
+export abstract class CoordinateSequence implements ICoordinateSequence {
+    dimension!: number;
+    measures!: number;
+    spatial!: number;
+    ordinates!: Ordinates;
+    hasZ!: boolean;
+    hasM!: boolean;
+    zOrdinateIndex!: number;
+    mOrdinateIndex!: number;
+    first!: Coordinate | undefined;
+    last!: Coordinate | undefined;
+    count!: number;
+
+    constructor(data?: ICoordinateSequence) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dimension = _data["dimension"];
+            this.measures = _data["measures"];
+            this.spatial = _data["spatial"];
+            this.ordinates = _data["ordinates"];
+            this.hasZ = _data["hasZ"];
+            this.hasM = _data["hasM"];
+            this.zOrdinateIndex = _data["zOrdinateIndex"];
+            this.mOrdinateIndex = _data["mOrdinateIndex"];
+            this.first = _data["first"] ? Coordinate.fromJS(_data["first"]) : <any>undefined;
+            this.last = _data["last"] ? Coordinate.fromJS(_data["last"]) : <any>undefined;
+            this.count = _data["count"];
+        }
+    }
+
+    static fromJS(data: any): CoordinateSequence {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'CoordinateSequence' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dimension"] = this.dimension;
+        data["measures"] = this.measures;
+        data["spatial"] = this.spatial;
+        data["ordinates"] = this.ordinates;
+        data["hasZ"] = this.hasZ;
+        data["hasM"] = this.hasM;
+        data["zOrdinateIndex"] = this.zOrdinateIndex;
+        data["mOrdinateIndex"] = this.mOrdinateIndex;
+        data["first"] = this.first ? this.first.toJSON() : <any>undefined;
+        data["last"] = this.last ? this.last.toJSON() : <any>undefined;
+        data["count"] = this.count;
+        return data; 
+    }
+}
+
+export interface ICoordinateSequence {
+    dimension: number;
+    measures: number;
+    spatial: number;
+    ordinates: Ordinates;
+    hasZ: boolean;
+    hasM: boolean;
+    zOrdinateIndex: number;
+    mOrdinateIndex: number;
+    first: Coordinate | undefined;
+    last: Coordinate | undefined;
+    count: number;
+}
+
+export enum Dimension {
+    P = "P",
+    Point = "P",
+    Curve = "Curve",
+    L = "Curve",
+    A = "Surface",
+    Surface = "Surface",
+    Collapse = "Collapse",
+    Dontcare = "Dontcare",
+    True = "True",
+    Unknown = "Unknown",
+    False = "Unknown",
+}
+
+export enum OgcGeometryType {
+    Point = "Point",
+    LineString = "LineString",
+    Polygon = "Polygon",
+    MultiPoint = "MultiPoint",
+    MultiLineString = "MultiLineString",
+    MultiPolygon = "MultiPolygon",
+    GeometryCollection = "GeometryCollection",
+    CircularString = "CircularString",
+    CompoundCurve = "CompoundCurve",
+    CurvePolygon = "CurvePolygon",
+    MultiCurve = "MultiCurve",
+    MultiSurface = "MultiSurface",
+    Curve = "Curve",
+    Surface = "Surface",
+    PolyhedralSurface = "PolyhedralSurface",
+    TIN = "TIN",
+}
+
+export class Country implements ICountry {
+    id!: number;
+    name!: string | undefined;
+    city!: City | undefined;
+
+    constructor(data?: ICountry) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Country {
+        data = typeof data === 'object' ? data : {};
+        let result = new Country();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["city"] = this.city ? this.city.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface ICountry {
+    id: number;
+    name: string | undefined;
+    city: City | undefined;
+}
+
+export class Meal implements IMeal {
+    id!: number;
+    name!: string | undefined;
+    offers!: Offer[] | undefined;
+
+    constructor(data?: IMeal) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Meal {
+        data = typeof data === 'object' ? data : {};
+        let result = new Meal();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IMeal {
+    id: number;
+    name: string | undefined;
+    offers: Offer[] | undefined;
 }
 
 export class AuthenticateWithCredentialsParameters implements IAuthenticateWithCredentialsParameters {
@@ -5420,513 +1502,6 @@ export interface IAuthenticateWithCredentialsParameters {
     password: string | undefined;
 }
 
-export class AddNewProductAction implements IAddNewProductAction {
-    productName!: string | undefined;
-    price!: number;
-    description!: string | undefined;
-    country!: string | undefined;
-    manufacturerId!: number;
-    quantity!: number;
-    images!: ImageData[] | undefined;
-
-    constructor(data?: IAddNewProductAction) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.productName = _data["productName"];
-            this.price = _data["price"];
-            this.description = _data["description"];
-            this.country = _data["country"];
-            this.manufacturerId = _data["manufacturerId"];
-            this.quantity = _data["quantity"];
-            if (Array.isArray(_data["images"])) {
-                this.images = [] as any;
-                for (let item of _data["images"])
-                    this.images!.push(ImageData.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): AddNewProductAction {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddNewProductAction();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["productName"] = this.productName;
-        data["price"] = this.price;
-        data["description"] = this.description;
-        data["country"] = this.country;
-        data["manufacturerId"] = this.manufacturerId;
-        data["quantity"] = this.quantity;
-        if (Array.isArray(this.images)) {
-            data["images"] = [];
-            for (let item of this.images)
-                data["images"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IAddNewProductAction {
-    productName: string | undefined;
-    price: number;
-    description: string | undefined;
-    country: string | undefined;
-    manufacturerId: number;
-    quantity: number;
-    images: ImageData[] | undefined;
-}
-
-export class ImageData implements IImageData {
-    id!: number;
-    name!: string | undefined;
-    uri!: string | undefined;
-
-    constructor(data?: IImageData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.uri = _data["uri"];
-        }
-    }
-
-    static fromJS(data: any): ImageData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ImageData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["uri"] = this.uri;
-        return data; 
-    }
-}
-
-export interface IImageData {
-    id: number;
-    name: string | undefined;
-    uri: string | undefined;
-}
-
-export class AddNewShopAction implements IAddNewShopAction {
-    name!: string | undefined;
-    description!: string | undefined;
-    nip!: string | undefined;
-    regon!: string | undefined;
-    krs!: string | undefined;
-    street!: string | undefined;
-    zipCode!: string | undefined;
-    city!: string | undefined;
-    categoriesId!: number[] | undefined;
-    image!: ImageData | undefined;
-    products!: Product[] | undefined;
-
-    constructor(data?: IAddNewShopAction) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.nip = _data["nip"];
-            this.regon = _data["regon"];
-            this.krs = _data["krs"];
-            this.street = _data["street"];
-            this.zipCode = _data["zipCode"];
-            this.city = _data["city"];
-            if (Array.isArray(_data["categoriesId"])) {
-                this.categoriesId = [] as any;
-                for (let item of _data["categoriesId"])
-                    this.categoriesId!.push(item);
-            }
-            this.image = _data["image"] ? ImageData.fromJS(_data["image"]) : <any>undefined;
-            if (Array.isArray(_data["products"])) {
-                this.products = [] as any;
-                for (let item of _data["products"])
-                    this.products!.push(Product.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): AddNewShopAction {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddNewShopAction();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["nip"] = this.nip;
-        data["regon"] = this.regon;
-        data["krs"] = this.krs;
-        data["street"] = this.street;
-        data["zipCode"] = this.zipCode;
-        data["city"] = this.city;
-        if (Array.isArray(this.categoriesId)) {
-            data["categoriesId"] = [];
-            for (let item of this.categoriesId)
-                data["categoriesId"].push(item);
-        }
-        data["image"] = this.image ? this.image.toJSON() : <any>undefined;
-        if (Array.isArray(this.products)) {
-            data["products"] = [];
-            for (let item of this.products)
-                data["products"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IAddNewShopAction {
-    name: string | undefined;
-    description: string | undefined;
-    nip: string | undefined;
-    regon: string | undefined;
-    krs: string | undefined;
-    street: string | undefined;
-    zipCode: string | undefined;
-    city: string | undefined;
-    categoriesId: number[] | undefined;
-    image: ImageData | undefined;
-    products: Product[] | undefined;
-}
-
-export class Product implements IProduct {
-    id!: number;
-    name!: string | undefined;
-    price!: number;
-    quantity!: number;
-    description!: string | undefined;
-    country!: string | undefined;
-    manufacturer!: Manufacturer | undefined;
-    images!: ImageData[] | undefined;
-
-    constructor(data?: IProduct) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.price = _data["price"];
-            this.quantity = _data["quantity"];
-            this.description = _data["description"];
-            this.country = _data["country"];
-            this.manufacturer = _data["manufacturer"] ? Manufacturer.fromJS(_data["manufacturer"]) : <any>undefined;
-            if (Array.isArray(_data["images"])) {
-                this.images = [] as any;
-                for (let item of _data["images"])
-                    this.images!.push(ImageData.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Product {
-        data = typeof data === 'object' ? data : {};
-        let result = new Product();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["price"] = this.price;
-        data["quantity"] = this.quantity;
-        data["description"] = this.description;
-        data["country"] = this.country;
-        data["manufacturer"] = this.manufacturer ? this.manufacturer.toJSON() : <any>undefined;
-        if (Array.isArray(this.images)) {
-            data["images"] = [];
-            for (let item of this.images)
-                data["images"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IProduct {
-    id: number;
-    name: string | undefined;
-    price: number;
-    quantity: number;
-    description: string | undefined;
-    country: string | undefined;
-    manufacturer: Manufacturer | undefined;
-    images: ImageData[] | undefined;
-}
-
-export class Manufacturer implements IManufacturer {
-    id!: number;
-    name!: string | undefined;
-    city!: string | undefined;
-
-    constructor(data?: IManufacturer) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.city = _data["city"];
-        }
-    }
-
-    static fromJS(data: any): Manufacturer {
-        data = typeof data === 'object' ? data : {};
-        let result = new Manufacturer();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["city"] = this.city;
-        return data; 
-    }
-}
-
-export interface IManufacturer {
-    id: number;
-    name: string | undefined;
-    city: string | undefined;
-}
-
-export class EditShopAction implements IEditShopAction {
-    id!: number;
-    name!: string | undefined;
-    description!: string | undefined;
-    nip!: string | undefined;
-    regon!: string | undefined;
-    krs!: string | undefined;
-    street!: string | undefined;
-    zipCode!: string | undefined;
-    city!: string | undefined;
-    categoriesId!: number[] | undefined;
-    image!: ImageData | undefined;
-    products!: Product[] | undefined;
-
-    constructor(data?: IEditShopAction) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.nip = _data["nip"];
-            this.regon = _data["regon"];
-            this.krs = _data["krs"];
-            this.street = _data["street"];
-            this.zipCode = _data["zipCode"];
-            this.city = _data["city"];
-            if (Array.isArray(_data["categoriesId"])) {
-                this.categoriesId = [] as any;
-                for (let item of _data["categoriesId"])
-                    this.categoriesId!.push(item);
-            }
-            this.image = _data["image"] ? ImageData.fromJS(_data["image"]) : <any>undefined;
-            if (Array.isArray(_data["products"])) {
-                this.products = [] as any;
-                for (let item of _data["products"])
-                    this.products!.push(Product.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): EditShopAction {
-        data = typeof data === 'object' ? data : {};
-        let result = new EditShopAction();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["nip"] = this.nip;
-        data["regon"] = this.regon;
-        data["krs"] = this.krs;
-        data["street"] = this.street;
-        data["zipCode"] = this.zipCode;
-        data["city"] = this.city;
-        if (Array.isArray(this.categoriesId)) {
-            data["categoriesId"] = [];
-            for (let item of this.categoriesId)
-                data["categoriesId"].push(item);
-        }
-        data["image"] = this.image ? this.image.toJSON() : <any>undefined;
-        if (Array.isArray(this.products)) {
-            data["products"] = [];
-            for (let item of this.products)
-                data["products"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IEditShopAction {
-    id: number;
-    name: string | undefined;
-    description: string | undefined;
-    nip: string | undefined;
-    regon: string | undefined;
-    krs: string | undefined;
-    street: string | undefined;
-    zipCode: string | undefined;
-    city: string | undefined;
-    categoriesId: number[] | undefined;
-    image: ImageData | undefined;
-    products: Product[] | undefined;
-}
-
-export class RemoveShopAction implements IRemoveShopAction {
-    id!: number;
-
-    constructor(data?: IRemoveShopAction) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): RemoveShopAction {
-        data = typeof data === 'object' ? data : {};
-        let result = new RemoveShopAction();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IRemoveShopAction {
-    id: number;
-}
-
-export class AddNewCustomerAction implements IAddNewCustomerAction {
-    password!: string | undefined;
-    nickname!: string | undefined;
-    phoneNumber!: string | undefined;
-    mail!: string | undefined;
-
-    constructor(data?: IAddNewCustomerAction) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.password = _data["password"];
-            this.nickname = _data["nickname"];
-            this.phoneNumber = _data["phoneNumber"];
-            this.mail = _data["mail"];
-        }
-    }
-
-    static fromJS(data: any): AddNewCustomerAction {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddNewCustomerAction();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["password"] = this.password;
-        data["nickname"] = this.nickname;
-        data["phoneNumber"] = this.phoneNumber;
-        data["mail"] = this.mail;
-        return data; 
-    }
-}
-
-export interface IAddNewCustomerAction {
-    password: string | undefined;
-    nickname: string | undefined;
-    phoneNumber: string | undefined;
-    mail: string | undefined;
-}
-
-export interface FileResponse {
-    data: Blob;
-    status: number;
-    fileName?: string;
-    headers?: { [name: string]: any };
-}
-
 export class SwaggerException extends Error {
     message: string;
     status: number;
@@ -5954,3 +1529,4 @@ export class SwaggerException extends Error {
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
     throw new SwaggerException(message, status, response, headers, result);
 }
+

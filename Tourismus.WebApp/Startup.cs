@@ -20,9 +20,7 @@ namespace Tourismus {
 
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllersWithViews();
-
             services.AddOData();
-
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/build";

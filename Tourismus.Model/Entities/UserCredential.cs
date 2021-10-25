@@ -1,10 +1,10 @@
-﻿namespace Api.Model.Database {
-    public partial class UserCredential {
+﻿using Tourismus.Model.Configuration._Infrastructure;
+
+namespace Api.Model.Database {
+    public partial class UserCredential : ModelBase {
         public UserCredential() { }
 
-        public int Id { get; set; }
         public string Hash { get; set; }
         public string Salt { get; set; }
-        public string Token { get; set; }
     }
 }

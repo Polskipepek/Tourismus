@@ -10,6 +10,7 @@ namespace WebApi.Model.Configuration.Entities {
             builder.HasKey(x => x.Id);
 
             builder.Property(e => e.Id).HasComment("Identificator").ValueGeneratedNever();
+            builder.Property(b => b.Token).HasComment("Token");
 
             builder.Property(e => e.AccountCreationDate).HasColumnType("datetime");
 

@@ -11,9 +11,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+		<PackageReference Include="Faker.Net" Version="1.5.150" />
+		<PackageReference Include="faker-csharp" Version="2.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OData" Version="7.5.6" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.3" />
 		<PackageReference Include="Microsoft.OData.Core" Version="7.8.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NSwag.Annotations" Version="13.10.8" />
 		<PackageReference Include="NSwag.MSBuild" Version="13.10.8">
 			<PrivateAssets>all</PrivateAssets>
@@ -22,11 +25,57 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Tourismus.Model\Tourismus.Model.csproj" />
+		<ProjectReference Include="..\Helpers\Helpers.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ClientApp\" />
+		<None Update="ClientApp\src\services\ListDtos\Offer_ListDto.ts">
+			<CustomToolNamespace>ReadModels\Dtos\Single\Offer_ListDto.cs</CustomToolNamespace>
+		</None>
+		<None Update="ClientApp\src\services\SingleDto\Offer_DetailsDto.ts">
+			<CustomToolNamespace>ReadModels\Dtos\List\Offer_DetailsDto.cs</CustomToolNamespace>
+		</None>
 	</ItemGroup>
+	
+	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+		<!-- Ensure Node.js is installed -->
+		<Exec Command="node --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+	</Target>
 
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+		<!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+		<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+
+		<!-- Include the newly-built files in the publish output -->
+		<ItemGroup>
+			<DistFiles Include="$(SpaRoot)build\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
+	
+	<PropertyGroup>
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+	</PropertyGroup>
+	
+	
+
+
+
+<Target Name="NSwag" AfterTargets="Build">
+		<Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
+		<Exec Command="$(NSwagExe_Net50) run nswag.json /variables:Configuration=$(Configuration),OutDir=$(OutDir),assemblyPath=$(OutDir)/Tourismus.WebApp.dll,clientOutput=ClientApp/src/services/GeneratedClient.ts" />
+		<RemoveDir Directories="$(OutDir)References" />
+	</Target>
+	
+	
 </Project>
