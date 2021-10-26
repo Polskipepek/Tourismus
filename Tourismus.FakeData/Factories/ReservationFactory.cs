@@ -1,5 +1,5 @@
-﻿using Api.Model.Database;
-using System;
+﻿using System;
+using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.Factories {
     public class ReservationFactory {

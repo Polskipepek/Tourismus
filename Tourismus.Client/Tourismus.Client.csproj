@@ -13,21 +13,14 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<ItemGroup>
-		<ContentWithTargetPath Include="ApiClient.generated.cs">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<TargetPath>..\..\..\..\..\..\AppVR\ShoppingAppVR\Assets\Source\WebApiClient\WebApiClient.cs</TargetPath>
-		</ContentWithTargetPath>
-	</ItemGroup>
-
 	<PropertyGroup>
 		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 	</PropertyGroup>
 
 	<Target Name="GenerateApiClientSourceCode" BeforeTargets="CoreCompile;PrepareResource">
-		<Exec Command="$(NSwagExe_Net50) run nswag.json /variables:Configuration=$(Configuration),Output=.\ApiClient.generated.cs,ProjectReference=Tourismus.WebApp,clientOutput=ClientApp/src/services/GeneratedClient.ts" />
+		<Exec Command="$(NSwagExe_Net50) run nswag.json /variables:Configuration=$(Configuration),Output=.\ApiClient.generated.cs,ProjectReference=Tourismus.WebApp" />
 	</Target>
 
-	<ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions><VisualStudio><UserProperties nswag_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 	
 </Project>

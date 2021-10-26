@@ -7,8 +7,8 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
-import moment from "antd/node_modules/moment";
-import { ClientBase } from "./ClientBase";
+import { ClientBase } from './ClientBase';
+import moment from 'moment';
 
 export class AuthenticateWithCredentialsClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
@@ -246,11 +246,11 @@ export class UserClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewCustomerAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/users/AddNewCustomerAction";
+    addNewUserAction(parameters: AddNewUserParameters, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/users/AddNewUserAction";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(action);
+        const content_ = JSON.stringify(parameters);
 
         let options_ = <RequestInit>{
             body: content_,
@@ -264,11 +264,11 @@ export class UserClient extends ClientBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewCustomerAction(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewUserAction(_response));
         });
     }
 
-    protected processAddNewCustomerAction(response: Response): Promise<void> {
+    protected processAddNewUserAction(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -291,9 +291,10 @@ export class User implements IUser {
     telephoneNumber!: string | undefined;
     email!: string | undefined;
     accountCreationDate!: moment.Moment;
-    token!: string | undefined;
     isAdmin!: boolean;
-    reservationsxd!: Reservation[] | undefined;
+    token!: string | undefined;
+    reservations!: Reservation[] | undefined;
+    userCredentials!: UserCredential[] | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -312,12 +313,17 @@ export class User implements IUser {
             this.telephoneNumber = _data["telephoneNumber"];
             this.email = _data["email"];
             this.accountCreationDate = _data["accountCreationDate"] ? moment(_data["accountCreationDate"].toString()) : <any>undefined;
-            this.token = _data["token"];
             this.isAdmin = _data["isAdmin"];
-            if (Array.isArray(_data["reservationsxd"])) {
-                this.reservationsxd = [] as any;
-                for (let item of _data["reservationsxd"])
-                    this.reservationsxd!.push(Reservation.fromJS(item));
+            this.token = _data["token"];
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+            if (Array.isArray(_data["userCredentials"])) {
+                this.userCredentials = [] as any;
+                for (let item of _data["userCredentials"])
+                    this.userCredentials!.push(UserCredential.fromJS(item));
             }
         }
     }
@@ -337,12 +343,17 @@ export class User implements IUser {
         data["telephoneNumber"] = this.telephoneNumber;
         data["email"] = this.email;
         data["accountCreationDate"] = this.accountCreationDate ? this.accountCreationDate.toISOString() : <any>undefined;
-        data["token"] = this.token;
         data["isAdmin"] = this.isAdmin;
-        if (Array.isArray(this.reservationsxd)) {
-            data["reservationsxd"] = [];
-            for (let item of this.reservationsxd)
-                data["reservationsxd"].push(item.toJSON());
+        data["token"] = this.token;
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        if (Array.isArray(this.userCredentials)) {
+            data["userCredentials"] = [];
+            for (let item of this.userCredentials)
+                data["userCredentials"].push(item.toJSON());
         }
         return data; 
     }
@@ -355,9 +366,10 @@ export interface IUser {
     telephoneNumber: string | undefined;
     email: string | undefined;
     accountCreationDate: moment.Moment;
-    token: string | undefined;
     isAdmin: boolean;
-    reservationsxd: Reservation[] | undefined;
+    token: string | undefined;
+    reservations: Reservation[] | undefined;
+    userCredentials: UserCredential[] | undefined;
 }
 
 export class Reservation implements IReservation {
@@ -520,7 +532,6 @@ export class City implements ICity {
     id!: number;
     name!: string | undefined;
     countryId!: number;
-    position!: Geometry | undefined;
     isAirport!: boolean;
     idNavigation!: Country | undefined;
     offers!: Offer[] | undefined;
@@ -539,7 +550,6 @@ export class City implements ICity {
             this.id = _data["id"];
             this.name = _data["name"];
             this.countryId = _data["countryId"];
-            this.position = _data["position"] ? Geometry.fromJS(_data["position"]) : <any>undefined;
             this.isAirport = _data["isAirport"];
             this.idNavigation = _data["idNavigation"] ? Country.fromJS(_data["idNavigation"]) : <any>undefined;
             if (Array.isArray(_data["offers"])) {
@@ -562,7 +572,6 @@ export class City implements ICity {
         data["id"] = this.id;
         data["name"] = this.name;
         data["countryId"] = this.countryId;
-        data["position"] = this.position ? this.position.toJSON() : <any>undefined;
         data["isAirport"] = this.isAirport;
         data["idNavigation"] = this.idNavigation ? this.idNavigation.toJSON() : <any>undefined;
         if (Array.isArray(this.offers)) {
@@ -578,792 +587,9 @@ export interface ICity {
     id: number;
     name: string | undefined;
     countryId: number;
-    position: Geometry | undefined;
     isAirport: boolean;
     idNavigation: Country | undefined;
     offers: Offer[] | undefined;
-}
-
-export abstract class Geometry implements IGeometry {
-    factory!: GeometryFactory | undefined;
-    userData!: any | undefined;
-    srid!: number;
-    precisionModel!: PrecisionModel | undefined;
-    numGeometries!: number;
-    isSimple!: boolean;
-    isValid!: boolean;
-    area!: number;
-    length!: number;
-    centroid!: Point | undefined;
-    interiorPoint!: Point | undefined;
-    pointOnSurface!: Point | undefined;
-    envelope!: Geometry | undefined;
-    envelopeInternal!: Envelope | undefined;
-    isRectangle!: boolean;
-
-    constructor(data?: IGeometry) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.factory = _data["factory"] ? GeometryFactory.fromJS(_data["factory"]) : <any>undefined;
-            this.userData = _data["userData"];
-            this.srid = _data["srid"];
-            this.precisionModel = _data["precisionModel"] ? PrecisionModel.fromJS(_data["precisionModel"]) : <any>undefined;
-            this.numGeometries = _data["numGeometries"];
-            this.isSimple = _data["isSimple"];
-            this.isValid = _data["isValid"];
-            this.area = _data["area"];
-            this.length = _data["length"];
-            this.centroid = _data["centroid"] ? Point.fromJS(_data["centroid"]) : <any>undefined;
-            this.interiorPoint = _data["interiorPoint"] ? Point.fromJS(_data["interiorPoint"]) : <any>undefined;
-            this.pointOnSurface = _data["pointOnSurface"] ? Point.fromJS(_data["pointOnSurface"]) : <any>undefined;
-            this.envelope = _data["envelope"] ? Geometry.fromJS(_data["envelope"]) : <any>undefined;
-            this.envelopeInternal = _data["envelopeInternal"] ? Envelope.fromJS(_data["envelopeInternal"]) : <any>undefined;
-            this.isRectangle = _data["isRectangle"];
-        }
-    }
-
-    static fromJS(data: any): Geometry {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'Geometry' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["factory"] = this.factory ? this.factory.toJSON() : <any>undefined;
-        data["userData"] = this.userData;
-        data["srid"] = this.srid;
-        data["precisionModel"] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
-        data["numGeometries"] = this.numGeometries;
-        data["isSimple"] = this.isSimple;
-        data["isValid"] = this.isValid;
-        data["area"] = this.area;
-        data["length"] = this.length;
-        data["centroid"] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-        data["interiorPoint"] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-        data["pointOnSurface"] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-        data["envelope"] = this.envelope ? this.envelope.toJSON() : <any>undefined;
-        data["envelopeInternal"] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
-        data["isRectangle"] = this.isRectangle;
-        return data; 
-    }
-}
-
-export interface IGeometry {
-    factory: GeometryFactory | undefined;
-    userData: any | undefined;
-    srid: number;
-    precisionModel: PrecisionModel | undefined;
-    numGeometries: number;
-    isSimple: boolean;
-    isValid: boolean;
-    area: number;
-    length: number;
-    centroid: Point | undefined;
-    interiorPoint: Point | undefined;
-    pointOnSurface: Point | undefined;
-    envelope: Geometry | undefined;
-    envelopeInternal: Envelope | undefined;
-    isRectangle: boolean;
-}
-
-export class GeometryFactory implements IGeometryFactory {
-    precisionModel!: PrecisionModel | undefined;
-    coordinateSequenceFactory!: CoordinateSequenceFactory | undefined;
-    srid!: number;
-    geometryServices!: NtsGeometryServices | undefined;
-
-    constructor(data?: IGeometryFactory) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.precisionModel = _data["precisionModel"] ? PrecisionModel.fromJS(_data["precisionModel"]) : <any>undefined;
-            this.coordinateSequenceFactory = _data["coordinateSequenceFactory"] ? CoordinateSequenceFactory.fromJS(_data["coordinateSequenceFactory"]) : <any>undefined;
-            this.srid = _data["srid"];
-            this.geometryServices = _data["geometryServices"] ? NtsGeometryServices.fromJS(_data["geometryServices"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): GeometryFactory {
-        data = typeof data === 'object' ? data : {};
-        let result = new GeometryFactory();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["precisionModel"] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
-        data["coordinateSequenceFactory"] = this.coordinateSequenceFactory ? this.coordinateSequenceFactory.toJSON() : <any>undefined;
-        data["srid"] = this.srid;
-        data["geometryServices"] = this.geometryServices ? this.geometryServices.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IGeometryFactory {
-    precisionModel: PrecisionModel | undefined;
-    coordinateSequenceFactory: CoordinateSequenceFactory | undefined;
-    srid: number;
-    geometryServices: NtsGeometryServices | undefined;
-}
-
-export class PrecisionModel implements IPrecisionModel {
-    isFloating!: boolean;
-    maximumSignificantDigits!: number;
-    scale!: number;
-    precisionModelType!: PrecisionModels;
-
-    constructor(data?: IPrecisionModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.isFloating = _data["isFloating"];
-            this.maximumSignificantDigits = _data["maximumSignificantDigits"];
-            this.scale = _data["scale"];
-            this.precisionModelType = _data["precisionModelType"];
-        }
-    }
-
-    static fromJS(data: any): PrecisionModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PrecisionModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isFloating"] = this.isFloating;
-        data["maximumSignificantDigits"] = this.maximumSignificantDigits;
-        data["scale"] = this.scale;
-        data["precisionModelType"] = this.precisionModelType;
-        return data; 
-    }
-}
-
-export interface IPrecisionModel {
-    isFloating: boolean;
-    maximumSignificantDigits: number;
-    scale: number;
-    precisionModelType: PrecisionModels;
-}
-
-export enum PrecisionModels {
-    Floating = "Floating",
-    FloatingSingle = "FloatingSingle",
-    Fixed = "Fixed",
-}
-
-export abstract class CoordinateSequenceFactory implements ICoordinateSequenceFactory {
-    ordinates!: Ordinates;
-
-    constructor(data?: ICoordinateSequenceFactory) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.ordinates = _data["ordinates"];
-        }
-    }
-
-    static fromJS(data: any): CoordinateSequenceFactory {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'CoordinateSequenceFactory' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ordinates"] = this.ordinates;
-        return data; 
-    }
-}
-
-export interface ICoordinateSequenceFactory {
-    ordinates: Ordinates;
-}
-
-export enum Ordinates {
-    None = "None",
-    X = "Spatial1",
-    Spatial1 = "Spatial1",
-    Y = "Spatial2",
-    Spatial2 = "Spatial2",
-    XY = "XY",
-    Spatial3 = "Z",
-    Z = "Z",
-    XYZ = "XYZ",
-    Spatial4 = "Spatial4",
-    Spatial5 = "Spatial5",
-    Spatial6 = "Spatial6",
-    Spatial7 = "Spatial7",
-    Spatial8 = "Spatial8",
-    Spatial9 = "Spatial9",
-    Spatial10 = "Spatial10",
-    Spatial11 = "Spatial11",
-    Spatial12 = "Spatial12",
-    Spatial13 = "Spatial13",
-    Spatial14 = "Spatial14",
-    Spatial15 = "Spatial15",
-    Spatial16 = "Spatial16",
-    AllSpatialOrdinates = "AllSpatialOrdinates",
-    Measure1 = "M",
-    M = "M",
-    XYM = "XYM",
-    XYZM = "XYZM",
-    Measure2 = "Measure2",
-    Measure3 = "Measure3",
-    Measure4 = "Measure4",
-    Measure5 = "Measure5",
-    Measure6 = "Measure6",
-    Measure7 = "Measure7",
-    Measure8 = "Measure8",
-    Measure9 = "Measure9",
-    Measure10 = "Measure10",
-    Measure11 = "Measure11",
-    Measure12 = "Measure12",
-    Measure13 = "Measure13",
-    Measure14 = "Measure14",
-    Measure15 = "Measure15",
-    Measure16 = "Measure16",
-    AllMeasureOrdinates = "AllMeasureOrdinates",
-    AllOrdinates = "AllOrdinates",
-}
-
-export class NtsGeometryServices implements INtsGeometryServices {
-    geometryOverlay!: GeometryOverlay | undefined;
-    coordinateEqualityComparer!: CoordinateEqualityComparer | undefined;
-    defaultSRID!: number;
-    defaultCoordinateSequenceFactory!: CoordinateSequenceFactory | undefined;
-    defaultPrecisionModel!: PrecisionModel | undefined;
-
-    constructor(data?: INtsGeometryServices) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.geometryOverlay = _data["geometryOverlay"] ? GeometryOverlay.fromJS(_data["geometryOverlay"]) : <any>undefined;
-            this.coordinateEqualityComparer = _data["coordinateEqualityComparer"] ? CoordinateEqualityComparer.fromJS(_data["coordinateEqualityComparer"]) : <any>undefined;
-            this.defaultSRID = _data["defaultSRID"];
-            this.defaultCoordinateSequenceFactory = _data["defaultCoordinateSequenceFactory"] ? CoordinateSequenceFactory.fromJS(_data["defaultCoordinateSequenceFactory"]) : <any>undefined;
-            this.defaultPrecisionModel = _data["defaultPrecisionModel"] ? PrecisionModel.fromJS(_data["defaultPrecisionModel"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): NtsGeometryServices {
-        data = typeof data === 'object' ? data : {};
-        let result = new NtsGeometryServices();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["geometryOverlay"] = this.geometryOverlay ? this.geometryOverlay.toJSON() : <any>undefined;
-        data["coordinateEqualityComparer"] = this.coordinateEqualityComparer ? this.coordinateEqualityComparer.toJSON() : <any>undefined;
-        data["defaultSRID"] = this.defaultSRID;
-        data["defaultCoordinateSequenceFactory"] = this.defaultCoordinateSequenceFactory ? this.defaultCoordinateSequenceFactory.toJSON() : <any>undefined;
-        data["defaultPrecisionModel"] = this.defaultPrecisionModel ? this.defaultPrecisionModel.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface INtsGeometryServices {
-    geometryOverlay: GeometryOverlay | undefined;
-    coordinateEqualityComparer: CoordinateEqualityComparer | undefined;
-    defaultSRID: number;
-    defaultCoordinateSequenceFactory: CoordinateSequenceFactory | undefined;
-    defaultPrecisionModel: PrecisionModel | undefined;
-}
-
-export abstract class GeometryOverlay implements IGeometryOverlay {
-
-    constructor(data?: IGeometryOverlay) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): GeometryOverlay {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'GeometryOverlay' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IGeometryOverlay {
-}
-
-export class CoordinateEqualityComparer implements ICoordinateEqualityComparer {
-
-    constructor(data?: ICoordinateEqualityComparer) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): CoordinateEqualityComparer {
-        data = typeof data === 'object' ? data : {};
-        let result = new CoordinateEqualityComparer();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface ICoordinateEqualityComparer {
-}
-
-export class Point implements IPoint {
-    factory!: GeometryFactory | undefined;
-    userData!: any | undefined;
-    srid!: number;
-    precisionModel!: PrecisionModel | undefined;
-    numGeometries!: number;
-    isSimple!: boolean;
-    isValid!: boolean;
-    area!: number;
-    length!: number;
-    centroid!: Point | undefined;
-    interiorPoint!: Point | undefined;
-    pointOnSurface!: Point | undefined;
-    envelope!: Geometry | undefined;
-    envelopeInternal!: Envelope | undefined;
-    isRectangle!: boolean;
-    coordinateSequence!: CoordinateSequence | undefined;
-    coordinates!: Coordinate[] | undefined;
-    numPoints!: number;
-    isEmpty!: boolean;
-    dimension!: Dimension;
-    boundaryDimension!: Dimension;
-    x!: number;
-    y!: number;
-    coordinate!: Coordinate | undefined;
-    geometryType!: string | undefined;
-    ogcGeometryType!: OgcGeometryType;
-    boundary!: Geometry | undefined;
-    z!: number;
-    m!: number;
-
-    constructor(data?: IPoint) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.factory = _data["factory"] ? GeometryFactory.fromJS(_data["factory"]) : <any>undefined;
-            this.userData = _data["userData"];
-            this.srid = _data["srid"];
-            this.precisionModel = _data["precisionModel"] ? PrecisionModel.fromJS(_data["precisionModel"]) : <any>undefined;
-            this.numGeometries = _data["numGeometries"];
-            this.isSimple = _data["isSimple"];
-            this.isValid = _data["isValid"];
-            this.area = _data["area"];
-            this.length = _data["length"];
-            this.centroid = _data["centroid"] ? Point.fromJS(_data["centroid"]) : <any>undefined;
-            this.interiorPoint = _data["interiorPoint"] ? Point.fromJS(_data["interiorPoint"]) : <any>undefined;
-            this.pointOnSurface = _data["pointOnSurface"] ? Point.fromJS(_data["pointOnSurface"]) : <any>undefined;
-            this.envelope = _data["envelope"] ? Geometry.fromJS(_data["envelope"]) : <any>undefined;
-            this.envelopeInternal = _data["envelopeInternal"] ? Envelope.fromJS(_data["envelopeInternal"]) : <any>undefined;
-            this.isRectangle = _data["isRectangle"];
-            this.coordinateSequence = _data["coordinateSequence"] ? CoordinateSequence.fromJS(_data["coordinateSequence"]) : <any>undefined;
-            if (Array.isArray(_data["coordinates"])) {
-                this.coordinates = [] as any;
-                for (let item of _data["coordinates"])
-                    this.coordinates!.push(Coordinate.fromJS(item));
-            }
-            this.numPoints = _data["numPoints"];
-            this.isEmpty = _data["isEmpty"];
-            this.dimension = _data["dimension"];
-            this.boundaryDimension = _data["boundaryDimension"];
-            this.x = _data["x"];
-            this.y = _data["y"];
-            this.coordinate = _data["coordinate"] ? Coordinate.fromJS(_data["coordinate"]) : <any>undefined;
-            this.geometryType = _data["geometryType"];
-            this.ogcGeometryType = _data["ogcGeometryType"];
-            this.boundary = _data["boundary"] ? Geometry.fromJS(_data["boundary"]) : <any>undefined;
-            this.z = _data["z"];
-            this.m = _data["m"];
-        }
-    }
-
-    static fromJS(data: any): Point {
-        data = typeof data === 'object' ? data : {};
-        let result = new Point();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["factory"] = this.factory ? this.factory.toJSON() : <any>undefined;
-        data["userData"] = this.userData;
-        data["srid"] = this.srid;
-        data["precisionModel"] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
-        data["numGeometries"] = this.numGeometries;
-        data["isSimple"] = this.isSimple;
-        data["isValid"] = this.isValid;
-        data["area"] = this.area;
-        data["length"] = this.length;
-        data["centroid"] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-        data["interiorPoint"] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-        data["pointOnSurface"] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-        data["envelope"] = this.envelope ? this.envelope.toJSON() : <any>undefined;
-        data["envelopeInternal"] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
-        data["isRectangle"] = this.isRectangle;
-        data["coordinateSequence"] = this.coordinateSequence ? this.coordinateSequence.toJSON() : <any>undefined;
-        if (Array.isArray(this.coordinates)) {
-            data["coordinates"] = [];
-            for (let item of this.coordinates)
-                data["coordinates"].push(item.toJSON());
-        }
-        data["numPoints"] = this.numPoints;
-        data["isEmpty"] = this.isEmpty;
-        data["dimension"] = this.dimension;
-        data["boundaryDimension"] = this.boundaryDimension;
-        data["x"] = this.x;
-        data["y"] = this.y;
-        data["coordinate"] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
-        data["geometryType"] = this.geometryType;
-        data["ogcGeometryType"] = this.ogcGeometryType;
-        data["boundary"] = this.boundary ? this.boundary.toJSON() : <any>undefined;
-        data["z"] = this.z;
-        data["m"] = this.m;
-        return data; 
-    }
-}
-
-export interface IPoint {
-    factory: GeometryFactory | undefined;
-    userData: any | undefined;
-    srid: number;
-    precisionModel: PrecisionModel | undefined;
-    numGeometries: number;
-    isSimple: boolean;
-    isValid: boolean;
-    area: number;
-    length: number;
-    centroid: Point | undefined;
-    interiorPoint: Point | undefined;
-    pointOnSurface: Point | undefined;
-    envelope: Geometry | undefined;
-    envelopeInternal: Envelope | undefined;
-    isRectangle: boolean;
-    coordinateSequence: CoordinateSequence | undefined;
-    coordinates: Coordinate[] | undefined;
-    numPoints: number;
-    isEmpty: boolean;
-    dimension: Dimension;
-    boundaryDimension: Dimension;
-    x: number;
-    y: number;
-    coordinate: Coordinate | undefined;
-    geometryType: string | undefined;
-    ogcGeometryType: OgcGeometryType;
-    boundary: Geometry | undefined;
-    z: number;
-    m: number;
-}
-
-export class Envelope implements IEnvelope {
-    isNull!: boolean;
-    width!: number;
-    height!: number;
-    diameter!: number;
-    minX!: number;
-    maxX!: number;
-    minY!: number;
-    maxY!: number;
-    area!: number;
-    minExtent!: number;
-    maxExtent!: number;
-    centre!: Coordinate | undefined;
-
-    constructor(data?: IEnvelope) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.isNull = _data["isNull"];
-            this.width = _data["width"];
-            this.height = _data["height"];
-            this.diameter = _data["diameter"];
-            this.minX = _data["minX"];
-            this.maxX = _data["maxX"];
-            this.minY = _data["minY"];
-            this.maxY = _data["maxY"];
-            this.area = _data["area"];
-            this.minExtent = _data["minExtent"];
-            this.maxExtent = _data["maxExtent"];
-            this.centre = _data["centre"] ? Coordinate.fromJS(_data["centre"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): Envelope {
-        data = typeof data === 'object' ? data : {};
-        let result = new Envelope();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isNull"] = this.isNull;
-        data["width"] = this.width;
-        data["height"] = this.height;
-        data["diameter"] = this.diameter;
-        data["minX"] = this.minX;
-        data["maxX"] = this.maxX;
-        data["minY"] = this.minY;
-        data["maxY"] = this.maxY;
-        data["area"] = this.area;
-        data["minExtent"] = this.minExtent;
-        data["maxExtent"] = this.maxExtent;
-        data["centre"] = this.centre ? this.centre.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IEnvelope {
-    isNull: boolean;
-    width: number;
-    height: number;
-    diameter: number;
-    minX: number;
-    maxX: number;
-    minY: number;
-    maxY: number;
-    area: number;
-    minExtent: number;
-    maxExtent: number;
-    centre: Coordinate | undefined;
-}
-
-export class Coordinate implements ICoordinate {
-    x!: number;
-    y!: number;
-    z!: number;
-    m!: number;
-    coordinateValue!: Coordinate | undefined;
-    isValid!: boolean;
-
-    constructor(data?: ICoordinate) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.x = _data["x"];
-            this.y = _data["y"];
-            this.z = _data["z"];
-            this.m = _data["m"];
-            this.coordinateValue = _data["coordinateValue"] ? Coordinate.fromJS(_data["coordinateValue"]) : <any>undefined;
-            this.isValid = _data["isValid"];
-        }
-    }
-
-    static fromJS(data: any): Coordinate {
-        data = typeof data === 'object' ? data : {};
-        let result = new Coordinate();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["x"] = this.x;
-        data["y"] = this.y;
-        data["z"] = this.z;
-        data["m"] = this.m;
-        data["coordinateValue"] = this.coordinateValue ? this.coordinateValue.toJSON() : <any>undefined;
-        data["isValid"] = this.isValid;
-        return data; 
-    }
-}
-
-export interface ICoordinate {
-    x: number;
-    y: number;
-    z: number;
-    m: number;
-    coordinateValue: Coordinate | undefined;
-    isValid: boolean;
-}
-
-export abstract class CoordinateSequence implements ICoordinateSequence {
-    dimension!: number;
-    measures!: number;
-    spatial!: number;
-    ordinates!: Ordinates;
-    hasZ!: boolean;
-    hasM!: boolean;
-    zOrdinateIndex!: number;
-    mOrdinateIndex!: number;
-    first!: Coordinate | undefined;
-    last!: Coordinate | undefined;
-    count!: number;
-
-    constructor(data?: ICoordinateSequence) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.dimension = _data["dimension"];
-            this.measures = _data["measures"];
-            this.spatial = _data["spatial"];
-            this.ordinates = _data["ordinates"];
-            this.hasZ = _data["hasZ"];
-            this.hasM = _data["hasM"];
-            this.zOrdinateIndex = _data["zOrdinateIndex"];
-            this.mOrdinateIndex = _data["mOrdinateIndex"];
-            this.first = _data["first"] ? Coordinate.fromJS(_data["first"]) : <any>undefined;
-            this.last = _data["last"] ? Coordinate.fromJS(_data["last"]) : <any>undefined;
-            this.count = _data["count"];
-        }
-    }
-
-    static fromJS(data: any): CoordinateSequence {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'CoordinateSequence' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["dimension"] = this.dimension;
-        data["measures"] = this.measures;
-        data["spatial"] = this.spatial;
-        data["ordinates"] = this.ordinates;
-        data["hasZ"] = this.hasZ;
-        data["hasM"] = this.hasM;
-        data["zOrdinateIndex"] = this.zOrdinateIndex;
-        data["mOrdinateIndex"] = this.mOrdinateIndex;
-        data["first"] = this.first ? this.first.toJSON() : <any>undefined;
-        data["last"] = this.last ? this.last.toJSON() : <any>undefined;
-        data["count"] = this.count;
-        return data; 
-    }
-}
-
-export interface ICoordinateSequence {
-    dimension: number;
-    measures: number;
-    spatial: number;
-    ordinates: Ordinates;
-    hasZ: boolean;
-    hasM: boolean;
-    zOrdinateIndex: number;
-    mOrdinateIndex: number;
-    first: Coordinate | undefined;
-    last: Coordinate | undefined;
-    count: number;
-}
-
-export enum Dimension {
-    P = "P",
-    Point = "P",
-    Curve = "Curve",
-    L = "Curve",
-    A = "Surface",
-    Surface = "Surface",
-    Collapse = "Collapse",
-    Dontcare = "Dontcare",
-    True = "True",
-    Unknown = "Unknown",
-    False = "Unknown",
-}
-
-export enum OgcGeometryType {
-    Point = "Point",
-    LineString = "LineString",
-    Polygon = "Polygon",
-    MultiPoint = "MultiPoint",
-    MultiLineString = "MultiLineString",
-    MultiPolygon = "MultiPolygon",
-    GeometryCollection = "GeometryCollection",
-    CircularString = "CircularString",
-    CompoundCurve = "CompoundCurve",
-    CurvePolygon = "CurvePolygon",
-    MultiCurve = "MultiCurve",
-    MultiSurface = "MultiSurface",
-    Curve = "Curve",
-    Surface = "Surface",
-    PolyhedralSurface = "PolyhedralSurface",
-    TIN = "TIN",
 }
 
 export class Country implements ICountry {
@@ -1462,6 +688,58 @@ export interface IMeal {
     offers: Offer[] | undefined;
 }
 
+export class UserCredential implements IUserCredential {
+    id!: number;
+    salt!: string | undefined;
+    hash!: string | undefined;
+    userId!: number | undefined;
+    user!: User | undefined;
+
+    constructor(data?: IUserCredential) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.salt = _data["salt"];
+            this.hash = _data["hash"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserCredential {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserCredential();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["salt"] = this.salt;
+        data["hash"] = this.hash;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IUserCredential {
+    id: number;
+    salt: string | undefined;
+    hash: string | undefined;
+    userId: number | undefined;
+    user: User | undefined;
+}
+
 export class AuthenticateWithCredentialsParameters implements IAuthenticateWithCredentialsParameters {
     mail!: string | undefined;
     password!: string | undefined;
@@ -1502,6 +780,58 @@ export interface IAuthenticateWithCredentialsParameters {
     password: string | undefined;
 }
 
+export class AddNewUserParameters implements IAddNewUserParameters {
+    firstName!: string | undefined;
+    lastName!: string | undefined;
+    telephoneNumber!: string | undefined;
+    email!: string | undefined;
+    password!: string | undefined;
+
+    constructor(data?: IAddNewUserParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.telephoneNumber = _data["telephoneNumber"];
+            this.email = _data["email"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): AddNewUserParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNewUserParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["telephoneNumber"] = this.telephoneNumber;
+        data["email"] = this.email;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface IAddNewUserParameters {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    telephoneNumber: string | undefined;
+    email: string | undefined;
+    password: string | undefined;
+}
+
 export class SwaggerException extends Error {
     message: string;
     status: number;
@@ -1529,4 +859,3 @@ export class SwaggerException extends Error {
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
     throw new SwaggerException(message, status, response, headers, result);
 }
-

@@ -1,6 +1,6 @@
-﻿using Api.Model.Database;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Tourismus.FakeData.Factories;
+using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.FakeSeeds.Seeders {
     class UserFakeSeeder : FakeSeederBase<User> {

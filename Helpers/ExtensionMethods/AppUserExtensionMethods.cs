@@ -1,4 +1,4 @@
-﻿using Api.Model.Database;
+﻿using Tourismus.Model.Models;
 
 namespace Helpers.ExtensionMethods {
     public static class AppUserExtensionMethods {

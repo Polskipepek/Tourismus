@@ -99,7 +99,7 @@
       "handleReferences": false,
       "generateConstructorInterface": true,
       "convertConstructorInterfaceData": false,
-      "importRequiredTypes": true,
+      "importRequiredTypes": false,
       "useGetBaseUrlMethod": true,
       "baseUrlTokenName": "API_BASE_URL",
       "queryNullValue": "",

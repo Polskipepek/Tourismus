@@ -1,6 +1,6 @@
-﻿using Api.Model.Database;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Tourismus.Model.Models;
 
 namespace WebApi.Model.Configuration.Entities {
     class ReservationConfiguration : IEntityTypeConfiguration<Reservation> {
@@ -22,7 +22,7 @@ namespace WebApi.Model.Configuration.Entities {
                 .HasConstraintName(OfferId);
 
             builder.HasOne(d => d.User)
-                .WithMany(p => p.Reservationsxd)
+                .WithMany(p => p.Reservations)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName(UserId);

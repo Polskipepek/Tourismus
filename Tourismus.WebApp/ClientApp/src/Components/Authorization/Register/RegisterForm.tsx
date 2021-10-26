@@ -10,7 +10,7 @@ import TextInputF from "../../../_Infrastructure/Formik/Components/TextInputF";
 import { IModalComponentProps } from "../../../_Infrastructure/Modals/IModalComponentProps";
 import Yup from "../../../_Infrastructure/Validation/YupValidation";
 import Resources from "../../../Resources";
-import { AuthenticateWithCredentialsParameters, AuthenticateWithCredentialsClient } from "../../../services/GeneratedClient";
+import { AuthenticateWithCredentialsParameters, AuthenticateWithCredentialsClient, UserClient, AddNewUserParameters } from "../../../services/GeneratedClient";
 
 interface IRegisterFormProps extends IModalComponentProps {}
 interface IRegisterFormValues {
@@ -18,7 +18,8 @@ interface IRegisterFormValues {
 	password: string | undefined;
 	passwordConfirmation: string | undefined;
 	phoneNumber: string | undefined;
-	nickname: string | undefined;
+	firstName: string | undefined;
+	lastName: string | undefined;
 }
 
 class InnerForm extends React.Component<IRegisterFormProps & FormikProps<IRegisterFormValues>> {
@@ -27,7 +28,10 @@ class InnerForm extends React.Component<IRegisterFormProps & FormikProps<IRegist
 			<Form id="register-form" name="RegisterForm" className="formStyle">
 				<Row gutter={[8, 16]}>
 					<Col span={24}>
-						<TextInputF {...this.props} name="nickname" placeholder={Resources.InputPlaceholder.nickname} />
+						<TextInputF {...this.props} name="firstName" placeholder={Resources.InputPlaceholder.firstName} />
+					</Col>{" "}
+					<Col span={24}>
+						<TextInputF {...this.props} name="lastName" placeholder={Resources.InputPlaceholder.lastName} />
 					</Col>
 					<Col span={24}>
 						<TextInputF {...this.props} name="email" placeholder={Resources.InputPlaceholder.email} />
@@ -58,7 +62,8 @@ const validationSchema: Yup.SchemaOf<IRegisterFormValues> = Yup.object({
 		.max(30)
 		.defined()
 		.oneOf([Yup.ref("password"), null], Resources.Validation.passwordConfirmation),
-	nickname: Yup.string().min(4).max(30).defined(),
+	firstName: Yup.string().min(4).max(30).defined(),
+	lastName: Yup.string().min(4).max(30).defined(),
 	phoneNumber: Yup.string().min(4).max(30).defined().matches(phoneRegExp, Resources.Validation.phoneNumber),
 });
 
@@ -68,23 +73,25 @@ const RegisterFormInner = withFormik<IRegisterFormProps, IRegisterFormValues>({
 	validationSchema: validationSchema,
 	mapPropsToValues: (props: IRegisterFormProps) => {
 		const mappedProps: IRegisterFormValues = {
-			nickname: undefined,
+			firstName: undefined,
 			email: undefined,
 			password: undefined,
 			passwordConfirmation: undefined,
 			phoneNumber: undefined,
+			lastName: undefined,
 		};
 		return mappedProps;
 	},
 	handleSubmit: (values: IRegisterFormValues, bag: FormikBag<IRegisterFormProps, IRegisterFormValues>) => {
-		var params = new AddNewCustomerAction({
+		var params = new AddNewUserParameters({
 			password: values.password,
-			mail: values.email,
-			nickname: values.nickname,
-			phoneNumber: values.phoneNumber,
+			email: values.email,
+			firstName: values.firstName,
+			lastName: values.lastName,
+			telephoneNumber: values.phoneNumber,
 		});
 		SendActionWithResponseAndNotification({
-			action: () => new CustomerClient().addNewCustomerAction(params),
+			action: () => new UserClient().addNewUserAction(params),
 			onSuccess: (resp) => {
 				bag.resetForm();
 				bag.props.closeModal();

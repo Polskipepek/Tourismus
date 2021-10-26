@@ -7,23 +7,24 @@ export default class Resources {
   };
 
   public static PageHeader = {
-    homePage: "Home Page",
-    profilePage: "Profile Page",
+    homePage: "Strona główna",
+    profilePage: "Profil",
     registerPage: "Rejestracja",
     loginPage: "Logowanie",
   };
 
   public static PageNames = {
-    homePage: "Home",
-    profilePage: "Profile",
-    aboutUsPage: "About us",
+    homePage: "Strona główna",
+    profilePage: "Profil",
+    aboutUsPage: "O nas",
   };
 
   public static InputPlaceholder = {
     email: "Email",
-    password: "Password",
-    nickname: "Nickname",
-    phoneNumber: "Phone number",
+    password: "Hasło",
+    firstName: "Imię",
+    lastName: "Nazwisko",
+    phoneNumber: "Numer telefonu",
   };
 
   public static Validation = {

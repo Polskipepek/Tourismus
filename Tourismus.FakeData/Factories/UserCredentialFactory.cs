@@ -1,5 +1,5 @@
-﻿using Api.Model.Database;
-using Helpers.HashHelpers;
+﻿using Helpers.HashHelpers;
+using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.Factories {
     public class UserCredentialFactory {

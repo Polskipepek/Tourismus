@@ -1,9 +1,9 @@
-import { Col, Form, Row } from 'antd';
-import { FormikBag, FormikProps, withFormik } from 'formik';
-import React from 'react';
+import { Col, Form, Row } from "antd";
+import { FormikBag, FormikProps, withFormik } from "formik";
+import React from "react";
 
-import TextInputF from '../../_Infrastructure/Formik/Components/TextInputF';
-import { ICustomerDetails_Dto } from '../../services/SingleDto/CustomerDetails_Dto';
+import TextInputF from "../../_Infrastructure/Formik/Components/TextInputF";
+/* //import { ICustomerDetails_Dto } from '../../services/SingleDto/CustomerDetails_Dto';
 
 type IProfileProps = ICustomerDetails_Dto;
 type IProfileValues = IProfileProps;
@@ -41,4 +41,4 @@ const ProfileFormInner = withFormik<IProfileProps, IProfileValues>({
 })(InnerForm);
 
 export const ProfileForm = ProfileFormInner;
-export default ProfileForm;
+export default ProfileForm; */

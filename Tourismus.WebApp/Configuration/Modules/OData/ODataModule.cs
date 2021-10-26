@@ -1,6 +1,6 @@
-﻿using Api.Model.Database;
-using Autofac;
+﻿using Autofac;
 using Microsoft.EntityFrameworkCore;
+using Tourismus.Model.Models;
 
 namespace Tourismus.WebApp.Configuration.Modules.OData {
     public class ODataModule : Module {

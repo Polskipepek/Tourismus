@@ -1,6 +1,6 @@
-﻿using Api.Model.Database;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Tourismus.Model.Models;
 
 namespace WebApi.Model.Configuration.Entities {
     class UserCredentialsConfiguration : IEntityTypeConfiguration<UserCredential> {

@@ -1,6 +1,6 @@
-﻿using Api.Model.Database;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Tourismus.Model.Models;
 
 namespace WebApi.Model.Configuration.Entities {
     class UserConfiguration : IEntityTypeConfiguration<User> {
@@ -10,7 +10,7 @@ namespace WebApi.Model.Configuration.Entities {
             builder.HasKey(x => x.Id);
 
             builder.Property(e => e.Id).HasComment("Identificator").ValueGeneratedNever();
-            builder.Property(b => b.Token).HasComment("Token");
+            //builder.Property(b => b.Token).HasComment("Token");
 
             builder.Property(e => e.AccountCreationDate).HasColumnType("datetime");
 

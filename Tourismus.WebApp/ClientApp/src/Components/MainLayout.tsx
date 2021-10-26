@@ -16,7 +16,7 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 	const [loginModalVisibility, setLoginModalVisibility] = useState<boolean>(false);
 	const [registerModalVisibility, setRegisterModalVisibility] = useState<boolean>(false);
 	const [selectedKey, setSelectedKey] = useState<string>("1");
-	const [user, setUser] = useState<IUser>();
+	const [user, setUser] = useState<IUser | undefined>();
 
 	const changePage = (page: string, menuItemId: string) => {
 		props.history.push(page);
@@ -51,12 +51,21 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 						<Menu.Item key="3" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.aboutUsPage, "3")}>
 							{Resources.PageNames.aboutUsPage}
 						</Menu.Item>
-						<Menu.Item key="4" style={{ float: "right" }} onClick={() => setLoginModalVisibility(true)}>
-							{Resources.Buttons.layout_signIn}
-						</Menu.Item>
-						<Menu.Item key="5" style={{ float: "right" }} onClick={() => setRegisterModalVisibility(true)}>
-							{Resources.Buttons.layout_register}
-						</Menu.Item>
+						{user == undefined && (
+							<Menu.Item key="4" style={{ float: "right" }} onClick={() => setLoginModalVisibility(true)}>
+								{Resources.Buttons.layout_signIn}
+							</Menu.Item>
+						)}
+						{user == undefined && (
+							<Menu.Item key="5" style={{ float: "right" }} onClick={() => setRegisterModalVisibility(true)}>
+								{Resources.Buttons.layout_register}
+							</Menu.Item>
+						)}
+						{user !== undefined && (
+							<Menu.Item key="6" style={{ float: "right" }} onClick={() => {}}>
+								{Resources.Buttons.layout_signOut}
+							</Menu.Item>
+						)}
 					</Menu>
 				</Header>
 				<Content

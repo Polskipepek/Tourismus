@@ -1,5 +1,5 @@
-﻿using Api.Model.Database;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Tourismus.Model.Models;
 
 namespace Tourismus.WebApp._Infrastructure.Authentication {
     public interface IUserService {

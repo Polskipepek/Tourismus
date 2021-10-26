@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Helpers\Helpers.csproj" />
+		<ProjectReference Include="..\Tourismus.Model\Tourismus.Model.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -66,12 +67,15 @@
 	<PropertyGroup>
 		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 	</PropertyGroup>
-	
-	
 
 
 
-<Target Name="NSwag" AfterTargets="Build">
+	<Target Name="NSwag" AfterTargets="Build">
+		<Exec Command="$(NSwagExe) run /variables:assemblyPath=$(OutDir)/Tourismus.WebApp.exe,clientOutput=ClientApp/src/services/GeneratedClient.ts" />
+	</Target>
+
+
+	<Target Name="NSwag" AfterTargets="Build">
 		<Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
 		<Exec Command="$(NSwagExe_Net50) run nswag.json /variables:Configuration=$(Configuration),OutDir=$(OutDir),assemblyPath=$(OutDir)/Tourismus.WebApp.dll,clientOutput=ClientApp/src/services/GeneratedClient.ts" />
 		<RemoveDir Directories="$(OutDir)References" />

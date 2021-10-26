@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
 
-namespace Helpers.ExtensionMethods {
+namespace Tourismus.WebApp.Configuration.Modules.Authentication {
     public static class ConfigureAddAuthenticationExtension {
-        public const string AuthCookieName = "auth_ShoplyVR";
+        public const string AuthCookieName = "auth_Tourismus";
         public static void ConfigureAddAuthentication(this IServiceCollection services) {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {

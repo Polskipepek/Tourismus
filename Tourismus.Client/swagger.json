@@ -139,20 +139,19 @@
         }
       }
     },
-    "/api/users/AddNewCustomerAction": {
+    "/api/users/AddNewUserAction": {
       "post": {
         "tags": [
           "User"
         ],
-        "operationId": "User_AddNewCustomerAction",
+        "operationId": "User_AddNewUserAction",
         "parameters": [
           {
-            "name": "action",
+            "name": "parameters",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/definitions/AddNewUserParameters"
             },
             "x-nullable": false
           }
@@ -200,7 +199,7 @@
             "IsAdmin": {
               "type": "boolean"
             },
-            "Reservationsxd": {
+            "Reservations": {
               "type": "array",
               "items": {
                 "$ref": "#/definitions/Reservation"
@@ -981,6 +980,26 @@
       "type": "object",
       "properties": {
         "Mail": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        }
+      }
+    },
+    "AddNewUserParameters": {
+      "type": "object",
+      "properties": {
+        "FirstName": {
+          "type": "string"
+        },
+        "LastName": {
+          "type": "string"
+        },
+        "TelephoneNumber": {
+          "type": "string"
+        },
+        "Email": {
           "type": "string"
         },
         "Password": {

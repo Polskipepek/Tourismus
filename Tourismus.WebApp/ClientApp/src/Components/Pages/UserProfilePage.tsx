@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 
 import { ODataSingleType } from "../../_Infrastructure/OData/Singles/ODataSingleType";
 import Resources from "../../Resources";
-import Profile from "../OData/Profile";
+//import Profile from "../OData/Profile";
 
 interface IUserProfilePageProps {}
 

@@ -1,8 +1,7 @@
-﻿using Api.Model.Database;
-using Helpers.HashHelpers;
+﻿using Helpers.HashHelpers;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Tourismus.Model.Models;
 
 namespace Tourismus.WebApp._Infrastructure.Authentication {
     class UserService : IUserService {
@@ -33,22 +32,9 @@ namespace Tourismus.WebApp._Infrastructure.Authentication {
         }
 
         private async Task<UserCredential> TryGetUserCredentials(string mail) {
-            //var person = await context.PersonsData.FirstOrDefaultAsync(personData => personData.Mail == mail);
-            //if (person == null) {
-            //    return null;
-            //}
+            var user = context.Users.FirstOrDefault(u => u.Email == mail);
 
-            //Customer customer = context.Customers.FirstOrDefault(customer => customer.PersonData.Id == person.Id);
-            //if (customer != null) {
-            //    return customer.AppUser;
-            //}
-
-            //Employee employee = context.Employees.FirstOrDefault(eployee => eployee.PersonData.Id == person.Id);
-            //if (employee != null) {
-            //    return employee.AppUser;
-            //}
-
-            return null;
+            return user != null ? context.UserCredentials.First(u => u.UserId == user.Id) : null;
         }
     }
 }

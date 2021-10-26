@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tourismus.WebApp.Configuration.Modules;
+using Tourismus.WebApp.Configuration.Modules.Authentication;
 using Tourismus.WebApp.Configuration.Modules.OData;
 
 namespace Tourismus {
@@ -21,6 +22,8 @@ namespace Tourismus {
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllersWithViews();
             services.AddOData();
+            services.ConfigureAddAuthentication();
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/build";
@@ -46,6 +49,9 @@ namespace Tourismus {
                 //app.UseHsts();
             }
             app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseAuthentication();
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();

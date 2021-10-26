@@ -1,5 +1,4 @@
-﻿using Api.Model.Database;
-using Helpers.Constants;
+﻿using Helpers.Constants;
 using Helpers.ExtensionMethods;
 using Helpers.MailHelpers;
 using Microsoft.AspNetCore.Authentication;
@@ -9,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Tourismus.Model.Models;
 using Tourismus.WebApp._Infrastructure.Authentication;
+using Tourismus.WebApp.Configuration.Modules.Authentication;
 
 namespace Tourismus.WebApp.Controllers.Authentication {
     public class AuthenticateWithCredentialsController : Controller {
@@ -36,7 +37,7 @@ namespace Tourismus.WebApp.Controllers.Authentication {
             return Ok(wtf);
         }
 
-        private void SignIn(string mail, ref User appUser) {
+        private void SignIn(string mail, ref User user) {
             var token = CreateToken();
             var claimsIdentity = CreateClaimsIdentity(token, mail);
 
@@ -44,7 +45,7 @@ namespace Tourismus.WebApp.Controllers.Authentication {
             taskSignResult.GetAwaiter().GetResult();
 
             GetCookieValueFromResponse(ConfigureAddAuthenticationExtension.AuthCookieName, out string cookieToken);
-            appUser.Token = cookieToken;
+            user.Token = cookieToken;
             _context.SaveChanges();
         }
 

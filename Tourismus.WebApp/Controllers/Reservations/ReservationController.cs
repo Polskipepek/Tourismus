@@ -1,9 +1,9 @@
-﻿using Api.Model.Database;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
+using Tourismus.Model.Models;
 
 namespace Tourismus.WebApp.Controllers.Shops {
     [Route("api/reservations")]

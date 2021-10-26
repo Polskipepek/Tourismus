@@ -1,4 +1,4 @@
-﻿using Api.Model.Database;
+﻿using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.Factories {
     public class OfferFactory {

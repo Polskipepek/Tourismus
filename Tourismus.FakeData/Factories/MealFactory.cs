@@ -1,7 +1,7 @@
-﻿using Api.Model.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.Factories {
     public class MealFactory {

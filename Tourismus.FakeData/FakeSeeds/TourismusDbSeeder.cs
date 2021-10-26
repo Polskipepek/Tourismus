@@ -1,5 +1,5 @@
-﻿using Api.Model.Database;
-using Tourismus.FakeData.FakeSeeds.Seeders;
+﻿using Tourismus.FakeData.FakeSeeds.Seeders;
+using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.FakeSeeds {
     public class TourismusDbSeeder {

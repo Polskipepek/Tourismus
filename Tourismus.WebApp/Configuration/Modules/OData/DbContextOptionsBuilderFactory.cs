@@ -1,5 +1,5 @@
-﻿using Api.Model.Database;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Tourismus.Model.Models;
 
 namespace Tourismus.WebApp.Configuration.Modules.OData {
     public static class DbContextOptionsBuilderFactory {

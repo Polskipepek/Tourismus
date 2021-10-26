@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using Tourismus.WebApp.Configuration.Modules.AppConfiguration;
+using Tourismus.WebApp.Configuration.Modules.Authentication;
 using Tourismus.WebApp.Configuration.Modules.Mappers;
 using Tourismus.WebApp.Configuration.Modules.OData;
 
@@ -15,9 +16,10 @@ namespace Tourismus.WebApp.Configuration.Modules {
             var configuration = GetConfiguration();
 
             builder.RegisterModule(new AppConfigModule(configuration));
-
-            builder.RegisterModule<MapperModule>();
             builder.RegisterModule(new ODataModule(configuration.GetConnectionString(nameof(AppConfig.TourismusConnectionString))));
+
+            builder.RegisterModule<AuthenticationModule>();
+            builder.RegisterModule<MapperModule>();
         }
 
         private static void RegisterAllAssemblies(ContainerBuilder builder, IEnumerable<System.Reflection.Assembly> additionalAssemblies) {
