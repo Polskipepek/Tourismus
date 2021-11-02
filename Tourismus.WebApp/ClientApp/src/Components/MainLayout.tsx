@@ -1,5 +1,5 @@
 import { Layout, Menu } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { withRouter } from "react-router-dom";
 
@@ -8,7 +8,9 @@ import { CopyrightOutlined, HomeOutlined } from "@ant-design/icons";
 import Resources from "../Resources";
 import { LoginModal } from "./Authorization/Login/LoginModal";
 import { RegisterModal } from "./Authorization/Register/RegisterModal";
-import { IUser } from "../services/GeneratedClient";
+import { IUser, UserClient } from "../services/GeneratedClient";
+import { AppContext, IAppContext } from "../App";
+import { openNotification } from "../Helpers/NotificationHelper";
 
 const { Header, Footer, Content } = Layout;
 
@@ -16,7 +18,14 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 	const [loginModalVisibility, setLoginModalVisibility] = useState<boolean>(false);
 	const [registerModalVisibility, setRegisterModalVisibility] = useState<boolean>(false);
 	const [selectedKey, setSelectedKey] = useState<string>("1");
-	const [user, setUser] = useState<IUser | undefined>();
+	const { user, toggleUser } = useContext<IAppContext>(AppContext);
+
+	const signOut = () => {
+		new UserClient().signOut().then((resp) => {
+			if (toggleUser) toggleUser(undefined);
+			openNotification(Resources.Notifications.logOut_successTitle, Resources.Notifications.logOut_successMessage);
+		});
+	};
 
 	const changePage = (page: string, menuItemId: string) => {
 		props.history.push(page);
@@ -48,9 +57,11 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 								{Resources.PageNames.profilePage}
 							</Menu.Item>
 						)}
-						<Menu.Item key="3" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.aboutUsPage, "3")}>
-							{Resources.PageNames.aboutUsPage}
-						</Menu.Item>
+						{user != undefined && (
+							<Menu.Item key="3" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.aboutUsPage, "3")}>
+								{Resources.PageNames.aboutUsPage}
+							</Menu.Item>
+						)}
 						{user == undefined && (
 							<Menu.Item key="4" style={{ float: "right" }} onClick={() => setLoginModalVisibility(true)}>
 								{Resources.Buttons.layout_signIn}
@@ -61,8 +72,8 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 								{Resources.Buttons.layout_register}
 							</Menu.Item>
 						)}
-						{user !== undefined && (
-							<Menu.Item key="6" style={{ float: "right" }} onClick={() => {}}>
+						{user != undefined && (
+							<Menu.Item key="6" style={{ float: "right" }} onClick={() => signOut()}>
 								{Resources.Buttons.layout_signOut}
 							</Menu.Item>
 						)}
@@ -84,6 +95,7 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 							marginLeft: 80,
 							marginRight: 80,
 							textAlign: "center",
+							bottom: 0,
 						}}>
 						Copyright <CopyrightOutlined />
 					</div>

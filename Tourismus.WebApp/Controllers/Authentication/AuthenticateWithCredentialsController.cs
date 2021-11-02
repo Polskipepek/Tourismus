@@ -32,9 +32,9 @@ namespace Tourismus.WebApp.Controllers.Authentication {
 
             if (user != null) {
                 SignIn(action.Mail, ref user);
+                return Ok(user.WithoutSensitiveDataButToken());
             }
-            var wtf = user.WithoutSensitiveDataButToken();
-            return Ok(wtf);
+            return Unauthorized();
         }
 
         private void SignIn(string mail, ref User user) {

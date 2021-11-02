@@ -1,4 +1,7 @@
 ﻿using Helpers.HashHelpers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System;
@@ -44,6 +47,7 @@ namespace Tourismus.WebApp.Controllers.Users {
             var userCredential = new UserCredential {
                 Salt = salt,
                 Hash = HashHelper.CreateSha256(parameters.Password, salt),
+                UserId = context.Users.Count() - 1,
             };
 
             try {
@@ -54,6 +58,14 @@ namespace Tourismus.WebApp.Controllers.Users {
                 throw new Exception(e.Message);
             }
 
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        [SwaggerResponse(HttpStatusCode.OK, null)]
+        public new ActionResult SignOut() {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Ok();
         }
     }

@@ -44,6 +44,11 @@ export default class Resources {
     registerForm_failureTitle: "Błąd rejestracji",
     registerForm_failureMessage: "Błędne dane rejestracji",
 
+    logOut_successTitle: "Wylogowano pomyślnie",
+    logOut_successMessage: "",
+    logOut_failureTitle: "Błąd podczas wylogowywania",
+    logOut_failureMessage: "Ups!",
+
     odata_getListErrorTitle: "Wystąpił błąd przy pobieraniu danych.",
     odata_getSingleErrorTitle: "Wystąpił błąd przy pobieraniu obiektu.",
 
@@ -56,25 +61,10 @@ export default class Resources {
   public static Buttons = {
     layout_signIn: "Zaloguj",
     layout_register: "Zarejestruj",
-    layout_signedIn: "Wyloguj",
+    layout_signOut: "Wyloguj",
   };
 
-  public static RegistrationShopPage = {
-    textOnValidToken: "Rejestracja sklepu:",
-    textOnUnvalidToken: "Błedny token",
-  };
-
-  public static RegistrationShopForm = {
-    labelName: "Nazwa",
-    labelDescription: "Opis",
-    labelNIPNumber: "Numer NIP",
-    labelRegonNumber: "Numer Regon",
-    labelKRSNumber: "Numer KRS",
-    labelStreet: "Adres sklepu",
-    labelZipCode: "Kod pocztowy",
-    labelCity: "Miasto",
-    labelUrl: "Link URL do zdjęcia",
-    labelShopCategory: "Kategoria sklepu",
-    btnRegisterShop: "Zarejestruj Sklep",
+  static persistentKeys = {
+    User: "User",
   };
 }

@@ -1,15 +1,19 @@
 import { Col, Row } from "antd";
 import { Form, FormikBag, FormikProps, withFormik } from "formik";
-import React from "react";
+import React, { useContext } from "react";
 
 import { SendActionWithResponseAndNotification } from "../../../_Infrastructure/Actions/SendAction";
 import TextInputF from "../../../_Infrastructure/Formik/Components/TextInputF";
 import { IModalComponentProps } from "../../../_Infrastructure/Modals/IModalComponentProps";
 import Yup from "../../../_Infrastructure/Validation/YupValidation";
 import Resources from "../../../Resources";
-import { AuthenticateWithCredentialsParameters, AuthenticateWithCredentialsClient } from "../../../services/GeneratedClient";
+import { AuthenticateWithCredentialsParameters, AuthenticateWithCredentialsClient, IUser } from "../../../services/GeneratedClient";
+import { AppContext, IAppContext } from "../../../App";
 
-interface ILoginFormProps extends IModalComponentProps {}
+interface ILoginFormProps extends IModalComponentProps {
+	toggleUser: (user: IUser | undefined) => void;
+}
+
 interface ILoginFormValues {
 	email: string | undefined;
 	password: string | undefined; // to idzie z DTO
@@ -58,6 +62,7 @@ const LoginFormInner = withFormik<ILoginFormProps, ILoginFormValues>({
 			onSuccess: (resp) => {
 				bag.resetForm();
 				bag.props.closeModal();
+				bag.props.toggleUser(resp as IUser | undefined);
 			},
 			successTitle: Resources.Notifications.loginForm_successTitle,
 			successMessage: Resources.Notifications.loginForm_successMessage,

@@ -17,7 +17,7 @@ namespace Tourismus.WebApp._Infrastructure.Authentication {
                 if (HashHelper.VerifyHash(password + userCredential.Salt, userCredential.Hash) == false) {
                     return null;
                 }
-                var user = context.Users.FirstOrDefault(u => u.Id == userCredential.Id);
+                var user = context.Users.FirstOrDefault(u => u.Id == userCredential.UserId);
                 if (user != null) {
                     user.Token = Faker.Generators.Strings.GenerateAlphaNumericString(16, 16);
                     context.Users.Update(user);

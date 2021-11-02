@@ -43,6 +43,26 @@
         }
       }
     },
+    "/Authorize": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "operationId": "Authorization_Authorize",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/offers/AddNewProductAction": {
       "post": {
         "tags": [
@@ -165,6 +185,19 @@
           "required": true,
           "x-position": 1
         },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/users/SignOut": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_SignOut",
         "responses": {
           "200": {
             "description": ""
