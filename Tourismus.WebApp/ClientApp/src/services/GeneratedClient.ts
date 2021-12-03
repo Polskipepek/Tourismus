@@ -112,7 +112,7 @@ export class AuthorizationClient extends ClientBase {
     }
 }
 
-export class OfferClient extends ClientBase {
+export class CityClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -123,11 +123,273 @@ export class OfferClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewProductAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/offers/AddNewProductAction";
+    addNewCityAction(parameters: AddNewCityParameters, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/cities/AddNewCityAction";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(action);
+        const content_ = JSON.stringify(parameters);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewCityAction(_response));
+        });
+    }
+
+    protected processAddNewCityAction(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getCities(signal?: AbortSignal | undefined): Promise<City_Dto[] | null> {
+        let url_ = this.baseUrl + "/api/cities/GetCities";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetCities(_response));
+        });
+    }
+
+    protected processGetCities(response: Response): Promise<City_Dto[] | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(City_Dto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<City_Dto[] | null>(<any>null);
+    }
+
+    removeCity(cityId: number, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/cities/RemoveCity";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cityId);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processRemoveCity(_response));
+        });
+    }
+
+    protected processRemoveCity(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+}
+
+export class CountryClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    addNewCountryAction(parameters: AddNewCountryParameters, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/countries/AddNewCountryAction";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(parameters);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewCountryAction(_response));
+        });
+    }
+
+    protected processAddNewCountryAction(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getCountries(signal?: AbortSignal | undefined): Promise<Country_Dto[] | null> {
+        let url_ = this.baseUrl + "/api/countries/GetCountries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetCountries(_response));
+        });
+    }
+
+    protected processGetCountries(response: Response): Promise<Country_Dto[] | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Country_Dto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Country_Dto[] | null>(<any>null);
+    }
+
+    removeCountry(cityId: number, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/countries/RemoveCountry";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cityId);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processRemoveCountry(_response));
+        });
+    }
+
+    protected processRemoveCountry(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+}
+
+export class HotelClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    addNewHotelAction(parameters: AddNewHotelParameters, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/hotels/AddNewHotelAction";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(parameters);
 
         let options_ = <RequestInit>{
             body: content_,
@@ -141,11 +403,11 @@ export class OfferClient extends ClientBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewProductAction(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewHotelAction(_response));
         });
     }
 
-    protected processAddNewProductAction(response: Response): Promise<void> {
+    protected processAddNewHotelAction(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -161,7 +423,7 @@ export class OfferClient extends ClientBase {
     }
 }
 
-export class ReservationClient extends ClientBase {
+export class OfferClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -172,11 +434,11 @@ export class ReservationClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewShopAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/reservations/AddNewShopAction";
+    addNewOfferAction(parameters: AddNewOfferParameters, signal?: AbortSignal | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/offers/AddNewOfferAction";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(action);
+        const content_ = JSON.stringify(parameters);
 
         let options_ = <RequestInit>{
             body: content_,
@@ -190,85 +452,11 @@ export class ReservationClient extends ClientBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewShopAction(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewOfferAction(_response));
         });
     }
 
-    protected processAddNewShopAction(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    editShopAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/reservations/EditShopAction";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(action);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            signal,
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processEditShopAction(_response));
-        });
-    }
-
-    protected processEditShopAction(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    removeShopAction(action: number, signal?: AbortSignal | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/reservations/RemoveShopAction";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(action);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            signal,
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processRemoveShopAction(_response));
-        });
-    }
-
-    protected processRemoveShopAction(response: Response): Promise<void> {
+    protected processAddNewOfferAction(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -516,17 +704,16 @@ export interface IReservation {
 
 export class Offer implements IOffer {
     id!: number;
-    name!: string | undefined;
-    stars!: number;
+    hotelId!: number;
     cityId!: number;
     dateFrom!: moment.Moment;
     dateTo!: moment.Moment;
     price!: number;
     numberOfPeople!: number;
-    photoPaths!: string | undefined;
     description!: string | undefined;
     mealsId!: number | undefined;
     city!: City | undefined;
+    hotel!: Hotel | undefined;
     meals!: Meal | undefined;
     reservations!: Reservation[] | undefined;
 
@@ -542,17 +729,16 @@ export class Offer implements IOffer {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
-            this.stars = _data["stars"];
+            this.hotelId = _data["hotelId"];
             this.cityId = _data["cityId"];
             this.dateFrom = _data["dateFrom"] ? moment(_data["dateFrom"].toString()) : <any>undefined;
             this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
             this.price = _data["price"];
             this.numberOfPeople = _data["numberOfPeople"];
-            this.photoPaths = _data["photoPaths"];
             this.description = _data["description"];
             this.mealsId = _data["mealsId"];
             this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
             this.meals = _data["meals"] ? Meal.fromJS(_data["meals"]) : <any>undefined;
             if (Array.isArray(_data["reservations"])) {
                 this.reservations = [] as any;
@@ -572,17 +758,16 @@ export class Offer implements IOffer {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
-        data["stars"] = this.stars;
+        data["hotelId"] = this.hotelId;
         data["cityId"] = this.cityId;
         data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>undefined;
         data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
         data["price"] = this.price;
         data["numberOfPeople"] = this.numberOfPeople;
-        data["photoPaths"] = this.photoPaths;
         data["description"] = this.description;
         data["mealsId"] = this.mealsId;
         data["city"] = this.city ? this.city.toJSON() : <any>undefined;
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
         data["meals"] = this.meals ? this.meals.toJSON() : <any>undefined;
         if (Array.isArray(this.reservations)) {
             data["reservations"] = [];
@@ -595,17 +780,16 @@ export class Offer implements IOffer {
 
 export interface IOffer {
     id: number;
-    name: string | undefined;
-    stars: number;
+    hotelId: number;
     cityId: number;
     dateFrom: moment.Moment;
     dateTo: moment.Moment;
     price: number;
     numberOfPeople: number;
-    photoPaths: string | undefined;
     description: string | undefined;
     mealsId: number | undefined;
     city: City | undefined;
+    hotel: Hotel | undefined;
     meals: Meal | undefined;
     reservations: Reservation[] | undefined;
 }
@@ -616,6 +800,7 @@ export class City implements ICity {
     countryId!: number;
     isAirport!: boolean;
     idNavigation!: Country | undefined;
+    hotels!: Hotel[] | undefined;
     offers!: Offer[] | undefined;
 
     constructor(data?: ICity) {
@@ -634,6 +819,11 @@ export class City implements ICity {
             this.countryId = _data["countryId"];
             this.isAirport = _data["isAirport"];
             this.idNavigation = _data["idNavigation"] ? Country.fromJS(_data["idNavigation"]) : <any>undefined;
+            if (Array.isArray(_data["hotels"])) {
+                this.hotels = [] as any;
+                for (let item of _data["hotels"])
+                    this.hotels!.push(Hotel.fromJS(item));
+            }
             if (Array.isArray(_data["offers"])) {
                 this.offers = [] as any;
                 for (let item of _data["offers"])
@@ -656,6 +846,11 @@ export class City implements ICity {
         data["countryId"] = this.countryId;
         data["isAirport"] = this.isAirport;
         data["idNavigation"] = this.idNavigation ? this.idNavigation.toJSON() : <any>undefined;
+        if (Array.isArray(this.hotels)) {
+            data["hotels"] = [];
+            for (let item of this.hotels)
+                data["hotels"].push(item.toJSON());
+        }
         if (Array.isArray(this.offers)) {
             data["offers"] = [];
             for (let item of this.offers)
@@ -671,6 +866,7 @@ export interface ICity {
     countryId: number;
     isAirport: boolean;
     idNavigation: Country | undefined;
+    hotels: Hotel[] | undefined;
     offers: Offer[] | undefined;
 }
 
@@ -716,6 +912,78 @@ export interface ICountry {
     id: number;
     name: string | undefined;
     city: City | undefined;
+}
+
+export class Hotel implements IHotel {
+    id!: number;
+    name!: string | undefined;
+    star!: number | undefined;
+    cityId!: number | undefined;
+    description!: string | undefined;
+    photosPaths!: string | undefined;
+    city!: City | undefined;
+    offers!: Offer[] | undefined;
+
+    constructor(data?: IHotel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.star = _data["star"];
+            this.cityId = _data["cityId"];
+            this.description = _data["description"];
+            this.photosPaths = _data["photosPaths"];
+            this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Hotel {
+        data = typeof data === 'object' ? data : {};
+        let result = new Hotel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["star"] = this.star;
+        data["cityId"] = this.cityId;
+        data["description"] = this.description;
+        data["photosPaths"] = this.photosPaths;
+        data["city"] = this.city ? this.city.toJSON() : <any>undefined;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IHotel {
+    id: number;
+    name: string | undefined;
+    star: number | undefined;
+    cityId: number | undefined;
+    description: string | undefined;
+    photosPaths: string | undefined;
+    city: City | undefined;
+    offers: Offer[] | undefined;
 }
 
 export class Meal implements IMeal {
@@ -862,6 +1130,290 @@ export interface IAuthenticateWithCredentialsParameters {
     password: string | undefined;
 }
 
+export class AddNewCityParameters implements IAddNewCityParameters {
+    name!: string | undefined;
+    countryId!: number;
+    isAirport!: boolean;
+
+    constructor(data?: IAddNewCityParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.countryId = _data["countryId"];
+            this.isAirport = _data["isAirport"];
+        }
+    }
+
+    static fromJS(data: any): AddNewCityParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNewCityParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["countryId"] = this.countryId;
+        data["isAirport"] = this.isAirport;
+        return data; 
+    }
+}
+
+export interface IAddNewCityParameters {
+    name: string | undefined;
+    countryId: number;
+    isAirport: boolean;
+}
+
+export class City_Dto implements ICity_Dto {
+    id!: number;
+    name!: string | undefined;
+    countryName!: string | undefined;
+
+    constructor(data?: ICity_Dto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.countryName = _data["countryName"];
+        }
+    }
+
+    static fromJS(data: any): City_Dto {
+        data = typeof data === 'object' ? data : {};
+        let result = new City_Dto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["countryName"] = this.countryName;
+        return data; 
+    }
+}
+
+export interface ICity_Dto {
+    id: number;
+    name: string | undefined;
+    countryName: string | undefined;
+}
+
+export class AddNewCountryParameters implements IAddNewCountryParameters {
+    name!: string | undefined;
+
+    constructor(data?: IAddNewCountryParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): AddNewCountryParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNewCountryParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IAddNewCountryParameters {
+    name: string | undefined;
+}
+
+export class Country_Dto implements ICountry_Dto {
+    id!: number;
+    name!: string | undefined;
+
+    constructor(data?: ICountry_Dto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): Country_Dto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Country_Dto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface ICountry_Dto {
+    id: number;
+    name: string | undefined;
+}
+
+export class AddNewHotelParameters implements IAddNewHotelParameters {
+    name!: string | undefined;
+    star!: number;
+    cityId!: number | undefined;
+    description!: string | undefined;
+    photosPaths!: string | undefined;
+
+    constructor(data?: IAddNewHotelParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.star = _data["star"];
+            this.cityId = _data["cityId"];
+            this.description = _data["description"];
+            this.photosPaths = _data["photosPaths"];
+        }
+    }
+
+    static fromJS(data: any): AddNewHotelParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNewHotelParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["star"] = this.star;
+        data["cityId"] = this.cityId;
+        data["description"] = this.description;
+        data["photosPaths"] = this.photosPaths;
+        return data; 
+    }
+}
+
+export interface IAddNewHotelParameters {
+    name: string | undefined;
+    star: number;
+    cityId: number | undefined;
+    description: string | undefined;
+    photosPaths: string | undefined;
+}
+
+export class AddNewOfferParameters implements IAddNewOfferParameters {
+    hotelId!: number;
+    cityId!: number;
+    dateFrom!: moment.Moment;
+    dateTo!: moment.Moment;
+    price!: number;
+    numberOfPeople!: number;
+    photoPaths!: string | undefined;
+    description!: string | undefined;
+    mealsId!: number | undefined;
+
+    constructor(data?: IAddNewOfferParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hotelId = _data["hotelId"];
+            this.cityId = _data["cityId"];
+            this.dateFrom = _data["dateFrom"] ? moment(_data["dateFrom"].toString()) : <any>undefined;
+            this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
+            this.price = _data["price"];
+            this.numberOfPeople = _data["numberOfPeople"];
+            this.photoPaths = _data["photoPaths"];
+            this.description = _data["description"];
+            this.mealsId = _data["mealsId"];
+        }
+    }
+
+    static fromJS(data: any): AddNewOfferParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNewOfferParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelId"] = this.hotelId;
+        data["cityId"] = this.cityId;
+        data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>undefined;
+        data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
+        data["price"] = this.price;
+        data["numberOfPeople"] = this.numberOfPeople;
+        data["photoPaths"] = this.photoPaths;
+        data["description"] = this.description;
+        data["mealsId"] = this.mealsId;
+        return data; 
+    }
+}
+
+export interface IAddNewOfferParameters {
+    hotelId: number;
+    cityId: number;
+    dateFrom: moment.Moment;
+    dateTo: moment.Moment;
+    price: number;
+    numberOfPeople: number;
+    photoPaths: string | undefined;
+    description: string | undefined;
+    mealsId: number | undefined;
+}
+
 export class AddNewUserParameters implements IAddNewUserParameters {
     firstName!: string | undefined;
     lastName!: string | undefined;
@@ -912,6 +1464,13 @@ export interface IAddNewUserParameters {
     telephoneNumber: string | undefined;
     email: string | undefined;
     password: string | undefined;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
 }
 
 export class SwaggerException extends Error {

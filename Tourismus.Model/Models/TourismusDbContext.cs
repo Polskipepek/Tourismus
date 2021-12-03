@@ -20,6 +20,7 @@ namespace Tourismus.Model.Models
 
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Hotel> Hotels { get; set; }
         public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<Offer> Offers { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
@@ -52,6 +53,18 @@ namespace Tourismus.Model.Models
                     .HasMaxLength(100);
             });
 
+            modelBuilder.Entity<Hotel>(entity =>
+            {
+                entity.Property(e => e.Description).HasMaxLength(500);
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.HasOne(d => d.City)
+                    .WithMany(p => p.Hotels)
+                    .HasForeignKey(d => d.CityId)
+                    .HasConstraintName("FK_Hotels_Cities");
+            });
+
             modelBuilder.Entity<Meal>(entity =>
             {
                 entity.Property(e => e.Name)
@@ -65,13 +78,7 @@ namespace Tourismus.Model.Models
 
                 entity.Property(e => e.DateTo).HasColumnType("datetime");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
+                entity.Property(e => e.Description).IsRequired();
 
                 entity.Property(e => e.Price).HasColumnType("money");
 
@@ -80,6 +87,12 @@ namespace Tourismus.Model.Models
                     .HasForeignKey(d => d.CityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Offers_Cities");
+
+                entity.HasOne(d => d.Hotel)
+                    .WithMany(p => p.Offers)
+                    .HasForeignKey(d => d.HotelId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Offers_Hotels");
 
                 entity.HasOne(d => d.Meals)
                     .WithMany(p => p.Offers)

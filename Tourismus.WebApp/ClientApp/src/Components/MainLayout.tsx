@@ -27,9 +27,9 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 		});
 	};
 
-	const changePage = (page: string, menuItemId: string) => {
+	const changePage = (page: string) => {
 		props.history.push(page);
-		if (menuItemId != "4") setSelectedKey(menuItemId);
+		setSelectedKey(page);
 	};
 
 	const getCurrentPage = () => {
@@ -40,6 +40,8 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 				return "2";
 			case Resources.AvailablePages.aboutUsPage:
 				return "3";
+			case Resources.AvailablePages.adminDashboardPage:
+				return "4";
 		}
 	};
 
@@ -48,32 +50,35 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 			<Layout>
 				<Header style={{ position: "fixed", zIndex: 1, width: "100%", backgroundColor: "#fff" }}>
 					<Menu mode="horizontal" theme="light" style={{ textAlign: "center" }} selectedKeys={[selectedKey]}>
-						<Menu.Item key="1" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.homePage, "1")}>
+						<Menu.Item key="1" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.homePage)}>
 							<HomeOutlined />
 							{Resources.PageNames.homePage}
 						</Menu.Item>
 						{user && (
-							<Menu.Item key="2" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.userProfilePage, "2")}>
+							<Menu.Item key="2" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.userProfilePage)}>
 								{Resources.PageNames.profilePage}
 							</Menu.Item>
 						)}
 						{user != undefined && (
-							<Menu.Item key="3" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.aboutUsPage, "3")}>
+							<Menu.Item key="3" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.aboutUsPage)}>
 								{Resources.PageNames.aboutUsPage}
 							</Menu.Item>
 						)}
+						<Menu.Item key="4" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.adminDashboardPage)}>
+							{Resources.PageNames.adminDashboardPage}
+						</Menu.Item>
 						{user == undefined && (
-							<Menu.Item key="4" style={{ float: "right" }} onClick={() => setLoginModalVisibility(true)}>
+							<Menu.Item key="98" style={{ float: "right" }} onClick={() => setLoginModalVisibility(true)}>
 								{Resources.Buttons.layout_signIn}
 							</Menu.Item>
 						)}
 						{user == undefined && (
-							<Menu.Item key="5" style={{ float: "right" }} onClick={() => setRegisterModalVisibility(true)}>
+							<Menu.Item key="97" style={{ float: "right" }} onClick={() => setRegisterModalVisibility(true)}>
 								{Resources.Buttons.layout_register}
 							</Menu.Item>
 						)}
 						{user != undefined && (
-							<Menu.Item key="6" style={{ float: "right" }} onClick={() => signOut()}>
+							<Menu.Item key="99" style={{ float: "right" }} onClick={() => signOut()}>
 								{Resources.Buttons.layout_signOut}
 							</Menu.Item>
 						)}
@@ -86,6 +91,7 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 						marginTop: 80,
 						marginLeft: 80,
 						marginRight: 80,
+						bottom: 100,
 					}}>
 					{props.children}
 				</Content>

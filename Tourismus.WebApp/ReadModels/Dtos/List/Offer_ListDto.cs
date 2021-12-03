@@ -2,7 +2,7 @@
 
 namespace Tourismus.WebApp.ReadModels.Dtos.List {
     public class Offer_ListDto {
-        public string Name { get; set; }
+        public int Id { get; set; }
         public int Stars { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }

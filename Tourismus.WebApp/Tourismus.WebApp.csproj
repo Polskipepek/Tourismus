@@ -30,11 +30,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="ClientApp\src\services\Dtos\City_Dto.ts">
+		  <CustomToolNamespace>ReadModels\Dtos\ControllerBase\City_Dto.cs</CustomToolNamespace>
+		</None>
+		<None Update="ClientApp\src\services\Dtos\Country_Dto.ts">
+		  <CustomToolNamespace>ReadModels\Dtos\ControllerBase\Country_Dto.cs</CustomToolNamespace>
+		</None>
+		<None Update="ClientApp\src\services\ListDtos\Hotel_ListDto.ts">
+		  <CustomToolNamespace>ReadModels\Dtos\List\Hotel_ListDto.cs</CustomToolNamespace>
+		</None>
+		<None Update="ClientApp\src\services\ListDtos\Meal_ListDto.ts">
+		  <CustomToolNamespace>ReadModels\Dtos\List\Meal_ListDto.cs</CustomToolNamespace>
+		</None>
 		<None Update="ClientApp\src\services\ListDtos\Offer_ListDto.ts">
-			<CustomToolNamespace>ReadModels\Dtos\Single\Offer_ListDto.cs</CustomToolNamespace>
+			<CustomToolNamespace>ReadModels\Dtos\List\Offer_ListDto.cs</CustomToolNamespace>
 		</None>
 		<None Update="ClientApp\src\services\SingleDto\Offer_DetailsDto.ts">
-			<CustomToolNamespace>ReadModels\Dtos\List\Offer_DetailsDto.cs</CustomToolNamespace>
+			<CustomToolNamespace>ReadModels\Dtos\Single\Offer_DetailsDto.cs</CustomToolNamespace>
 		</None>
 	</ItemGroup>
 	

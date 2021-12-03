@@ -62,7 +62,7 @@ const validationSchema: Yup.SchemaOf<IRegisterFormValues> = Yup.object({
 		.max(30)
 		.defined()
 		.oneOf([Yup.ref("password"), null], Resources.Validation.passwordConfirmation),
-	firstName: Yup.string().min(4).max(30).defined(),
+	firstName: Yup.string().min(2).max(30).defined(),
 	lastName: Yup.string().min(4).max(30).defined(),
 	phoneNumber: Yup.string().min(4).max(30).defined().matches(phoneRegExp, Resources.Validation.phoneNumber),
 });

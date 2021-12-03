@@ -22,6 +22,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Hotels]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Meals]",
          "ObjectType": 0
       },

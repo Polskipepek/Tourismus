@@ -3,6 +3,7 @@
 
 export interface IOffer_DetailsDto {
 	
+		id: number;
 		name: string;
 		stars: number;
 		cityName: string;

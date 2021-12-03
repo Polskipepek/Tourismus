@@ -7,6 +7,7 @@ import { AboutUsPage } from "./Components/Pages/AboutUsPage";
 import UserProfilePage from "./Components/Pages/UserProfilePage";
 import { IUser, UserClient } from "./services/GeneratedClient";
 import { createContext, useContext, useEffect, useState } from "react";
+import AdminDashboardPage from "./Components/Pages/AdminDashboardPage";
 
 const usePersistentState = (key: string, defaultValue: any) => {
 	const _key = `persistent_state_${key}`;
@@ -81,6 +82,7 @@ const App: React.FunctionComponent = () => {
 						<Route path={Resources.AvailablePages.homePage} component={HomePage} />
 						<Route path={Resources.AvailablePages.aboutUsPage} component={AboutUsPage} />
 						<Route path={Resources.AvailablePages.userProfilePage} component={UserProfilePage} />
+						<Route path={Resources.AvailablePages.adminDashboardPage} component={AdminDashboardPage} />
 						<Redirect from="/" to={Resources.AvailablePages.homePage} />
 					</Switch>
 				</MainLayout>

@@ -3,7 +3,7 @@ export default class Resources {
     homePage: "/home",
     userProfilePage: "/profile",
     aboutUsPage: "/aboutUs",
-    registerShop: "/registerShop/:token",
+    adminDashboardPage:"/dashboardAdmin",
   };
 
   public static PageHeader = {
@@ -11,11 +11,19 @@ export default class Resources {
     profilePage: "Profil",
     registerPage: "Rejestracja",
     loginPage: "Logowanie",
+    CountryModalHeader: "Dodaj kraj",
+    CityModalHeader:"Dodaj miasto",
+  };
+
+  public static ModalHeader = {
+    CountryModalHeader: "Dodaj kraj",
+    CityModalHeader:"Dodaj miasto",
   };
 
   public static PageNames = {
     homePage: "Strona główna",
     profilePage: "Profil",
+    adminDashboardPage: "Dashboard administratora",
     aboutUsPage: "O nas",
   };
 
@@ -25,6 +33,9 @@ export default class Resources {
     firstName: "Imię",
     lastName: "Nazwisko",
     phoneNumber: "Numer telefonu",
+    countryName: "Kraj",
+    cityName: "Miasto",
+    isAirport: "Lotnisko",
   };
 
   public static Validation = {
@@ -56,12 +67,22 @@ export default class Resources {
     registrationShopForm_SuccessMessage: "",
     registrationShopForm_failureTitle: "Błąd rejestracji sklepu",
     registrationShopForm_failureMessage: "Wystąpił błąd podczas rejestracji sklepu",
+
+    successTitle: "Akcja zakończona sukcesem.",
+    successMessage: "Yay!",
+
+    failureTitle: "Ups!",
+    failureMessage: "Ta tablica tutaj nie stała!",
+    
   };
 
   public static Buttons = {
     layout_signIn: "Zaloguj",
     layout_register: "Zarejestruj",
     layout_signOut: "Wyloguj",
+    addCity:"Dodaj miasto",
+    addCountry: "Dodaj kraj",
+    remove:"Usuń",
   };
 
   static persistentKeys = {

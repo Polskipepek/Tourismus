@@ -63,97 +63,225 @@
         }
       }
     },
-    "/api/offers/AddNewProductAction": {
+    "/api/cities/AddNewCityAction": {
+      "post": {
+        "tags": [
+          "City"
+        ],
+        "operationId": "City_AddNewCityAction",
+        "requestBody": {
+          "x-name": "parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewCityParameters"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cities/GetCities": {
+      "post": {
+        "tags": [
+          "City"
+        ],
+        "operationId": "City_GetCities",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "nullable": true,
+                  "items": {
+                    "$ref": "#/components/schemas/City_Dto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cities/RemoveCity": {
+      "post": {
+        "tags": [
+          "City"
+        ],
+        "operationId": "City_RemoveCity",
+        "requestBody": {
+          "x-name": "cityId",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/AddNewCountryAction": {
+      "post": {
+        "tags": [
+          "Country"
+        ],
+        "operationId": "Country_AddNewCountryAction",
+        "requestBody": {
+          "x-name": "parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewCountryParameters"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/GetCountries": {
+      "post": {
+        "tags": [
+          "Country"
+        ],
+        "operationId": "Country_GetCountries",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "nullable": true,
+                  "items": {
+                    "$ref": "#/components/schemas/Country_Dto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/RemoveCountry": {
+      "post": {
+        "tags": [
+          "Country"
+        ],
+        "operationId": "Country_RemoveCountry",
+        "requestBody": {
+          "x-name": "cityId",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/hotels/AddNewHotelAction": {
+      "post": {
+        "tags": [
+          "Hotel"
+        ],
+        "operationId": "Hotel_AddNewHotelAction",
+        "requestBody": {
+          "x-name": "parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewHotelParameters"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/offers/AddNewOfferAction": {
       "post": {
         "tags": [
           "Offer"
         ],
-        "operationId": "Offer_AddNewProductAction",
+        "operationId": "Offer_AddNewOfferAction",
         "requestBody": {
-          "x-name": "action",
+          "x-name": "parameters",
           "content": {
             "application/json": {
               "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/reservations/AddNewShopAction": {
-      "post": {
-        "tags": [
-          "Reservation"
-        ],
-        "operationId": "Reservation_AddNewShopAction",
-        "requestBody": {
-          "x-name": "action",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/reservations/EditShopAction": {
-      "post": {
-        "tags": [
-          "Reservation"
-        ],
-        "operationId": "Reservation_EditShopAction",
-        "requestBody": {
-          "x-name": "action",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/reservations/RemoveShopAction": {
-      "post": {
-        "tags": [
-          "Reservation"
-        ],
-        "operationId": "Reservation_RemoveShopAction",
-        "requestBody": {
-          "x-name": "action",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
+                "$ref": "#/components/schemas/AddNewOfferParameters"
               }
             }
           },
@@ -308,11 +436,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "stars": {
+          "hotelId": {
             "type": "integer",
             "format": "int32"
           },
@@ -336,10 +460,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "photoPaths": {
-            "type": "string",
-            "nullable": true
-          },
           "description": {
             "type": "string",
             "nullable": true
@@ -354,6 +474,14 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/City"
+              }
+            ]
+          },
+          "hotel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Hotel"
               }
             ]
           },
@@ -401,6 +529,13 @@
               }
             ]
           },
+          "hotels": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Hotel"
+            }
+          },
           "offers": {
             "type": "array",
             "nullable": true,
@@ -429,6 +564,53 @@
                 "$ref": "#/components/schemas/City"
               }
             ]
+          }
+        }
+      },
+      "Hotel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "star": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cityId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "photosPaths": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/City"
+              }
+            ]
+          },
+          "offers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Offer"
+            }
           }
         }
       },
@@ -494,6 +676,135 @@
           },
           "password": {
             "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AddNewCityParameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isAirport": {
+            "type": "boolean"
+          }
+        }
+      },
+      "City_Dto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryName": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AddNewCountryParameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Country_Dto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AddNewHotelParameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "star": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cityId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "photosPaths": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AddNewOfferParameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "hotelId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dateFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dateTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "numberOfPeople": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "photoPaths": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "mealsId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         }

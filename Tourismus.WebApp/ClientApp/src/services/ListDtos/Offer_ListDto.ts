@@ -3,7 +3,7 @@
 
 export interface IOffer_ListDto {
 	
-		Name: string;
+		Id: number;
 		Stars: number;
 		CityName: string;
 		CountryName: string;

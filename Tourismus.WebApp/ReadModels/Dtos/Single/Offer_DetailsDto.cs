@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace Tourismus.WebApp.ReadModels.Dtos.List {
+namespace Tourismus.WebApp.ReadModels.Dtos.Single {
     public class Offer_DetailsDto {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Stars { get; set; }
         public string CityName { get; set; }
