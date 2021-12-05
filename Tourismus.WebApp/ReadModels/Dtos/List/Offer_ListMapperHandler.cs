@@ -15,12 +15,12 @@ namespace Tourismus.WebApp.ReadModels.Dtos.List {
                 DateFrom = x.DateFrom,
                 DateTo = x.DateTo,
                 CityName = x.City.Name,
-                CountryName = x.City.IdNavigation.Name,
+                CountryName = x.City.Country.Name,
                 Description = x.Description,
                 MealType = x.Meals.Name,
                 Price = x.Price,
                 Stars = x.Hotel.Star ?? 0,
-                NumberOfPeople=x.NumberOfPeople,
+                NumberOfPeople = x.NumberOfPeople,
             }).ToListAsync(cancellationToken: token);
         }
     }

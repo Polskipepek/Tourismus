@@ -521,7 +521,7 @@
           "isAirport": {
             "type": "boolean"
           },
-          "idNavigation": {
+          "country": {
             "nullable": true,
             "oneOf": [
               {

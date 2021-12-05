@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Tourismus.Model.Models;
+﻿using Tourismus.Model.Models;
 using Tourismus.WebApp.ReadModels._Infrastructure.Mappers;
 
 namespace Tourismus.WebApp.ReadModels.Dtos.Single {
@@ -10,13 +9,13 @@ namespace Tourismus.WebApp.ReadModels.Dtos.Single {
                 DateFrom = x.DateFrom,
                 DateTo = x.DateTo,
                 CityName = x.City.Name,
-                CountryName = x.City.IdNavigation.Name,
+                CountryName = x.City.Country.Name,
                 Description = x.Description,
                 MealType = x.Meals.Name,
                 Price = x.Price,
                 Stars = x.Hotel.Star ?? 0,
                 NumberOfPeople = x.NumberOfPeople,
-                PhotoPaths=x.Hotel.PhotosPaths,
+                PhotoPaths = x.Hotel.PhotosPaths,
             };
         }
     }

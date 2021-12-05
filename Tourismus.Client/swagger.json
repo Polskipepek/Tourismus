@@ -75,7 +75,11 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
           }
         }
       }
@@ -100,6 +104,35 @@
         }
       }
     },
+    "/api/cities/RemoveCity": {
+      "post": {
+        "tags": [
+          "City"
+        ],
+        "operationId": "City_RemoveCity",
+        "parameters": [
+          {
+            "name": "cityId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
     "/api/countries/AddNewCountryAction": {
       "post": {
         "tags": [
@@ -119,7 +152,11 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
           }
         }
       }
@@ -139,6 +176,35 @@
               "items": {
                 "$ref": "#/definitions/Country_Dto"
               }
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/RemoveCountry": {
+      "post": {
+        "tags": [
+          "Country"
+        ],
+        "operationId": "Country_RemoveCountry",
+        "parameters": [
+          {
+            "name": "cityId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
             }
           }
         }

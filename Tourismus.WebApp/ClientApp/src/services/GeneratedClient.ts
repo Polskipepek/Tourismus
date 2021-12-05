@@ -799,7 +799,7 @@ export class City implements ICity {
     name!: string | undefined;
     countryId!: number;
     isAirport!: boolean;
-    idNavigation!: Country | undefined;
+    country!: Country | undefined;
     hotels!: Hotel[] | undefined;
     offers!: Offer[] | undefined;
 
@@ -818,7 +818,7 @@ export class City implements ICity {
             this.name = _data["name"];
             this.countryId = _data["countryId"];
             this.isAirport = _data["isAirport"];
-            this.idNavigation = _data["idNavigation"] ? Country.fromJS(_data["idNavigation"]) : <any>undefined;
+            this.country = _data["country"] ? Country.fromJS(_data["country"]) : <any>undefined;
             if (Array.isArray(_data["hotels"])) {
                 this.hotels = [] as any;
                 for (let item of _data["hotels"])
@@ -845,7 +845,7 @@ export class City implements ICity {
         data["name"] = this.name;
         data["countryId"] = this.countryId;
         data["isAirport"] = this.isAirport;
-        data["idNavigation"] = this.idNavigation ? this.idNavigation.toJSON() : <any>undefined;
+        data["country"] = this.country ? this.country.toJSON() : <any>undefined;
         if (Array.isArray(this.hotels)) {
             data["hotels"] = [];
             for (let item of this.hotels)
@@ -865,7 +865,7 @@ export interface ICity {
     name: string | undefined;
     countryId: number;
     isAirport: boolean;
-    idNavigation: Country | undefined;
+    country: Country | undefined;
     hotels: Hotel[] | undefined;
     offers: Offer[] | undefined;
 }

@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Tourismus.Model.Configuration._Infrastructure;
-using Tourismus.Model.Models;
 
 namespace Tourismus.FakeData.FakeSeeds {
-    abstract class FakeSeederBase<TModel> where TModel : ModelBase {
+    abstract class FakeSeederBase<TModel> where TModel : class {
         public FakeSeederBase(DbSet<TModel> dbSet) {
             this.dbSet = dbSet;
         }
