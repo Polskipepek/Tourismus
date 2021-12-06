@@ -154,6 +154,97 @@
         }
       }
     },
+    "/api/meals/AddNewMealAction": {
+      "post": {
+        "tags": [
+          "Meal"
+        ],
+        "operationId": "Meal_AddNewMealAction",
+        "requestBody": {
+          "x-name": "parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewMealParameters"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meals/GetMeals": {
+      "post": {
+        "tags": [
+          "Meal"
+        ],
+        "operationId": "Meal_GetMeals",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "nullable": true,
+                  "items": {
+                    "$ref": "#/components/schemas/Meal_Dto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meals/RemoveMeal": {
+      "post": {
+        "tags": [
+          "Meal"
+        ],
+        "operationId": "Meal_RemoveMeal",
+        "requestBody": {
+          "x-name": "mealId",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/countries/AddNewCountryAction": {
       "post": {
         "tags": [
@@ -557,13 +648,12 @@
             "type": "string",
             "nullable": true
           },
-          "city": {
+          "cities": {
+            "type": "array",
             "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/City"
-              }
-            ]
+            "items": {
+              "$ref": "#/components/schemas/City"
+            }
           }
         }
       },
@@ -710,6 +800,33 @@
             "nullable": true
           },
           "countryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "isAirport": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AddNewMealParameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Meal_Dto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
             "type": "string",
             "nullable": true
           }

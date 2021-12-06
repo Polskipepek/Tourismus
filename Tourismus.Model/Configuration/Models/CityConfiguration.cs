@@ -12,8 +12,8 @@ namespace Tourismus.Model.Configuration.Models {
                 .HasMaxLength(100);
 
             entity.HasOne(d => d.Country)
-                .WithOne(p => p.City)
-                .HasForeignKey<City>(d => d.CountryId)
+                .WithMany(p => p.Cities)
+                .HasForeignKey(d => d.CountryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Cities_Countries");
         }

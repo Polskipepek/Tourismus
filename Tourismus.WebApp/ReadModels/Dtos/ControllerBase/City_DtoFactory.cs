@@ -12,6 +12,7 @@ namespace Tourismus.WebApp.ReadModels.Dtos.ControllerBase {
                         Id = city.Id,
                         Name = city.Name,
                         CountryName = context.Countries.FirstOrDefault(c => c.Id == city.CountryId).Name,
+                        IsAirport = city.IsAirport,
                     })
                     .ToArray();
         }

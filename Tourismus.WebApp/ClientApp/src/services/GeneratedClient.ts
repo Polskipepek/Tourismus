@@ -243,6 +243,137 @@ export class CityClient extends ClientBase {
     }
 }
 
+export class MealClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    addNewMealAction(parameters: AddNewMealParameters, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/meals/AddNewMealAction";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(parameters);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddNewMealAction(_response));
+        });
+    }
+
+    protected processAddNewMealAction(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getMeals(signal?: AbortSignal | undefined): Promise<Meal_Dto[] | null> {
+        let url_ = this.baseUrl + "/api/meals/GetMeals";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetMeals(_response));
+        });
+    }
+
+    protected processGetMeals(response: Response): Promise<Meal_Dto[] | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Meal_Dto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Meal_Dto[] | null>(<any>null);
+    }
+
+    removeMeal(mealId: number, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/meals/RemoveMeal";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(mealId);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processRemoveMeal(_response));
+        });
+    }
+
+    protected processRemoveMeal(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+}
+
 export class CountryClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -873,7 +1004,7 @@ export interface ICity {
 export class Country implements ICountry {
     id!: number;
     name!: string | undefined;
-    city!: City | undefined;
+    cities!: City[] | undefined;
 
     constructor(data?: ICountry) {
         if (data) {
@@ -888,7 +1019,11 @@ export class Country implements ICountry {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
+            if (Array.isArray(_data["cities"])) {
+                this.cities = [] as any;
+                for (let item of _data["cities"])
+                    this.cities!.push(City.fromJS(item));
+            }
         }
     }
 
@@ -903,7 +1038,11 @@ export class Country implements ICountry {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["city"] = this.city ? this.city.toJSON() : <any>undefined;
+        if (Array.isArray(this.cities)) {
+            data["cities"] = [];
+            for (let item of this.cities)
+                data["cities"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -911,7 +1050,7 @@ export class Country implements ICountry {
 export interface ICountry {
     id: number;
     name: string | undefined;
-    city: City | undefined;
+    cities: City[] | undefined;
 }
 
 export class Hotel implements IHotel {
@@ -1178,6 +1317,7 @@ export class City_Dto implements ICity_Dto {
     id!: number;
     name!: string | undefined;
     countryName!: string | undefined;
+    isAirport!: boolean;
 
     constructor(data?: ICity_Dto) {
         if (data) {
@@ -1193,6 +1333,7 @@ export class City_Dto implements ICity_Dto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.countryName = _data["countryName"];
+            this.isAirport = _data["isAirport"];
         }
     }
 
@@ -1208,6 +1349,7 @@ export class City_Dto implements ICity_Dto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["countryName"] = this.countryName;
+        data["isAirport"] = this.isAirport;
         return data; 
     }
 }
@@ -1216,6 +1358,83 @@ export interface ICity_Dto {
     id: number;
     name: string | undefined;
     countryName: string | undefined;
+    isAirport: boolean;
+}
+
+export class AddNewMealParameters implements IAddNewMealParameters {
+    name!: string | undefined;
+
+    constructor(data?: IAddNewMealParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): AddNewMealParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNewMealParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IAddNewMealParameters {
+    name: string | undefined;
+}
+
+export class Meal_Dto implements IMeal_Dto {
+    id!: number;
+    name!: string | undefined;
+
+    constructor(data?: IMeal_Dto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): Meal_Dto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Meal_Dto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IMeal_Dto {
+    id: number;
+    name: string | undefined;
 }
 
 export class AddNewCountryParameters implements IAddNewCountryParameters {

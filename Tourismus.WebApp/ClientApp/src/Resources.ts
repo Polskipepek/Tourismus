@@ -11,13 +11,12 @@ export default class Resources {
     profilePage: "Profil",
     registerPage: "Rejestracja",
     loginPage: "Logowanie",
-    CountryModalHeader: "Dodaj kraj",
-    CityModalHeader:"Dodaj miasto",
   };
 
   public static ModalHeader = {
-    CountryModalHeader: "Dodaj kraj",
-    CityModalHeader:"Dodaj miasto",
+    AddCountry: "Dodaj kraj",
+    AddCity:"Dodaj miasto",
+    AddMeal:"Dodaj typ posiłku",
   };
 
   public static PageNames = {
@@ -35,6 +34,7 @@ export default class Resources {
     phoneNumber: "Numer telefonu",
     countryName: "Kraj",
     cityName: "Miasto",
+    meal: "Posiłek",
     isAirport: "Lotnisko",
   };
 
@@ -73,7 +73,6 @@ export default class Resources {
 
     failureTitle: "Ups!",
     failureMessage: "Ta tablica tutaj nie stała!",
-    
   };
 
   public static Buttons = {
@@ -81,11 +80,20 @@ export default class Resources {
     layout_register: "Zarejestruj",
     layout_signOut: "Wyloguj",
     addCity:"Dodaj miasto",
+    addMeal:"Dodaj typ posiłku",
     addCountry: "Dodaj kraj",
     remove:"Usuń",
   };
 
   static persistentKeys = {
     User: "User",
+  };
+
+  public static ColumnTitles = {
+    city: "Miasto",
+    country: "Kraj",
+    isAirport: "Lotnisko",
+    action: "Akcja",
+    meal:"Posiłek",
   };
 }

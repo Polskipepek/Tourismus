@@ -133,6 +133,83 @@
         }
       }
     },
+    "/api/meals/AddNewMealAction": {
+      "post": {
+        "tags": [
+          "Meal"
+        ],
+        "operationId": "Meal_AddNewMealAction",
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddNewMealParameters"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/meals/GetMeals": {
+      "post": {
+        "tags": [
+          "Meal"
+        ],
+        "operationId": "Meal_GetMeals",
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Meal_Dto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meals/RemoveMeal": {
+      "post": {
+        "tags": [
+          "Meal"
+        ],
+        "operationId": "Meal_RemoveMeal",
+        "parameters": [
+          {
+            "name": "mealId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
     "/api/countries/AddNewCountryAction": {
       "post": {
         "tags": [
@@ -468,7 +545,7 @@
         "IsAirport": {
           "type": "boolean"
         },
-        "IdNavigation": {
+        "Country": {
           "$ref": "#/definitions/Country"
         },
         "Hotels": {
@@ -498,8 +575,11 @@
         "Name": {
           "type": "string"
         },
-        "City": {
-          "$ref": "#/definitions/City"
+        "Cities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/City"
+          }
         }
       }
     },
@@ -620,7 +700,8 @@
     "City_Dto": {
       "type": "object",
       "required": [
-        "Id"
+        "Id",
+        "IsAirport"
       ],
       "properties": {
         "Id": {
@@ -631,6 +712,32 @@
           "type": "string"
         },
         "CountryName": {
+          "type": "string"
+        },
+        "IsAirport": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AddNewMealParameters": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        }
+      }
+    },
+    "Meal_Dto": {
+      "type": "object",
+      "required": [
+        "Id"
+      ],
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Name": {
           "type": "string"
         }
       }

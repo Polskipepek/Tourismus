@@ -19,7 +19,7 @@ export const AddCityModal: React.FunctionComponent<IAddCityModalProps> = (props)
 		<>
 			<Modal
 				className="addCity-modal"
-				title={Resources.PageHeader.CityModalHeader}
+				title={Resources.ModalHeader.AddCity}
 				centered
 				visible={props.modalVisible}
 				onCancel={() => props.closeModal()}

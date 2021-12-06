@@ -19,7 +19,6 @@ namespace Tourismus.WebApp.Controllers.Offers {
 
         [HttpPost]
         [Route("[action]")]
-        [SwaggerResponse(HttpStatusCode.OK, null)]
         public async Task<ActionResult> AddNewOfferAction([FromBody][Required] AddNewOfferParameters parameters) {
             if (parameters == null) {
                 throw new System.Exception("Add new offer without parameters?!?");
@@ -34,7 +33,6 @@ namespace Tourismus.WebApp.Controllers.Offers {
             if (city == null) {
                 throw new System.Exception("Add new offer without a city?!?");
             }
-
 
             Offer offer = new() {
                 CityId = parameters.CityId,

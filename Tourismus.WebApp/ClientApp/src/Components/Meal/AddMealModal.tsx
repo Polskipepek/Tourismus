@@ -1,4 +1,4 @@
-import "./country.css";
+import "./city.css";
 
 import { Button, Modal } from "antd";
 
@@ -6,28 +6,28 @@ import { CheckCircleTwoTone } from "@ant-design/icons";
 
 import { IModalComponentProps } from "../../_Infrastructure/Modals/IModalComponentProps";
 import Resources from "../../Resources";
-import { AddCountryForm } from "./AddCountryForm";
+import { AddMealForm } from "./AddMealForm";
 
-interface ILoginProps extends IModalComponentProps {
+interface IAddMealModalProps extends IModalComponentProps {
 	modalVisible: boolean;
 }
 
-export const AddCountryModal: React.FunctionComponent<ILoginProps> = (props) => {
+export const AddMealModal: React.FunctionComponent<IAddMealModalProps> = (props) => {
 	return (
 		<>
 			<Modal
-				className="addCountry-modal"
-				title={Resources.ModalHeader.AddCountry}
+				className="addMeal-modal"
+				title={Resources.ModalHeader.AddMeal}
 				centered
 				visible={props.modalVisible}
 				onCancel={() => props.closeModal()}
 				destroyOnClose
 				footer={[
-					<Button form="addCountry-form" key="submit" htmlType="submit" type="primary">
+					<Button form="addMeal-form" key="submit" htmlType="submit" type="primary">
 						<CheckCircleTwoTone />
 					</Button>,
 				]}>
-				<AddCountryForm {...props} />
+				<AddMealForm {...props} />
 			</Modal>
 		</>
 	);
