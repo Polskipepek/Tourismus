@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Tourismus.Model.Models;
+using Tourismus.WebApp.ReadModels.Dtos.ControllerBase;
+using Tourismus.WebApp.ReadModels.Dtos.List;
 
 namespace Tourismus.WebApp.Controllers.Offers {
     [Route("api/offers")]
@@ -35,6 +37,7 @@ namespace Tourismus.WebApp.Controllers.Offers {
             }
 
             Offer offer = new() {
+                Name=parameters.Name,
                 CityId = parameters.CityId,
                 DateFrom = parameters.DateFrom,
                 DateTo = parameters.DateTo,
@@ -49,6 +52,13 @@ namespace Tourismus.WebApp.Controllers.Offers {
             await context.SaveChangesAsync();
 
             return Ok();
+        }
+
+
+        [HttpPost]
+        [Route("[action]")]
+        public ActionResult<OfferList_Dto[]> GetListOffers() {
+            return OfferList_DtoFactory.BuildDtos(context, context.Offers);
         }
     }
 }

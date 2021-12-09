@@ -552,6 +552,47 @@ export class HotelClient extends ClientBase {
         }
         return Promise.resolve<void>(<any>null);
     }
+
+    getHotels(signal?: AbortSignal | undefined): Promise<Hotel_Dto[] | null> {
+        let url_ = this.baseUrl + "/api/hotels/GetHotels";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetHotels(_response));
+        });
+    }
+
+    protected processGetHotels(response: Response): Promise<Hotel_Dto[] | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Hotel_Dto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Hotel_Dto[] | null>(<any>null);
+    }
 }
 
 export class OfferClient extends ClientBase {
@@ -565,7 +606,7 @@ export class OfferClient extends ClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    addNewOfferAction(parameters: AddNewOfferParameters, signal?: AbortSignal | undefined): Promise<void> {
+    addNewOfferAction(parameters: AddNewOfferParameters, signal?: AbortSignal | undefined): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/offers/AddNewOfferAction";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -577,6 +618,7 @@ export class OfferClient extends ClientBase {
             signal,
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
             }
         };
 
@@ -587,19 +629,61 @@ export class OfferClient extends ClientBase {
         });
     }
 
-    protected processAddNewOfferAction(response: Response): Promise<void> {
+    protected processAddNewOfferAction(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getListOffers(signal?: AbortSignal | undefined): Promise<OfferList_Dto[] | null> {
+        let url_ = this.baseUrl + "/api/offers/GetListOffers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetListOffers(_response));
+        });
+    }
+
+    protected processGetListOffers(response: Response): Promise<OfferList_Dto[] | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OfferList_Dto.fromJS(item));
+            }
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
+        return Promise.resolve<OfferList_Dto[] | null>(<any>null);
     }
 }
 
@@ -692,10 +776,13 @@ export class User implements IUser {
     telephoneNumber!: string | undefined;
     email!: string | undefined;
     accountCreationDate!: moment.Moment;
+    lastSuccessfullyLogin!: moment.Moment;
+    lastUnsuccessfullyLoginAttempt!: moment.Moment;
     isAdmin!: boolean;
     token!: string | undefined;
+    salt!: string | undefined;
+    hash!: string | undefined;
     reservations!: Reservation[] | undefined;
-    userCredentials!: UserCredential[] | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -714,17 +801,16 @@ export class User implements IUser {
             this.telephoneNumber = _data["telephoneNumber"];
             this.email = _data["email"];
             this.accountCreationDate = _data["accountCreationDate"] ? moment(_data["accountCreationDate"].toString()) : <any>undefined;
+            this.lastSuccessfullyLogin = _data["lastSuccessfullyLogin"] ? moment(_data["lastSuccessfullyLogin"].toString()) : <any>undefined;
+            this.lastUnsuccessfullyLoginAttempt = _data["lastUnsuccessfullyLoginAttempt"] ? moment(_data["lastUnsuccessfullyLoginAttempt"].toString()) : <any>undefined;
             this.isAdmin = _data["isAdmin"];
             this.token = _data["token"];
+            this.salt = _data["salt"];
+            this.hash = _data["hash"];
             if (Array.isArray(_data["reservations"])) {
                 this.reservations = [] as any;
                 for (let item of _data["reservations"])
                     this.reservations!.push(Reservation.fromJS(item));
-            }
-            if (Array.isArray(_data["userCredentials"])) {
-                this.userCredentials = [] as any;
-                for (let item of _data["userCredentials"])
-                    this.userCredentials!.push(UserCredential.fromJS(item));
             }
         }
     }
@@ -744,17 +830,16 @@ export class User implements IUser {
         data["telephoneNumber"] = this.telephoneNumber;
         data["email"] = this.email;
         data["accountCreationDate"] = this.accountCreationDate ? this.accountCreationDate.toISOString() : <any>undefined;
+        data["lastSuccessfullyLogin"] = this.lastSuccessfullyLogin ? this.lastSuccessfullyLogin.toISOString() : <any>undefined;
+        data["lastUnsuccessfullyLoginAttempt"] = this.lastUnsuccessfullyLoginAttempt ? this.lastUnsuccessfullyLoginAttempt.toISOString() : <any>undefined;
         data["isAdmin"] = this.isAdmin;
         data["token"] = this.token;
+        data["salt"] = this.salt;
+        data["hash"] = this.hash;
         if (Array.isArray(this.reservations)) {
             data["reservations"] = [];
             for (let item of this.reservations)
                 data["reservations"].push(item.toJSON());
-        }
-        if (Array.isArray(this.userCredentials)) {
-            data["userCredentials"] = [];
-            for (let item of this.userCredentials)
-                data["userCredentials"].push(item.toJSON());
         }
         return data; 
     }
@@ -767,10 +852,13 @@ export interface IUser {
     telephoneNumber: string | undefined;
     email: string | undefined;
     accountCreationDate: moment.Moment;
+    lastSuccessfullyLogin: moment.Moment;
+    lastUnsuccessfullyLoginAttempt: moment.Moment;
     isAdmin: boolean;
     token: string | undefined;
+    salt: string | undefined;
+    hash: string | undefined;
     reservations: Reservation[] | undefined;
-    userCredentials: UserCredential[] | undefined;
 }
 
 export class Reservation implements IReservation {
@@ -841,6 +929,7 @@ export class Offer implements IOffer {
     dateTo!: moment.Moment;
     price!: number;
     numberOfPeople!: number;
+    name!: string | undefined;
     description!: string | undefined;
     mealsId!: number | undefined;
     city!: City | undefined;
@@ -866,6 +955,7 @@ export class Offer implements IOffer {
             this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
             this.price = _data["price"];
             this.numberOfPeople = _data["numberOfPeople"];
+            this.name = _data["name"];
             this.description = _data["description"];
             this.mealsId = _data["mealsId"];
             this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
@@ -895,6 +985,7 @@ export class Offer implements IOffer {
         data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
         data["price"] = this.price;
         data["numberOfPeople"] = this.numberOfPeople;
+        data["name"] = this.name;
         data["description"] = this.description;
         data["mealsId"] = this.mealsId;
         data["city"] = this.city ? this.city.toJSON() : <any>undefined;
@@ -917,6 +1008,7 @@ export interface IOffer {
     dateTo: moment.Moment;
     price: number;
     numberOfPeople: number;
+    name: string | undefined;
     description: string | undefined;
     mealsId: number | undefined;
     city: City | undefined;
@@ -1175,58 +1267,6 @@ export interface IMeal {
     id: number;
     name: string | undefined;
     offers: Offer[] | undefined;
-}
-
-export class UserCredential implements IUserCredential {
-    id!: number;
-    salt!: string | undefined;
-    hash!: string | undefined;
-    userId!: number | undefined;
-    user!: User | undefined;
-
-    constructor(data?: IUserCredential) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.salt = _data["salt"];
-            this.hash = _data["hash"];
-            this.userId = _data["userId"];
-            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): UserCredential {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserCredential();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["salt"] = this.salt;
-        data["hash"] = this.hash;
-        data["userId"] = this.userId;
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IUserCredential {
-    id: number;
-    salt: string | undefined;
-    hash: string | undefined;
-    userId: number | undefined;
-    user: User | undefined;
 }
 
 export class AuthenticateWithCredentialsParameters implements IAuthenticateWithCredentialsParameters {
@@ -1565,6 +1605,58 @@ export interface IAddNewHotelParameters {
     photosPaths: string | undefined;
 }
 
+export class Hotel_Dto implements IHotel_Dto {
+    id!: number;
+    name!: string | undefined;
+    star!: number;
+    cityName!: string | undefined;
+    description!: string | undefined;
+
+    constructor(data?: IHotel_Dto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.star = _data["star"];
+            this.cityName = _data["cityName"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): Hotel_Dto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Hotel_Dto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["star"] = this.star;
+        data["cityName"] = this.cityName;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IHotel_Dto {
+    id: number;
+    name: string | undefined;
+    star: number;
+    cityName: string | undefined;
+    description: string | undefined;
+}
+
 export class AddNewOfferParameters implements IAddNewOfferParameters {
     hotelId!: number;
     cityId!: number;
@@ -1575,6 +1667,7 @@ export class AddNewOfferParameters implements IAddNewOfferParameters {
     photoPaths!: string | undefined;
     description!: string | undefined;
     mealsId!: number | undefined;
+    name!: string | undefined;
 
     constructor(data?: IAddNewOfferParameters) {
         if (data) {
@@ -1596,6 +1689,7 @@ export class AddNewOfferParameters implements IAddNewOfferParameters {
             this.photoPaths = _data["photoPaths"];
             this.description = _data["description"];
             this.mealsId = _data["mealsId"];
+            this.name = _data["name"];
         }
     }
 
@@ -1617,6 +1711,7 @@ export class AddNewOfferParameters implements IAddNewOfferParameters {
         data["photoPaths"] = this.photoPaths;
         data["description"] = this.description;
         data["mealsId"] = this.mealsId;
+        data["name"] = this.name;
         return data; 
     }
 }
@@ -1631,6 +1726,79 @@ export interface IAddNewOfferParameters {
     photoPaths: string | undefined;
     description: string | undefined;
     mealsId: number | undefined;
+    name: string | undefined;
+}
+
+export class OfferList_Dto implements IOfferList_Dto {
+    id!: number;
+    name!: string | undefined;
+    stars!: number;
+    cityName!: string | undefined;
+    countryName!: string | undefined;
+    dateFrom!: moment.Moment;
+    dateTo!: moment.Moment;
+    price!: number;
+    numberOfPeople!: number;
+    mealType!: string | undefined;
+
+    constructor(data?: IOfferList_Dto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.stars = _data["stars"];
+            this.cityName = _data["cityName"];
+            this.countryName = _data["countryName"];
+            this.dateFrom = _data["dateFrom"] ? moment(_data["dateFrom"].toString()) : <any>undefined;
+            this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
+            this.price = _data["price"];
+            this.numberOfPeople = _data["numberOfPeople"];
+            this.mealType = _data["mealType"];
+        }
+    }
+
+    static fromJS(data: any): OfferList_Dto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OfferList_Dto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["stars"] = this.stars;
+        data["cityName"] = this.cityName;
+        data["countryName"] = this.countryName;
+        data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>undefined;
+        data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
+        data["price"] = this.price;
+        data["numberOfPeople"] = this.numberOfPeople;
+        data["mealType"] = this.mealType;
+        return data; 
+    }
+}
+
+export interface IOfferList_Dto {
+    id: number;
+    name: string | undefined;
+    stars: number;
+    cityName: string | undefined;
+    countryName: string | undefined;
+    dateFrom: moment.Moment;
+    dateTo: moment.Moment;
+    price: number;
+    numberOfPeople: number;
+    mealType: string | undefined;
 }
 
 export class AddNewUserParameters implements IAddNewUserParameters {

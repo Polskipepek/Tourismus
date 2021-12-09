@@ -11,5 +11,6 @@ namespace Tourismus.WebApp.Controllers.Offers {
         public string PhotoPaths { get; set; }
         public string Description { get; set; }
         public int? MealsId { get; set; }
+        public string Name { get; set; }
     }
 }

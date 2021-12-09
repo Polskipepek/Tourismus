@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 using Tourismus.Model.Models;
+using Tourismus.WebApp.ReadModels.Dtos.ControllerBase;
+using Tourismus.WebApp.ReadModels.Dtos.List;
 
 namespace Tourismus.WebApp.Controllers.Hotels {
     [Route("api/hotels")]
@@ -39,6 +41,12 @@ namespace Tourismus.WebApp.Controllers.Hotels {
             await context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public ActionResult<Hotel_Dto[]> GetHotels() {
+            return Hotel_DtoFactory.BuildDtos(context, context.Hotels);
         }
     }
 }

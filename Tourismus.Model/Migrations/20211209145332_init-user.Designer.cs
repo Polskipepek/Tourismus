@@ -10,8 +10,8 @@ using Tourismus.Model.Models;
 namespace Tourismus.Model.Migrations
 {
     [DbContext(typeof(TourismusDbContext))]
-    [Migration("20211205215031_FKCitiesCountryFix")]
-    partial class FKCitiesCountryFix
+    [Migration("20211209145332_init-user")]
+    partial class inituser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -137,6 +137,9 @@ namespace Tourismus.Model.Migrations
                     b.Property<int?>("MealsId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
@@ -210,6 +213,12 @@ namespace Tourismus.Model.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("LastSuccessfullyLogin")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("LastUnsuccessfullyLoginAttempt")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("TelephoneNumber")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -243,12 +252,13 @@ namespace Tourismus.Model.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("UserCredentials");
                 });
@@ -321,9 +331,10 @@ namespace Tourismus.Model.Migrations
             modelBuilder.Entity("Tourismus.Model.Models.UserCredential", b =>
                 {
                     b.HasOne("Tourismus.Model.Models.User", "User")
-                        .WithMany("UserCredentials")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_UserCredentials_Users");
+                        .WithOne("UserCredential")
+                        .HasForeignKey("Tourismus.Model.Models.UserCredential", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -359,7 +370,7 @@ namespace Tourismus.Model.Migrations
                 {
                     b.Navigation("Reservations");
 
-                    b.Navigation("UserCredentials");
+                    b.Navigation("UserCredential");
                 });
 #pragma warning restore 612, 618
         }

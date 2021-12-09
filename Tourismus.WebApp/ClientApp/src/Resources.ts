@@ -16,7 +16,9 @@ export default class Resources {
   public static ModalHeader = {
     AddCountry: "Dodaj kraj",
     AddCity:"Dodaj miasto",
+    AddOffer:"Dodaj ofertę",
     AddMeal:"Dodaj typ posiłku",
+    AddHotel:"Dodaj hotel",
   };
 
   public static PageNames = {
@@ -35,7 +37,17 @@ export default class Resources {
     countryName: "Kraj",
     cityName: "Miasto",
     meal: "Posiłek",
+    name: "Nazwa",
     isAirport: "Lotnisko",
+    description: "Opis",
+    dateFrom:"Od",
+    dateTo: "Do",
+    numberOfPeople: "Liczba gości",
+    price: "Cena",
+    photoPaths: "ścieżki",
+    mealsId: "Typ posiłku",
+    hotelId: "Hotel",
+    star:"Gwiazdki",
   };
 
   public static Validation = {
@@ -74,7 +86,13 @@ export default class Resources {
     failureTitle: "Ups!",
     failureMessage: "Ta tablica tutaj nie stała!",
   };
-
+  public static BusinessNames = {
+    offers: "Oferty",
+    hotels: "Hotele",
+    cities: "Miasta",
+    countries: "Kraje",
+    meals: "Posiłki",
+  };
   public static Buttons = {
     layout_signIn: "Zaloguj",
     layout_register: "Zarejestruj",
@@ -82,7 +100,9 @@ export default class Resources {
     addCity:"Dodaj miasto",
     addMeal:"Dodaj typ posiłku",
     addCountry: "Dodaj kraj",
-    remove:"Usuń",
+    addHotel: "Dodaj hotel",
+    remove: "Usuń",
+    addOffer:"Dodaj ofertę"
   };
 
   static persistentKeys = {
@@ -94,6 +114,8 @@ export default class Resources {
     country: "Kraj",
     isAirport: "Lotnisko",
     action: "Akcja",
-    meal:"Posiłek",
+    meal: "Posiłek",
+    offer: "Oferta",
+    stars:"Gwiazdki",
   };
 }

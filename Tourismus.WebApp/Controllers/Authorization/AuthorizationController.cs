@@ -17,8 +17,8 @@ namespace Tourismus.WebApp.Controllers.Authentication {
         [Route("[action]")]
         [AllowAnonymous]
         public async Task<ActionResult<bool>> Authorize() {
-            var a = userService.Authorize();
-            return false;
+            var user = userService.Authorize();
+            return user!=null;
         }
     }
 }

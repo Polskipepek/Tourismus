@@ -1,37 +1,56 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Button, Divider, Modal, Tooltip } from "antd";
+import { Button, Divider, Modal, Tabs, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import Resources from "../../Resources";
-import { CityClient, City_Dto, Country, CountryClient, Country_Dto, MealClient, Meal_Dto } from "../../services/GeneratedClient";
+import { CityClient, City_Dto, Country, CountryClient, Country_Dto, HotelClient, Hotel_Dto, MealClient, Meal_Dto, OfferClient, OfferList_Dto } from "../../services/GeneratedClient";
 import { AddCityModal } from "../City/AddCityModal";
 import { AddCountryModal } from "../Country/AddCountryModal";
+import { AddHotelModal } from "../Hotel/AddHotelModal";
 import { AddMealModal } from "../Meal/AddMealModal";
 import Tabelka from "../OData/Tabelka";
+import { AddOfferModal } from "../Offer/AddOfferModal";
 interface IAdminDashboardPageProps {}
 
 const AdminDashboardPage: React.FC<IAdminDashboardPageProps> = (props) => {
 	const [cities, setCities] = useState<City_Dto[]>([]);
 	const [countries, setCountries] = useState<Country_Dto[]>([]);
 	const [meals, setMeals] = useState<Meal_Dto[]>([]);
+	const [offers, setOffers] = useState<OfferList_Dto[]>([]);
+	const [hotels, setHotels] = useState<Hotel_Dto[]>([]);
 
 	const [addCityModalVisible, setAddCityModalVisible] = useState<boolean>(false);
 	const [addCountryModalVisible, setAddCountryModalVisible] = useState<boolean>(false);
 	const [addMealModalVisible, setAddMealModalVisible] = useState<boolean>(false);
+	const [addOfferModalVisible, setAddOfferModalVisible] = useState<boolean>(false);
+	const [addHotelModalVisible, setAddHotelModalVisible] = useState<boolean>(false);
 
-	useEffect(() => {
+	const { TabPane } = Tabs;
+
+	/* 	useEffect(() => {
 		getCities();
 		getCountries();
 		getMeals();
-	}, []);
+	}, []); */
 
 	useEffect(() => {
 		getCities();
+	}, [, addCityModalVisible]);
+
+	useEffect(() => {
 		getCountries();
-	}, [addCountryModalVisible, addCityModalVisible]);
+	}, [, addCountryModalVisible]);
 
 	useEffect(() => {
 		getMeals();
-	}, [addMealModalVisible]);
+	}, [, addMealModalVisible]);
+	useEffect(() => {
+		getOffers();
+	}, [, addOfferModalVisible]);
+
+	useEffect(() => {
+		getHotels();
+	}, [, addHotelModalVisible]);
+
 	const getCities = () => {
 		new CityClient().getCities().then((resp) => {
 			if (resp != null && (resp as City_Dto[])) {
@@ -55,6 +74,67 @@ const AdminDashboardPage: React.FC<IAdminDashboardPageProps> = (props) => {
 			}
 		});
 	};
+
+	const getOffers = () => {
+		new OfferClient().getListOffers().then((resp) => {
+			if (resp != null && (resp as OfferList_Dto[])) {
+				setOffers(resp);
+			}
+		});
+	};
+
+	const getHotels = () => {
+		new HotelClient().getHotels().then((resp) => {
+			if (resp != null && (resp as Hotel_Dto[])) {
+				setHotels(resp);
+			}
+		});
+	};
+	const offersColumns = [
+		{
+			key: "name",
+			title: Resources.ColumnTitles.offer,
+			dataIndex: "name",
+			sort: (a: OfferList_Dto, b: OfferList_Dto) => a.name!.localeCompare(b.name!),
+		},
+		{
+			key: "stars",
+			title: Resources.ColumnTitles.stars,
+			dataIndex: "stars",
+			sort: (a: OfferList_Dto, b: OfferList_Dto) => a.stars - b.stars,
+		},
+		{
+			key: "cityName",
+			title: Resources.ColumnTitles.city,
+			dataIndex: "cityName",
+			sort: (a: OfferList_Dto, b: OfferList_Dto) => a.cityName!.localeCompare(b.cityName!),
+		},
+		{
+			key: "countryName",
+			title: Resources.ColumnTitles.country,
+			dataIndex: "countryName",
+			sort: (a: OfferList_Dto, b: OfferList_Dto) => a.countryName!.localeCompare(b.countryName!),
+		},
+		{
+			width: "20%",
+			title: Resources.ColumnTitles.action,
+			render: (v: OfferList_Dto) => <Button onClick={() => onClickRemoveCountry(v.id)}>{Resources.Buttons.remove}</Button>,
+		},
+	];
+
+	const hotelsColumns = [
+		{
+			key: "name",
+			title: Resources.ColumnTitles.offer,
+			dataIndex: "name",
+			sort: (a: Hotel_Dto, b: Hotel_Dto) => a.name!.localeCompare(b.name!),
+		},
+		{
+			width: "20%",
+			title: Resources.ColumnTitles.action,
+			render: (v: Hotel_Dto) => <Button onClick={() => onClickRemoveCountry(v.id)}>{Resources.Buttons.remove}</Button>,
+		},
+	];
 
 	const citiesColumns = [
 		{
@@ -138,26 +218,45 @@ const AdminDashboardPage: React.FC<IAdminDashboardPageProps> = (props) => {
 
 	return (
 		<>
-			<Tabelka data={cities} columns={citiesColumns} title={Resources.ColumnTitles.city} />
-			<Button style={{ backgroundColor: "#aaa" }} key={"AddCityBtn"} type="primary" title={Resources.Buttons.addCity} onClick={() => setAddCityModalVisible(true)}>
-				{Resources.Buttons.addCity}
-			</Button>
-			<Divider type="horizontal" />
-
-			<Tabelka data={countries} columns={countriesColumns} title={Resources.ColumnTitles.country} />
-			<Button style={{ backgroundColor: "#aaa" }} key={"AddCountryBtn"} type="primary" title={Resources.Buttons.addCountry} onClick={() => setAddCountryModalVisible(true)}>
-				{Resources.Buttons.addCountry}
-			</Button>
-			<Divider type="horizontal" />
-
-			<Tabelka data={meals} columns={mealsColumns} title={Resources.ColumnTitles.meal} />
-			<Button style={{ backgroundColor: "#aaa" }} key={"AddMealBtn"} type="primary" title={Resources.Buttons.addMeal} onClick={() => setAddMealModalVisible(true)}>
-				{Resources.Buttons.addMeal}
-			</Button>
+			<Tabs defaultActiveKey={Resources.BusinessNames.offers}>
+				<TabPane tab={Resources.BusinessNames.offers} key={Resources.BusinessNames.offers}>
+					<Button style={{ backgroundColor: "#aaa" }} key={"AddOfferBtn"} type="primary" title={Resources.Buttons.addOffer} onClick={() => setAddOfferModalVisible(true)}>
+						{Resources.Buttons.addOffer}
+					</Button>
+					<br /> <br /> <Tabelka data={offers} columns={offersColumns} />
+				</TabPane>
+				<TabPane tab={Resources.BusinessNames.cities} key={Resources.BusinessNames.cities}>
+					<Button style={{ backgroundColor: "#aaa" }} key={"AddCityBtn"} type="primary" onClick={() => setAddCityModalVisible(true)}>
+						{Resources.Buttons.addCity}
+					</Button>
+					<br /> <br />
+					<Tabelka data={cities} columns={citiesColumns} />
+				</TabPane>
+				<TabPane tab={Resources.BusinessNames.countries} key={Resources.BusinessNames.countries}>
+					<Button style={{ backgroundColor: "#aaa" }} key={"AddCountryBtn"} type="primary" onClick={() => setAddCountryModalVisible(true)}>
+						{Resources.Buttons.addCountry}
+					</Button>
+					<br /> <br /> <Tabelka data={countries} columns={countriesColumns} />
+				</TabPane>
+				<TabPane tab={Resources.BusinessNames.meals} key={Resources.BusinessNames.meals}>
+					<Button style={{ backgroundColor: "#aaa" }} key={"AddMealBtn"} type="primary" onClick={() => setAddMealModalVisible(true)}>
+						{Resources.Buttons.addMeal}
+					</Button>
+					<br /> <br /> <Tabelka data={meals} columns={mealsColumns} />
+				</TabPane>
+				<TabPane tab={Resources.BusinessNames.hotels} key={Resources.BusinessNames.hotels}>
+					<Button style={{ backgroundColor: "#aaa" }} key={"AddHotelBtn"} type="primary" onClick={() => setAddHotelModalVisible(true)}>
+						{Resources.Buttons.addHotel}
+					</Button>
+					<br /> <br /> <Tabelka data={hotels} columns={hotelsColumns} />
+				</TabPane>
+			</Tabs>
 
 			<AddCountryModal modalVisible={addCountryModalVisible} closeModal={() => setAddCountryModalVisible(false)} />
 			<AddCityModal modalVisible={addCityModalVisible} closeModal={() => setAddCityModalVisible(false)} countriesToAddCity={countries} />
 			<AddMealModal modalVisible={addMealModalVisible} closeModal={() => setAddMealModalVisible(false)} />
+			<AddOfferModal modalVisible={addOfferModalVisible} closeModal={() => setAddOfferModalVisible(false)} />
+			<AddHotelModal modalVisible={addHotelModalVisible} closeModal={() => setAddHotelModalVisible(false)} />
 		</>
 	);
 };

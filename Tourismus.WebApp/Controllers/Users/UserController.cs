@@ -22,10 +22,12 @@ namespace Tourismus.WebApp.Controllers.Users {
 
         private readonly TourismusDbContext context;
 
+        long date2000 = 630822816000000000;
+
         [HttpPost]
         [Route("[action]")]
         [SwaggerResponse(HttpStatusCode.OK, null)]
-        public async Task<ActionResult> AddNewUserAction([FromBody][Required] AddNewUserParameters parameters) {
+        public  IActionResult AddNewUserAction([FromBody][Required] AddNewUserParameters parameters) {
             if (parameters == null || parameters.Password.Length < 8 || parameters.Email.Length < 4) {
                 throw new Exception("Wrong parameters");
             }
@@ -42,18 +44,16 @@ namespace Tourismus.WebApp.Controllers.Users {
                 FirstName = parameters.FirstName,
                 LastName = parameters.LastName,
                 TelephoneNumber = parameters.TelephoneNumber,
-            };
-
-            var userCredential = new UserCredential {
                 Salt = salt,
                 Hash = HashHelper.CreateSha256(parameters.Password, salt),
-                UserId = context.Users.Count() - 1,
+                IsAdmin =false,
+                LastUnsuccessfullyLoginAttempt = new DateTime(date2000),
+                LastSuccessfullyLogin=new DateTime(date2000),
             };
 
             try {
-                await context.Users.AddAsync(user);
-                await context.UserCredentials.AddAsync(userCredential);
-                await context.SaveChangesAsync();
+                context.Users.Add(user);
+                context.SaveChanges();
             } catch (Exception e) {
                 throw new Exception(e.Message);
             }

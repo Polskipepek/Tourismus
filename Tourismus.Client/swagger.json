@@ -330,7 +330,31 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/offers/GetListOffers": {
+      "post": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "Offer_GetListOffers",
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OfferList_Dto"
+              }
+            }
           }
         }
       }
@@ -379,6 +403,8 @@
       "required": [
         "Id",
         "AccountCreationDate",
+        "LastSuccessfullyLogin",
+        "LastUnsuccessfullyLoginAttempt",
         "IsAdmin"
       ],
       "properties": {
@@ -399,6 +425,14 @@
           "type": "string"
         },
         "AccountCreationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastSuccessfullyLogin": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastUnsuccessfullyLoginAttempt": {
           "type": "string",
           "format": "date-time"
         },
@@ -498,6 +532,9 @@
         "NumberOfPeople": {
           "type": "integer",
           "format": "int32"
+        },
+        "Name": {
+          "type": "string"
         },
         "Description": {
           "type": "string"
@@ -834,6 +871,55 @@
         "MealsId": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "OfferList_Dto": {
+      "type": "object",
+      "required": [
+        "Id",
+        "Stars",
+        "DateFrom",
+        "DateTo",
+        "Price",
+        "NumberOfPeople"
+      ],
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Stars": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CityName": {
+          "type": "string"
+        },
+        "CountryName": {
+          "type": "string"
+        },
+        "DateFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "DateTo": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Price": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "NumberOfPeople": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "MealType": {
+          "type": "string"
         }
       }
     },

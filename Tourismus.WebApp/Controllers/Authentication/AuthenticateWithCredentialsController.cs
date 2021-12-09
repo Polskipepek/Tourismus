@@ -28,7 +28,7 @@ namespace Tourismus.WebApp.Controllers.Authentication {
             if (string.IsNullOrEmpty(action.Password) || string.IsNullOrEmpty(action.Mail) || !MailHelper.IsValidEmail(action.Mail))
                 return Unauthorized(null);
 
-            var user = await userService.AuthenticateAsync(action.Mail, action.Password);
+            var user =  userService.AuthenticateAsync(action.Mail, action.Password);
 
             if (user != null) {
                 SignIn(action.Mail, ref user);

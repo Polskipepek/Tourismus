@@ -11,18 +11,16 @@ namespace Tourismus.WebApp._Infrastructure.Authentication {
             this.context = context;
         }
 
-        public async Task<User> AuthenticateAsync(string mail, string password) {
-            var userCredential = await TryGetUserCredentials(mail);
-            if (userCredential != null) {
-                if (HashHelper.VerifyHash(password + userCredential.Salt, userCredential.Hash) == false) {
+        public User AuthenticateAsync(string mail, string password) {
+            var user = TryGetUserCredentials(mail);
+            if (user != null) {
+                if (HashHelper.VerifyHash(password + user.Salt, user.Hash) == false)
                     return null;
-                }
-                var user = context.Users.FirstOrDefault(u => u.Id == userCredential.UserId);
-                if (user != null) {
-                    user.Token = Faker.Generators.Strings.GenerateAlphaNumericString(16, 16);
-                    context.Users.Update(user);
-                    return user;
-                }
+
+                user.Token = Faker.Generators.Strings.GenerateAlphaNumericString(16, 16);
+                context.Users.Update(user);
+                return user;
+
             }
             return null;
         }
@@ -31,10 +29,9 @@ namespace Tourismus.WebApp._Infrastructure.Authentication {
             throw new System.NotImplementedException();
         }
 
-        private async Task<UserCredential> TryGetUserCredentials(string mail) {
-            var user = context.Users.FirstOrDefault(u => u.Email == mail);
+        private User TryGetUserCredentials(string mail) {
 
-            return user != null ? context.UserCredentials.First(u => u.UserId == user.Id) : null;
+            return context.Users.First(u => u.Email == mail);
         }
     }
 }

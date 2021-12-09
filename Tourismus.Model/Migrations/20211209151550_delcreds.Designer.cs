@@ -10,8 +10,8 @@ using Tourismus.Model.Models;
 namespace Tourismus.Model.Migrations
 {
     [DbContext(typeof(TourismusDbContext))]
-    [Migration("20211205202615_Initial1")]
-    partial class Initial1
+    [Migration("20211209151550_delcreds")]
+    partial class delcreds
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,8 +42,7 @@ namespace Tourismus.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId")
-                        .IsUnique();
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Cities");
                 });
@@ -138,6 +137,9 @@ namespace Tourismus.Model.Migrations
                     b.Property<int?>("MealsId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
@@ -203,6 +205,9 @@ namespace Tourismus.Model.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Hash")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
@@ -210,6 +215,15 @@ namespace Tourismus.Model.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("LastSuccessfullyLogin")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("LastUnsuccessfullyLoginAttempt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Salt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TelephoneNumber")
                         .IsRequired()
@@ -225,40 +239,11 @@ namespace Tourismus.Model.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Tourismus.Model.Models.UserCredential", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Hash")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCredentials");
-                });
-
             modelBuilder.Entity("Tourismus.Model.Models.City", b =>
                 {
                     b.HasOne("Tourismus.Model.Models.Country", "Country")
-                        .WithOne("City")
-                        .HasForeignKey("Tourismus.Model.Models.City", "CountryId")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
                         .HasConstraintName("FK_Cities_Countries")
                         .IsRequired();
 
@@ -319,16 +304,6 @@ namespace Tourismus.Model.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Tourismus.Model.Models.UserCredential", b =>
-                {
-                    b.HasOne("Tourismus.Model.Models.User", "User")
-                        .WithMany("UserCredentials")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_UserCredentials_Users");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Tourismus.Model.Models.City", b =>
                 {
                     b.Navigation("Hotels");
@@ -338,7 +313,7 @@ namespace Tourismus.Model.Migrations
 
             modelBuilder.Entity("Tourismus.Model.Models.Country", b =>
                 {
-                    b.Navigation("City");
+                    b.Navigation("Cities");
                 });
 
             modelBuilder.Entity("Tourismus.Model.Models.Hotel", b =>
@@ -359,8 +334,6 @@ namespace Tourismus.Model.Migrations
             modelBuilder.Entity("Tourismus.Model.Models.User", b =>
                 {
                     b.Navigation("Reservations");
-
-                    b.Navigation("UserCredentials");
                 });
 #pragma warning restore 612, 618
         }

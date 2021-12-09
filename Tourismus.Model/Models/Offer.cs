@@ -14,6 +14,7 @@ namespace Tourismus.Model.Models {
         public DateTime DateTo { get; set; }
         public decimal Price { get; set; }
         public int NumberOfPeople { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public int? MealsId { get; set; }
         public virtual City City { get; set; }

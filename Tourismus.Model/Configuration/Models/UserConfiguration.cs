@@ -25,7 +25,17 @@ namespace Tourismus.Model.Configuration.Models {
                 .IsRequired()
                 .HasMaxLength(100);
 
+            entity.Property(e => e.LastSuccessfullyLogin)
+                .HasColumnType("datetime"); 
+
+            entity.Property(e => e.LastUnsuccessfullyLoginAttempt)
+                .HasColumnType("datetime");
+            entity.Property(e => e.IsAdmin)
+                .HasColumnType("bit")
+                .IsRequired();
+
             entity.Property(e => e.Token).HasMaxLength(1000);
+
         }
     }
 }

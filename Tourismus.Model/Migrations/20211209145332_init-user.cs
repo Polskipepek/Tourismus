@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tourismus.Model.Migrations
 {
-    public partial class Initial : Migration
+    public partial class inituser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,8 @@ namespace Tourismus.Model.Migrations
                     TelephoneNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     AccountCreationDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    LastSuccessfullyLogin = table.Column<DateTime>(type: "datetime", nullable: false),
+                    LastUnsuccessfullyLoginAttempt = table.Column<DateTime>(type: "datetime", nullable: false),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
                 },
@@ -81,17 +83,17 @@ namespace Tourismus.Model.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Salt = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     Hash = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserCredentials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserCredentials_Users",
+                        name: "FK_UserCredentials_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,6 +131,7 @@ namespace Tourismus.Model.Migrations
                     DateTo = table.Column<DateTime>(type: "datetime", nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MealsId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -186,8 +189,7 @@ namespace Tourismus.Model.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_CountryId",
                 table: "Cities",
-                column: "CountryId",
-                unique: true);
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_CityId",
@@ -222,7 +224,8 @@ namespace Tourismus.Model.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserCredentials_UserId",
                 table: "UserCredentials",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

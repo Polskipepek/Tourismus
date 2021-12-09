@@ -41,12 +41,14 @@ class InnerForm extends React.Component<IAddCityFormProps & FormikProps<IAddCity
 						<TextInputF {...this.props} name="cityName" placeholder={Resources.InputPlaceholder.cityName} />
 					</Col>
 				</Row>
+				<br />
 				<Row gutter={[8, 16]}>
 					<Col span={4}>{Resources.InputPlaceholder.countryName}</Col>
 					<Col span={20}>
 						<SelectF {...this.props} name="countryId" width={"100%"} placeholder={Resources.InputPlaceholder.countryName} options={this.props.countries} labelKey="name" valueKey="id" />
 					</Col>
 				</Row>
+				<br />
 				<Row gutter={[8, 16]}>
 					<Col span={4}>{Resources.InputPlaceholder.isAirport}</Col>
 					<Col span={20}>

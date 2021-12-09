@@ -23,7 +23,6 @@ namespace Tourismus.Model.Models {
         public virtual DbSet<Offer> Offers { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserCredential> UserCredentials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -35,7 +34,6 @@ namespace Tourismus.Model.Models {
             modelBuilder.ApplyConfiguration(new OfferConfiguration());
             modelBuilder.ApplyConfiguration(new ReservationConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new UserCredentialConfiguration());
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
