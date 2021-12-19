@@ -4,9 +4,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Tourismus.FakeData.FakeSeeds;
+using Tourismus.Model.Models;
 using Tourismus.WebApp.Configuration.Modules;
 using Tourismus.WebApp.Configuration.Modules.Authentication;
 using Tourismus.WebApp.Configuration.Modules.OData;
@@ -70,6 +75,16 @@ namespace Tourismus {
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope()) {
+                var context = serviceScope.ServiceProvider.GetRequiredService<TourismusDbContext>();
+                if (context.Database.GetService<IRelationalDatabaseCreator>().HasTables() == false) {
+                    context.Database.Migrate();
+                    new TourismusDbSeeder().SeedFakeData(context);
+                }
+            }
+
+           
         }
     }
 }

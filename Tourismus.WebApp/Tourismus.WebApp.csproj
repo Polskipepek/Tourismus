@@ -19,6 +19,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.13" />
 		<PackageReference Include="Microsoft.OData.Core" Version="7.8.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NSwag.Annotations" Version="13.10.8" />
@@ -30,6 +31,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Helpers\Helpers.csproj" />
+		<ProjectReference Include="..\Tourismus.FakeData\Tourismus.FakeData.csproj" />
 		<ProjectReference Include="..\Tourismus.Model\Tourismus.Model.csproj" />
 	</ItemGroup>
 
@@ -51,6 +53,9 @@
 		</None>
 		<None Update="ClientApp\src\services\SingleDto\Offer_DetailsDto.ts">
 			<CustomToolNamespace>ReadModels\Dtos\Single\Offer_DetailsDto.cs</CustomToolNamespace>
+		</None>
+		<None Update="ClientApp\src\services\SingleDto\User_DetailsDto.ts">
+		  <CustomToolNamespace>ReadModels\Dtos\Single\User_DetailsDto.cs</CustomToolNamespace>
 		</None>
 	</ItemGroup>
 	

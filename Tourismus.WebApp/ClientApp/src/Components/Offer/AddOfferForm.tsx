@@ -3,7 +3,7 @@ import { Form, FormikBag, FormikProps, withFormik } from "formik";
 import React from "react";
 import { nameof } from "ts-simple-nameof";
 import Resources from "../../Resources";
-import { IAddNewOfferParameters, AddNewOfferParameters, OfferClient, City_Dto, Meal_Dto, Hotel_Dto } from "../../services/GeneratedClient";
+import { AddNewOfferParameters, OfferClient, City_Dto, Meal_Dto, Hotel_Dto } from "../../services/GeneratedClient";
 import { SendActionWithResponseAndNotification } from "../../_Infrastructure/Actions/SendAction";
 import TextInputF from "../../_Infrastructure/Formik/Components/TextInputF";
 import { IModalComponentProps } from "../../_Infrastructure/Modals/IModalComponentProps";
@@ -12,6 +12,7 @@ import moment from "moment";
 import TextAreaF from "../../_Infrastructure/Formik/Components/TextAreaF";
 import SelectF from "../../_Infrastructure/Formik/Components/SelectF";
 import DateF from "../../_Infrastructure/Formik/Components/DateF";
+
 interface IAddOfferFormProps extends IModalComponentProps {
 	closeModal: () => void;
 	cities: City_Dto[];

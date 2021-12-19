@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Button, Divider, Modal, Tabs, Tooltip } from "antd";
+import { Button, Divider, Modal, Spin, Tabs, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import Resources from "../../Resources";
 import { CityClient, City_Dto, Country, CountryClient, Country_Dto, HotelClient, Hotel_Dto, MealClient, Meal_Dto, OfferClient, OfferList_Dto } from "../../services/GeneratedClient";
@@ -125,7 +125,7 @@ const AdminDashboardPage: React.FC<IAdminDashboardPageProps> = (props) => {
 	const hotelsColumns = [
 		{
 			key: "name",
-			title: Resources.ColumnTitles.offer,
+			title: Resources.ColumnTitles.hotel,
 			dataIndex: "name",
 			sort: (a: Hotel_Dto, b: Hotel_Dto) => a.name!.localeCompare(b.name!),
 		},
@@ -223,32 +223,45 @@ const AdminDashboardPage: React.FC<IAdminDashboardPageProps> = (props) => {
 					<Button style={{ backgroundColor: "#aaa" }} key={"AddOfferBtn"} type="primary" title={Resources.Buttons.addOffer} onClick={() => setAddOfferModalVisible(true)}>
 						{Resources.Buttons.addOffer}
 					</Button>
-					<br /> <br /> <Tabelka data={offers} columns={offersColumns} />
+					<br /> <br />
+					<Spin spinning={offers.length == 0}>
+						<Tabelka data={offers} columns={offersColumns} />
+					</Spin>
 				</TabPane>
 				<TabPane tab={Resources.BusinessNames.cities} key={Resources.BusinessNames.cities}>
 					<Button style={{ backgroundColor: "#aaa" }} key={"AddCityBtn"} type="primary" onClick={() => setAddCityModalVisible(true)}>
 						{Resources.Buttons.addCity}
 					</Button>
 					<br /> <br />
-					<Tabelka data={cities} columns={citiesColumns} />
+					<Spin spinning={cities.length == 0}>
+						<Tabelka data={cities} columns={citiesColumns} />
+					</Spin>
 				</TabPane>
 				<TabPane tab={Resources.BusinessNames.countries} key={Resources.BusinessNames.countries}>
 					<Button style={{ backgroundColor: "#aaa" }} key={"AddCountryBtn"} type="primary" onClick={() => setAddCountryModalVisible(true)}>
 						{Resources.Buttons.addCountry}
 					</Button>
-					<br /> <br /> <Tabelka data={countries} columns={countriesColumns} />
+					<br /> <br />
+					<Spin spinning={countries.length == 0}>
+						<Tabelka data={countries} columns={countriesColumns} />
+					</Spin>
 				</TabPane>
 				<TabPane tab={Resources.BusinessNames.meals} key={Resources.BusinessNames.meals}>
 					<Button style={{ backgroundColor: "#aaa" }} key={"AddMealBtn"} type="primary" onClick={() => setAddMealModalVisible(true)}>
 						{Resources.Buttons.addMeal}
 					</Button>
-					<br /> <br /> <Tabelka data={meals} columns={mealsColumns} />
+					<br /> <br />
+					<Spin spinning={meals.length == 0}></Spin>
+					<Tabelka data={meals} columns={mealsColumns} />
 				</TabPane>
 				<TabPane tab={Resources.BusinessNames.hotels} key={Resources.BusinessNames.hotels}>
 					<Button style={{ backgroundColor: "#aaa" }} key={"AddHotelBtn"} type="primary" onClick={() => setAddHotelModalVisible(true)}>
 						{Resources.Buttons.addHotel}
 					</Button>
-					<br /> <br /> <Tabelka data={hotels} columns={hotelsColumns} />
+					<br /> <br />
+					<Spin spinning={hotels.length == 0}>
+						<Tabelka data={hotels} columns={hotelsColumns} />
+					</Spin>
 				</TabPane>
 			</Tabs>
 

@@ -30,6 +30,7 @@ namespace Tourismus.Model.Configuration.Models {
 
             entity.Property(e => e.LastUnsuccessfullyLoginAttempt)
                 .HasColumnType("datetime");
+
             entity.Property(e => e.IsAdmin)
                 .HasColumnType("bit")
                 .IsRequired();

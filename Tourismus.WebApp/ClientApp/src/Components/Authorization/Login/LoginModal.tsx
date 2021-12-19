@@ -21,6 +21,7 @@ export const LoginModal: React.FunctionComponent<ILoginProps> = (props) => {
 	const setUser = (user: IUser | undefined) => {
 		if (toggleUser) {
 			toggleUser(user);
+			console.log(user);
 		}
 	};
 

@@ -1,4 +1,4 @@
 export enum ODataSingleType{
-    ProductDetails="Products",
-    CustomerDetails="Customers",
+    OfferDetails = "Offers",
+    UserDetail = "Users",
 }

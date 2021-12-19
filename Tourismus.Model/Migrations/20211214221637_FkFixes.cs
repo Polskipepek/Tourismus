@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tourismus.Model.Migrations
 {
-    public partial class inituser : Migration
+    public partial class FkFixes : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,10 +44,12 @@ namespace Tourismus.Model.Migrations
                     TelephoneNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     AccountCreationDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    LastSuccessfullyLogin = table.Column<DateTime>(type: "datetime", nullable: false),
-                    LastUnsuccessfullyLoginAttempt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    LastSuccessfullyLogin = table.Column<DateTime>(type: "datetime", nullable: true),
+                    LastUnsuccessfullyLoginAttempt = table.Column<DateTime>(type: "datetime", nullable: true),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
+                    Token = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Hash = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,39 +63,25 @@ namespace Tourismus.Model.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
-                    IsAirport = table.Column<bool>(type: "bit", nullable: false)
+                    IsAirport = table.Column<bool>(type: "bit", nullable: false),
+                    CountryId = table.Column<int>(type: "int", nullable: true),
+                    CountryId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cities_Countries",
+                        name: "FK_Cities_Countries_CountryId",
                         column: x => x.CountryId,
                         principalTable: "Countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserCredentials",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Salt = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
-                    Hash = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserCredentials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserCredentials_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Cities_Countries_CountryId1",
+                        column: x => x.CountryId1,
+                        principalTable: "Countries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,10 +91,10 @@ namespace Tourismus.Model.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Star = table.Column<int>(type: "int", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true),
+                    Star = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhotosPaths = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PhotosPaths = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -125,34 +113,55 @@ namespace Tourismus.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HotelId = table.Column<int>(type: "int", nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: false),
                     DateFrom = table.Column<DateTime>(type: "datetime", nullable: false),
                     DateTo = table.Column<DateTime>(type: "datetime", nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MealsId = table.Column<int>(type: "int", nullable: true)
+                    CityId = table.Column<int>(type: "int", nullable: true),
+                    HotelId = table.Column<int>(type: "int", nullable: true),
+                    MealId = table.Column<int>(type: "int", nullable: true),
+                    CityId1 = table.Column<int>(type: "int", nullable: true),
+                    HotelId1 = table.Column<int>(type: "int", nullable: true),
+                    MealId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Offers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Offers_Cities",
+                        name: "FK_Offers_Cities_CityId",
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Offers_Hotels",
+                        name: "FK_Offers_Cities_CityId1",
+                        column: x => x.CityId1,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offers_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Offers_Meals",
-                        column: x => x.MealsId,
+                        name: "FK_Offers_Hotels_HotelId1",
+                        column: x => x.HotelId1,
+                        principalTable: "Hotels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offers_Meals_MealId",
+                        column: x => x.MealId,
+                        principalTable: "Meals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offers_Meals_MealId1",
+                        column: x => x.MealId1,
                         principalTable: "Meals",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -164,23 +173,37 @@ namespace Tourismus.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OfferId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     ReservationDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    IsPaid = table.Column<bool>(type: "bit", nullable: false)
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    OfferId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    OfferId1 = table.Column<int>(type: "int", nullable: true),
+                    UserId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_Offers",
+                        name: "FK_Reservations_Offers_OfferId",
                         column: x => x.OfferId,
                         principalTable: "Offers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reservations_Users",
+                        name: "FK_Reservations_Offers_OfferId1",
+                        column: x => x.OfferId1,
+                        principalTable: "Offers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Users_UserId",
                         column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Users_UserId1",
+                        column: x => x.UserId1,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -190,6 +213,11 @@ namespace Tourismus.Model.Migrations
                 name: "IX_Cities_CountryId",
                 table: "Cities",
                 column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cities_CountryId1",
+                table: "Cities",
+                column: "CountryId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_CityId",
@@ -202,14 +230,29 @@ namespace Tourismus.Model.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Offers_CityId1",
+                table: "Offers",
+                column: "CityId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Offers_HotelId",
                 table: "Offers",
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_MealsId",
+                name: "IX_Offers_HotelId1",
                 table: "Offers",
-                column: "MealsId");
+                column: "HotelId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Offers_MealId",
+                table: "Offers",
+                column: "MealId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Offers_MealId1",
+                table: "Offers",
+                column: "MealId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_OfferId",
@@ -217,24 +260,25 @@ namespace Tourismus.Model.Migrations
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reservations_OfferId1",
+                table: "Reservations",
+                column: "OfferId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_UserId",
                 table: "Reservations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserCredentials_UserId",
-                table: "UserCredentials",
-                column: "UserId",
-                unique: true);
+                name: "IX_Reservations_UserId1",
+                table: "Reservations",
+                column: "UserId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Reservations");
-
-            migrationBuilder.DropTable(
-                name: "UserCredentials");
 
             migrationBuilder.DropTable(
                 name: "Offers");

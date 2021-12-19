@@ -1,11 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-
-namespace Tourismus.Model.Models {
-    public class Reservation {
-        public int Id { get; set; }
-        public int OfferId { get; set; }
-        public int UserId { get; set; }
+namespace Tourismus.Model.Models  {
+    public class Reservation : EntityBase {
         public DateTime ReservationDate { get; set; }
         public bool IsPaid { get; set; }
 

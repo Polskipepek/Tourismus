@@ -14,11 +14,11 @@ namespace Tourismus.WebApp.ReadModels.Dtos.ControllerBase {
                         CountryName = offer.City.Country.Name,
                         DateFrom = offer.DateFrom,
                         DateTo = offer.DateTo,
-                        MealType = offer.Meals.Name,
+                        MealType = offer.Meal.Name,
                         Name = offer.Name,
                         NumberOfPeople = offer.NumberOfPeople,
                         Price = offer.Price,
-                        Stars = offer.Hotel.Star ?? -1,
+                        Stars = offer.Hotel.Star ,
                         Description=offer.Description,
                     })
                     .ToArray();

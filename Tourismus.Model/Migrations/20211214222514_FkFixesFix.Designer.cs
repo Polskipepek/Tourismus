@@ -10,8 +10,8 @@ using Tourismus.Model.Models;
 namespace Tourismus.Model.Migrations
 {
     [DbContext(typeof(TourismusDbContext))]
-    [Migration("20211209151550_delcreds")]
-    partial class delcreds
+    [Migration("20211214222514_FkFixesFix")]
+    partial class FkFixesFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,7 +29,7 @@ namespace Tourismus.Model.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("CountryId")
+                    b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAirport")
@@ -84,7 +84,7 @@ namespace Tourismus.Model.Migrations
                     b.Property<string>("PhotosPaths")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Star")
+                    b.Property<int>("Star")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -118,7 +118,7 @@ namespace Tourismus.Model.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateFrom")
@@ -131,10 +131,10 @@ namespace Tourismus.Model.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HotelId")
+                    b.Property<int?>("HotelId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MealsId")
+                    b.Property<int?>("MealId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -152,7 +152,7 @@ namespace Tourismus.Model.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.HasIndex("MealsId");
+                    b.HasIndex("MealId");
 
                     b.ToTable("Offers");
                 });
@@ -167,13 +167,13 @@ namespace Tourismus.Model.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
-                    b.Property<int>("OfferId")
+                    b.Property<int?>("OfferId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -216,10 +216,10 @@ namespace Tourismus.Model.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("LastSuccessfullyLogin")
+                    b.Property<DateTime?>("LastSuccessfullyLogin")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("LastUnsuccessfullyLoginAttempt")
+                    b.Property<DateTime?>("LastUnsuccessfullyLoginAttempt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Salt")
@@ -243,9 +243,7 @@ namespace Tourismus.Model.Migrations
                 {
                     b.HasOne("Tourismus.Model.Models.Country", "Country")
                         .WithMany("Cities")
-                        .HasForeignKey("CountryId")
-                        .HasConstraintName("FK_Cities_Countries")
-                        .IsRequired();
+                        .HasForeignKey("CountryId");
 
                     b.Navigation("Country");
                 });
@@ -263,41 +261,32 @@ namespace Tourismus.Model.Migrations
                 {
                     b.HasOne("Tourismus.Model.Models.City", "City")
                         .WithMany("Offers")
-                        .HasForeignKey("CityId")
-                        .HasConstraintName("FK_Offers_Cities")
-                        .IsRequired();
+                        .HasForeignKey("CityId");
 
                     b.HasOne("Tourismus.Model.Models.Hotel", "Hotel")
                         .WithMany("Offers")
-                        .HasForeignKey("HotelId")
-                        .HasConstraintName("FK_Offers_Hotels")
-                        .IsRequired();
+                        .HasForeignKey("HotelId");
 
-                    b.HasOne("Tourismus.Model.Models.Meal", "Meals")
+                    b.HasOne("Tourismus.Model.Models.Meal", "Meal")
                         .WithMany("Offers")
-                        .HasForeignKey("MealsId")
-                        .HasConstraintName("FK_Offers_Meals");
+                        .HasForeignKey("MealId");
 
                     b.Navigation("City");
 
                     b.Navigation("Hotel");
 
-                    b.Navigation("Meals");
+                    b.Navigation("Meal");
                 });
 
             modelBuilder.Entity("Tourismus.Model.Models.Reservation", b =>
                 {
                     b.HasOne("Tourismus.Model.Models.Offer", "Offer")
                         .WithMany("Reservations")
-                        .HasForeignKey("OfferId")
-                        .HasConstraintName("FK_Reservations_Offers")
-                        .IsRequired();
+                        .HasForeignKey("OfferId");
 
                     b.HasOne("Tourismus.Model.Models.User", "User")
                         .WithMany("Reservations")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_Reservations_Users")
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Offer");
 

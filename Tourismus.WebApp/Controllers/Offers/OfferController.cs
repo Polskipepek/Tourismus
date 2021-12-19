@@ -35,15 +35,19 @@ namespace Tourismus.WebApp.Controllers.Offers {
             if (city == null) {
                 throw new System.Exception("Add new offer without a city?!?");
             }
+            var meal = context.Meals.FirstOrDefault(c => c.Id == parameters.MealsId);
+            if (meal == null) {
+                throw new System.Exception("Add new offer without a meal?!?");
+            }
 
             Offer offer = new() {
-                Name=parameters.Name,
-                CityId = parameters.CityId,
+                Name = parameters.Name,
+                City = city,
                 DateFrom = parameters.DateFrom,
                 DateTo = parameters.DateTo,
                 Description = parameters.Description,
-                HotelId = parameters.HotelId,
-                MealsId = parameters.MealsId,
+                Hotel = hotel,
+                Meal = meal,
                 NumberOfPeople = parameters.NumberOfPeople,
                 Price = parameters.Price,
             };

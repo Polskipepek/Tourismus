@@ -18,69 +18,6 @@ interface IAddHotelFormProps extends IModalComponentProps {
 
 class InnerForm extends React.Component<IAddHotelFormProps & FormikProps<IFormValues>> {
 	public render() {
-		const starOptions = [
-			{
-				value: 1,
-				label: (
-					<>
-						<StarFilled />
-						<StarOutlined />
-						<StarOutlined />
-						<StarOutlined />
-						<StarOutlined />
-					</>
-				),
-			},
-			{
-				value: 2,
-				label: (
-					<>
-						<StarFilled />
-						<StarFilled />
-						<StarOutlined />
-						<StarOutlined />
-						<StarOutlined />
-					</>
-				),
-			},
-			{
-				value: 3,
-				label: (
-					<>
-						<StarFilled />
-						<StarFilled />
-						<StarFilled />
-						<StarOutlined />
-						<StarOutlined />
-					</>
-				),
-			},
-			{
-				value: 4,
-				label: (
-					<>
-						<StarFilled />
-						<StarFilled />
-						<StarFilled />
-						<StarFilled />
-						<StarOutlined />
-					</>
-				),
-			},
-			{
-				value: 5,
-				label: (
-					<>
-						<StarFilled />
-						<StarFilled />
-						<StarFilled />
-						<StarFilled />
-						<StarFilled />
-					</>
-				),
-			},
-		];
-
 		return (
 			<Form id="addHotel-form" name="addHotelForm" className="formStyle">
 				<Row gutter={[8, 16]}>
@@ -160,3 +97,66 @@ const AddHotelFormInner = withFormik<IAddHotelFormProps, IFormValues>({
 })(InnerForm);
 
 export const AddHotelForm = AddHotelFormInner;
+
+export const starOptions = [
+	{
+		value: 1,
+		label: (
+			<>
+				<StarFilled />
+				<StarOutlined />
+				<StarOutlined />
+				<StarOutlined />
+				<StarOutlined />
+			</>
+		),
+	},
+	{
+		value: 2,
+		label: (
+			<>
+				<StarFilled />
+				<StarFilled />
+				<StarOutlined />
+				<StarOutlined />
+				<StarOutlined />
+			</>
+		),
+	},
+	{
+		value: 3,
+		label: (
+			<>
+				<StarFilled />
+				<StarFilled />
+				<StarFilled />
+				<StarOutlined />
+				<StarOutlined />
+			</>
+		),
+	},
+	{
+		value: 4,
+		label: (
+			<>
+				<StarFilled />
+				<StarFilled />
+				<StarFilled />
+				<StarFilled />
+				<StarOutlined />
+			</>
+		),
+	},
+	{
+		value: 5,
+		label: (
+			<>
+				<StarFilled />
+				<StarFilled />
+				<StarFilled />
+				<StarFilled />
+				<StarFilled />
+			</>
+		),
+	},
+];

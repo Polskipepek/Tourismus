@@ -6,7 +6,7 @@ namespace Tourismus.WebApp.Configuration.Modules.OData {
 
         public static DbContextOptionsBuilder<TourismusDbContext> CreateTourismusDbConfiguration(string connectionString) {
             var conf = new DbContextOptionsBuilder<TourismusDbContext>()
-                    //.UseLazyLoadingProxies()
+                    .UseLazyLoadingProxies()
                     .UseSqlServer(connectionString, options => options.UseNetTopologySuite());
 
             return conf;

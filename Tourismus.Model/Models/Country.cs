@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tourismus.Model.Models {
-    public class Country {
+    public class Country : EntityBase {
         public Country() {
             Cities = new HashSet<City>();
         }
-        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public virtual ICollection<City> Cities { get; set; }

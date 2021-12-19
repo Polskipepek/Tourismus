@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tourismus.Model.Models {
-    public class City {
+    public class City : EntityBase {
         public City() {
             Hotels = new HashSet<Hotel>();
             Offers = new HashSet<Offer>();
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
-        public int CountryId { get; set; }
         public bool IsAirport { get; set; }
 
         public virtual Country Country { get; set; }

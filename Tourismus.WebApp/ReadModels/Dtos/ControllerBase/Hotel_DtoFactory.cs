@@ -13,7 +13,7 @@ namespace Tourismus.WebApp.ReadModels.Dtos.ControllerBase {
                         Name = hotel.Name,
                         CityName=hotel.City?.Name ?? "Błąd",
                         Description = hotel.Description,
-                        Star=hotel.Star??0,
+                        Star=hotel.Star,
                     })
                     .ToArray();
         }

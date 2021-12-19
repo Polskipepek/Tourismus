@@ -1,20 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace Tourismus.FakeData.FakeSeeds {
-    abstract class FakeSeederBase<TModel> where TModel : class {
+    abstract class FakeSeederBase<TModel, TResult> where TModel : class {
         public FakeSeederBase(DbSet<TModel> dbSet) {
             this.dbSet = dbSet;
         }
 
         protected readonly DbSet<TModel> dbSet;
 
-        public void SeedIfNotSeeded() {
-            if (!dbSet.Any()) {
-                Seed();
-            }
-        }
+        public abstract void Seed();
 
-        protected abstract void Seed();
+        public virtual TResult SeedWithResult() {
+            throw new NotImplementedException();
+        }
     }
 }

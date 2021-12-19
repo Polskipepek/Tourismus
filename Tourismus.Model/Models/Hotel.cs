@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tourismus.Model.Models {
-    public class Hotel {
+    public class Hotel : EntityBase {
         public Hotel() {
             Offers = new HashSet<Offer>();
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
-        public int? Star { get; set; }
-        public int? CityId { get; set; }
+        public int Star { get; set; }
         public string Description { get; set; }
         public string PhotosPaths { get; set; }
 

@@ -17,6 +17,7 @@ export default class Resources {
     AddCountry: "Dodaj kraj",
     AddCity:"Dodaj miasto",
     AddOffer:"Dodaj ofertę",
+    Offer:"Oferta",
     AddMeal:"Dodaj typ posiłku",
     AddHotel:"Dodaj hotel",
   };
@@ -116,6 +117,7 @@ export default class Resources {
     action: "Akcja",
     meal: "Posiłek",
     offer: "Oferta",
-    stars:"Gwiazdki",
+    stars: "Gwiazdki",
+    hotel:"Hotel",
   };
 }

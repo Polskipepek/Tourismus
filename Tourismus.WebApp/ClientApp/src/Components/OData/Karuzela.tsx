@@ -2,7 +2,7 @@ import { Carousel } from "antd";
 import { IOffer_ListDto } from "../../services/ListDtos/Offer_ListDto";
 
 interface IKaruzelaProps {
-	data: IOffer_ListDto[];
+	data: any[];
 }
 
 const Karuzela: React.FC<IKaruzelaProps> = (props) => {
@@ -16,12 +16,11 @@ const Karuzela: React.FC<IKaruzelaProps> = (props) => {
 	return (
 		<>
 			<Carousel>
-				{props.data &&
-					props.data.map((item) => {
-						<div>
-							<h3 style={contentStyle}>{item.Id}</h3>
-						</div>;
-					})}
+				{props.data.map((item) => {
+					<div>
+						<h3 style={contentStyle}>{item.Id}</h3>
+					</div>;
+				})}
 			</Carousel>
 		</>
 	);

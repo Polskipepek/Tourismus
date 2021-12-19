@@ -16,21 +16,16 @@ namespace Tourismus.Model.Configuration.Models {
             entity.Property(e => e.Price).HasColumnType("money");
 
             entity.HasOne(d => d.City)
-                .WithMany(p => p.Offers)
-                .HasForeignKey(d => d.CityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Offers_Cities");
+                .WithMany(c=>c.Offers)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Hotel)
-                .WithMany(p => p.Offers)
-                .HasForeignKey(d => d.HotelId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Offers_Hotels");
+                .WithMany(h=>h.Offers)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.Meals)
-                .WithMany(p => p.Offers)
-                .HasForeignKey(d => d.MealsId)
-                .HasConstraintName("FK_Offers_Meals");
+            entity.HasOne(d => d.Meal)
+                .WithMany(m=>m.Offers)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

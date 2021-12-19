@@ -10,16 +10,12 @@ namespace Tourismus.Model.Configuration.Models {
             entity.Property(e => e.ReservationDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Offer)
-                .WithMany(p => p.Reservations)
-                .HasForeignKey(d => d.OfferId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Reservations_Offers");
+                .WithMany(o => o.Reservations)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.User)
-                .WithMany(p => p.Reservations)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Reservations_Users");
+                .WithMany(u => u.Reservations)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

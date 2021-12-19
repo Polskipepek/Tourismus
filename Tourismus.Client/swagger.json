@@ -311,6 +311,26 @@
         }
       }
     },
+    "/api/hotels/GetHotels": {
+      "post": {
+        "tags": [
+          "Hotel"
+        ],
+        "operationId": "Hotel_GetHotels",
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Hotel_Dto"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/offers/AddNewOfferAction": {
       "post": {
         "tags": [
@@ -399,207 +419,205 @@
   },
   "definitions": {
     "User": {
-      "type": "object",
-      "required": [
-        "Id",
-        "AccountCreationDate",
-        "LastSuccessfullyLogin",
-        "LastUnsuccessfullyLoginAttempt",
-        "IsAdmin"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
         },
-        "FirstName": {
-          "type": "string"
-        },
-        "LastName": {
-          "type": "string"
-        },
-        "TelephoneNumber": {
-          "type": "string"
-        },
-        "Email": {
-          "type": "string"
-        },
-        "AccountCreationDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "LastSuccessfullyLogin": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "LastUnsuccessfullyLoginAttempt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "IsAdmin": {
-          "type": "boolean"
-        },
-        "Token": {
-          "type": "string"
-        },
-        "Reservations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Reservation"
-          }
-        },
-        "UserCredentials": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UserCredential"
+        {
+          "type": "object",
+          "required": [
+            "AccountCreationDate",
+            "IsAdmin"
+          ],
+          "properties": {
+            "FirstName": {
+              "type": "string"
+            },
+            "LastName": {
+              "type": "string"
+            },
+            "TelephoneNumber": {
+              "type": "string"
+            },
+            "Email": {
+              "type": "string"
+            },
+            "AccountCreationDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "LastSuccessfullyLogin": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "LastUnsuccessfullyLoginAttempt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "IsAdmin": {
+              "type": "boolean"
+            },
+            "Token": {
+              "type": "string"
+            },
+            "Salt": {
+              "type": "string"
+            },
+            "Hash": {
+              "type": "string"
+            },
+            "Reservations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reservation"
+              }
+            }
           }
         }
-      }
+      ]
     },
     "Reservation": {
-      "type": "object",
-      "required": [
-        "Id",
-        "OfferId",
-        "UserId",
-        "ReservationDate",
-        "IsPaid"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
         },
-        "OfferId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "UserId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "ReservationDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "IsPaid": {
-          "type": "boolean"
-        },
-        "Offer": {
-          "$ref": "#/definitions/Offer"
-        },
-        "User": {
-          "$ref": "#/definitions/User"
+        {
+          "type": "object",
+          "required": [
+            "ReservationDate",
+            "IsPaid"
+          ],
+          "properties": {
+            "ReservationDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "IsPaid": {
+              "type": "boolean"
+            },
+            "Offer": {
+              "$ref": "#/definitions/Offer"
+            },
+            "User": {
+              "$ref": "#/definitions/User"
+            }
+          }
         }
-      }
+      ]
     },
     "Offer": {
-      "type": "object",
-      "required": [
-        "Id",
-        "HotelId",
-        "CityId",
-        "DateFrom",
-        "DateTo",
-        "Price",
-        "NumberOfPeople"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
         },
-        "HotelId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "CityId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "DateFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "DateTo": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "Price": {
-          "type": "number",
-          "format": "decimal"
-        },
-        "NumberOfPeople": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Description": {
-          "type": "string"
-        },
-        "MealsId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "City": {
-          "$ref": "#/definitions/City"
-        },
-        "Hotel": {
-          "$ref": "#/definitions/Hotel"
-        },
-        "Meals": {
-          "$ref": "#/definitions/Meal"
-        },
-        "Reservations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Reservation"
+        {
+          "type": "object",
+          "required": [
+            "DateFrom",
+            "DateTo",
+            "Price",
+            "NumberOfPeople"
+          ],
+          "properties": {
+            "DateFrom": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "DateTo": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "Price": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "NumberOfPeople": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "Name": {
+              "type": "string"
+            },
+            "Description": {
+              "type": "string"
+            },
+            "City": {
+              "$ref": "#/definitions/City"
+            },
+            "Hotel": {
+              "$ref": "#/definitions/Hotel"
+            },
+            "Meal": {
+              "$ref": "#/definitions/Meal"
+            },
+            "Reservations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reservation"
+              }
+            }
           }
         }
-      }
+      ]
     },
     "City": {
-      "type": "object",
-      "required": [
-        "Id",
-        "CountryId",
-        "IsAirport"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
         },
-        "Name": {
-          "type": "string"
-        },
-        "CountryId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "IsAirport": {
-          "type": "boolean"
-        },
-        "Country": {
-          "$ref": "#/definitions/Country"
-        },
-        "Hotels": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Hotel"
-          }
-        },
-        "Offers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Offer"
+        {
+          "type": "object",
+          "required": [
+            "IsAirport"
+          ],
+          "properties": {
+            "Name": {
+              "type": "string"
+            },
+            "IsAirport": {
+              "type": "boolean"
+            },
+            "Country": {
+              "$ref": "#/definitions/Country"
+            },
+            "Hotels": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Hotel"
+              }
+            },
+            "Offers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Offer"
+              }
+            }
           }
         }
-      }
+      ]
     },
     "Country": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "type": "string"
+            },
+            "Cities": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/City"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EntityBase": {
       "type": "object",
       "required": [
         "Id"
@@ -608,101 +626,66 @@
         "Id": {
           "type": "integer",
           "format": "int32"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Cities": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/City"
-          }
         }
       }
     },
     "Hotel": {
-      "type": "object",
-      "required": [
-        "Id"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
         },
-        "Name": {
-          "type": "string"
-        },
-        "Star": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "CityId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "Description": {
-          "type": "string"
-        },
-        "PhotosPaths": {
-          "type": "string"
-        },
-        "City": {
-          "$ref": "#/definitions/City"
-        },
-        "Offers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Offer"
+        {
+          "type": "object",
+          "required": [
+            "Star"
+          ],
+          "properties": {
+            "Name": {
+              "type": "string"
+            },
+            "Star": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "Description": {
+              "type": "string"
+            },
+            "PhotosPaths": {
+              "type": "string"
+            },
+            "City": {
+              "$ref": "#/definitions/City"
+            },
+            "Offers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Offer"
+              }
+            }
           }
         }
-      }
+      ]
     },
     "Meal": {
-      "type": "object",
-      "required": [
-        "Id"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityBase"
         },
-        "Name": {
-          "type": "string"
-        },
-        "Offers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Offer"
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "type": "string"
+            },
+            "Offers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Offer"
+              }
+            }
           }
         }
-      }
-    },
-    "UserCredential": {
-      "type": "object",
-      "required": [
-        "Id"
-      ],
-      "properties": {
-        "Id": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "Salt": {
-          "type": "string"
-        },
-        "Hash": {
-          "type": "string"
-        },
-        "UserId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "User": {
-          "$ref": "#/definitions/User"
-        }
-      }
+      ]
     },
     "AuthenticateWithCredentialsParameters": {
       "type": "object",
@@ -827,6 +810,32 @@
         }
       }
     },
+    "Hotel_Dto": {
+      "type": "object",
+      "required": [
+        "Id",
+        "Star"
+      ],
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Star": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CityName": {
+          "type": "string"
+        },
+        "Description": {
+          "type": "string"
+        }
+      }
+    },
     "AddNewOfferParameters": {
       "type": "object",
       "required": [
@@ -871,6 +880,9 @@
         "MealsId": {
           "type": "integer",
           "format": "int32"
+        },
+        "Name": {
+          "type": "string"
         }
       }
     },

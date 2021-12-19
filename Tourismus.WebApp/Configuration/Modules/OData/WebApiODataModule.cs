@@ -13,8 +13,8 @@ namespace Tourismus.WebApp.Configuration.Modules.OData {
             builder.EntitySet<Offer>("Offers").AddGetList<Offer, Offer_ListDto>();
             builder.EntitySet<Meal>("Meals").AddGetList<Meal, Meal_ListDto>();
             builder.EntitySet<Hotel>("Hotels").AddGetList<Hotel, Hotel_ListDto>();
-          //  builder.EntitySet<City>("Cities").AddGetList<City, City_Dto>();
-         //   builder.EntitySet<Country>("Countries").AddGetList<Country, Country_Dto>();
+            //builder.EntitySet<City>("Cities").AddGetList<City, City_Dto>();
+            //builder.EntitySet<Country>("Countries").AddGetList<Country, Country_Dto>();
         }
     }
 }

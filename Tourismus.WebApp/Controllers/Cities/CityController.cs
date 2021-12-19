@@ -24,9 +24,14 @@ namespace Tourismus.WebApp.Controllers.Cities {
                 throw new System.Exception("Add new city without parameters?!?");
             }
 
+            var country = context.Countries.FirstOrDefault(c => c.Id == parameters.CountryId);
+            if (country == null) {
+                throw new System.Exception("country does not exist.");
+            }
+
             City city = new() {
                 Name = parameters.Name,
-                CountryId = parameters.CountryId,
+                Country = country,
                 IsAirport = parameters.IsAirport,
             };
 
@@ -38,7 +43,7 @@ namespace Tourismus.WebApp.Controllers.Cities {
         [HttpPost]
         [Route("[action]")]
         public ActionResult<City_Dto[]> GetCities() {
-            return City_DtoFactory.BuildDtos(context, context.Cities);
+            return City_DtoFactory.BuildDtos(context.Cities);
         }
 
         [HttpPost]

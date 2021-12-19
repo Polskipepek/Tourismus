@@ -1,4 +1,4 @@
-import "./city.css";
+import "./offer.css";
 
 import { Button, Modal } from "antd";
 

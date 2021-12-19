@@ -5,7 +5,7 @@ import MainLayout from "./Components/MainLayout";
 import Resources from "./Resources";
 import { AboutUsPage } from "./Components/Pages/AboutUsPage";
 import UserProfilePage from "./Components/Pages/UserProfilePage";
-import { IUser, UserClient } from "./services/GeneratedClient";
+import { IUser } from "./services/GeneratedClient";
 import { createContext, useContext, useEffect, useState } from "react";
 import AdminDashboardPage from "./Components/Pages/AdminDashboardPage";
 
@@ -56,6 +56,7 @@ const App: React.FunctionComponent = () => {
 
 	useEffect(() => {
 		CheckIfAuthorized();
+		console.log(user);
 	}, []);
 
 	const refreshPage = () => setRefresh(!refresh);

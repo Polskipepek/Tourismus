@@ -1522,6 +1522,10 @@ namespace Tourismus.Client
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task AddNewHotelActionAsync(AddNewHotelParameters parameters, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Hotel_Dto>> GetHotelsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.10.8.0 (NJsonSchema v10.3.11.0 (Newtonsoft.Json v12.0.0.0))")]
@@ -1604,6 +1608,69 @@ namespace Tourismus.Client
                         if (status_ == 200)
                         {
                             return;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+    
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Hotel_Dto>> GetHotelsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/hotels/GetHotels");
+    
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+    
+                    PrepareRequest(client_, request_, urlBuilder_);
+    
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+    
+                    PrepareRequest(client_, request_, url_);
+    
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+    
+                        ProcessResponse(client_, response_);
+    
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Hotel_Dto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            return objectResponse_.Object;
                         }
                         else
                         {
@@ -2291,11 +2358,8 @@ namespace Tourismus.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class User 
+    public partial class User : EntityBase
     {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("FirstName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string FirstName { get; set; }
     
@@ -2312,13 +2376,11 @@ namespace Tourismus.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset AccountCreationDate { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("LastSuccessfullyLogin", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset LastSuccessfullyLogin { get; set; }
+        [Newtonsoft.Json.JsonProperty("LastSuccessfullyLogin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? LastSuccessfullyLogin { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("LastUnsuccessfullyLoginAttempt", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset LastUnsuccessfullyLoginAttempt { get; set; }
+        [Newtonsoft.Json.JsonProperty("LastUnsuccessfullyLoginAttempt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? LastUnsuccessfullyLoginAttempt { get; set; }
     
         [Newtonsoft.Json.JsonProperty("IsAdmin", Required = Newtonsoft.Json.Required.Always)]
         public bool IsAdmin { get; set; }
@@ -2326,27 +2388,21 @@ namespace Tourismus.Client
         [Newtonsoft.Json.JsonProperty("Token", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Token { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("Salt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Salt { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Hash", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Hash { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("Reservations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Reservation> Reservations { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("UserCredentials", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<UserCredential> UserCredentials { get; set; }
     
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Reservation 
+    public partial class Reservation : EntityBase
     {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("OfferId", Required = Newtonsoft.Json.Required.Always)]
-        public int OfferId { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("UserId", Required = Newtonsoft.Json.Required.Always)]
-        public int UserId { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("ReservationDate", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset ReservationDate { get; set; }
@@ -2364,17 +2420,8 @@ namespace Tourismus.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Offer 
+    public partial class Offer : EntityBase
     {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("HotelId", Required = Newtonsoft.Json.Required.Always)]
-        public int HotelId { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("CityId", Required = Newtonsoft.Json.Required.Always)]
-        public int CityId { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("DateFrom", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset DateFrom { get; set; }
@@ -2395,17 +2442,14 @@ namespace Tourismus.Client
         [Newtonsoft.Json.JsonProperty("Description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("MealsId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? MealsId { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("City", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public City City { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Hotel", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Hotel Hotel { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("Meals", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Meal Meals { get; set; }
+        [Newtonsoft.Json.JsonProperty("Meal", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Meal Meal { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Reservations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Reservation> Reservations { get; set; }
@@ -2414,16 +2458,10 @@ namespace Tourismus.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class City 
+    public partial class City : EntityBase
     {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("CountryId", Required = Newtonsoft.Json.Required.Always)]
-        public int CountryId { get; set; }
     
         [Newtonsoft.Json.JsonProperty("IsAirport", Required = Newtonsoft.Json.Required.Always)]
         public bool IsAirport { get; set; }
@@ -2441,11 +2479,8 @@ namespace Tourismus.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Country 
+    public partial class Country : EntityBase
     {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
     
@@ -2456,19 +2491,22 @@ namespace Tourismus.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Hotel 
+    public partial class EntityBase 
     {
         [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
         public int Id { get; set; }
     
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class Hotel : EntityBase
+    {
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("Star", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Star { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("CityId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? CityId { get; set; }
+        [Newtonsoft.Json.JsonProperty("Star", Required = Newtonsoft.Json.Required.Always)]
+        public int Star { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
@@ -2486,37 +2524,13 @@ namespace Tourismus.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Meal 
+    public partial class Meal : EntityBase
     {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Offers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Offer> Offers { get; set; }
-    
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class UserCredential 
-    {
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("Salt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Salt { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("Hash", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Hash { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("UserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? UserId { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("User", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public User User { get; set; }
     
     
     }
@@ -2630,6 +2644,27 @@ namespace Tourismus.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class Hotel_Dto 
+    {
+        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Star", Required = Newtonsoft.Json.Required.Always)]
+        public int Star { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("CityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CityName { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Description { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class AddNewOfferParameters 
     {
         [Newtonsoft.Json.JsonProperty("HotelId", Required = Newtonsoft.Json.Required.Always)]
@@ -2660,6 +2695,9 @@ namespace Tourismus.Client
     
         [Newtonsoft.Json.JsonProperty("MealsId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? MealsId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; }
     
     
     }

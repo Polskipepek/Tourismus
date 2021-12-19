@@ -8,17 +8,18 @@ namespace Tourismus.WebApp.ReadModels.Dtos.ControllerBase {
 
         public static OfferList_Dto[] BuildDtos(TourismusDbContext context, IEnumerable<Offer> offers) {
             return (from offer in offers.ToList()
+                    let name = context.Hotels.FirstOrDefault(h => h.Id == offer.Id)?.Name
                     select new OfferList_Dto() {
                         Id = offer.Id,
                         CityName = offer.City.Name,
                         CountryName = offer.City.Country.Name,
                         DateFrom = offer.DateFrom,
                         DateTo = offer.DateTo,
-                        MealType = offer.Meals.Name,
-                        Name = "TODO",
+                        MealType = offer.Meal.Name,
+                        Name = name,
                         NumberOfPeople = offer.NumberOfPeople,
                         Price = offer.Price,
-                        Stars = offer.Hotel.Star ?? -1,
+                        Stars = offer.Hotel.Star,
 
                     })
                     .ToArray();

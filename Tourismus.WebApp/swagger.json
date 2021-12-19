@@ -513,11 +513,13 @@
           },
           "lastSuccessfullyLogin": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "lastUnsuccessfullyLoginAttempt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "isAdmin": {
             "type": "boolean"
@@ -548,14 +550,6 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "offerId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
             "type": "integer",
             "format": "int32"
           },
@@ -592,14 +586,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "hotelId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cityId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "dateFrom": {
             "type": "string",
             "format": "date-time"
@@ -624,11 +610,6 @@
             "type": "string",
             "nullable": true
           },
-          "mealsId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "city": {
             "nullable": true,
             "oneOf": [
@@ -645,7 +626,7 @@
               }
             ]
           },
-          "meals": {
+          "meal": {
             "nullable": true,
             "oneOf": [
               {
@@ -673,10 +654,6 @@
           "name": {
             "type": "string",
             "nullable": true
-          },
-          "countryId": {
-            "type": "integer",
-            "format": "int32"
           },
           "isAirport": {
             "type": "boolean"
@@ -740,13 +717,7 @@
           },
           "star": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "cityId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "description": {
             "type": "string",

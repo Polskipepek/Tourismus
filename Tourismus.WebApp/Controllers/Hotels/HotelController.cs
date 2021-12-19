@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Tourismus.Model.Models;
@@ -29,9 +30,14 @@ namespace Tourismus.WebApp.Controllers.Hotels {
                 throw new System.Exception("Add new hotel without parameters?!?");
             }
 
+            var city = context.Cities.FirstOrDefault(c => c.Id == parameters.CityId);
+            if (city == null) {
+                throw new System.Exception("Add new hotel without city");
+            }
+
             Hotel hotel = new() {
                 Name = parameters.Name,
-                CityId = parameters.CityId,
+                City = city,
                 Description = parameters.Description,
                 Star = parameters.Star,
                 PhotosPaths = parameters.PhotosPaths,

@@ -15,7 +15,7 @@ namespace Tourismus.WebApp.ReadModels.Dtos.List {
                 CityName = x.Name,
                 Name = x.Name,
                 CountryName = x.City.Country.Name,
-                Star = x.Star ?? 0,
+                Star = x.Star ,
             }).ToListAsync(cancellationToken: token);
         }
 

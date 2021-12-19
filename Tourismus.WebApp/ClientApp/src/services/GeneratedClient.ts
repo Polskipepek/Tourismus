@@ -776,8 +776,8 @@ export class User implements IUser {
     telephoneNumber!: string | undefined;
     email!: string | undefined;
     accountCreationDate!: moment.Moment;
-    lastSuccessfullyLogin!: moment.Moment;
-    lastUnsuccessfullyLoginAttempt!: moment.Moment;
+    lastSuccessfullyLogin!: moment.Moment | undefined;
+    lastUnsuccessfullyLoginAttempt!: moment.Moment | undefined;
     isAdmin!: boolean;
     token!: string | undefined;
     salt!: string | undefined;
@@ -852,8 +852,8 @@ export interface IUser {
     telephoneNumber: string | undefined;
     email: string | undefined;
     accountCreationDate: moment.Moment;
-    lastSuccessfullyLogin: moment.Moment;
-    lastUnsuccessfullyLoginAttempt: moment.Moment;
+    lastSuccessfullyLogin: moment.Moment | undefined;
+    lastUnsuccessfullyLoginAttempt: moment.Moment | undefined;
     isAdmin: boolean;
     token: string | undefined;
     salt: string | undefined;
@@ -863,8 +863,6 @@ export interface IUser {
 
 export class Reservation implements IReservation {
     id!: number;
-    offerId!: number;
-    userId!: number;
     reservationDate!: moment.Moment;
     isPaid!: boolean;
     offer!: Offer | undefined;
@@ -882,8 +880,6 @@ export class Reservation implements IReservation {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.offerId = _data["offerId"];
-            this.userId = _data["userId"];
             this.reservationDate = _data["reservationDate"] ? moment(_data["reservationDate"].toString()) : <any>undefined;
             this.isPaid = _data["isPaid"];
             this.offer = _data["offer"] ? Offer.fromJS(_data["offer"]) : <any>undefined;
@@ -901,8 +897,6 @@ export class Reservation implements IReservation {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["offerId"] = this.offerId;
-        data["userId"] = this.userId;
         data["reservationDate"] = this.reservationDate ? this.reservationDate.toISOString() : <any>undefined;
         data["isPaid"] = this.isPaid;
         data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
@@ -913,8 +907,6 @@ export class Reservation implements IReservation {
 
 export interface IReservation {
     id: number;
-    offerId: number;
-    userId: number;
     reservationDate: moment.Moment;
     isPaid: boolean;
     offer: Offer | undefined;
@@ -923,18 +915,15 @@ export interface IReservation {
 
 export class Offer implements IOffer {
     id!: number;
-    hotelId!: number;
-    cityId!: number;
     dateFrom!: moment.Moment;
     dateTo!: moment.Moment;
     price!: number;
     numberOfPeople!: number;
     name!: string | undefined;
     description!: string | undefined;
-    mealsId!: number | undefined;
     city!: City | undefined;
     hotel!: Hotel | undefined;
-    meals!: Meal | undefined;
+    meal!: Meal | undefined;
     reservations!: Reservation[] | undefined;
 
     constructor(data?: IOffer) {
@@ -949,18 +938,15 @@ export class Offer implements IOffer {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.hotelId = _data["hotelId"];
-            this.cityId = _data["cityId"];
             this.dateFrom = _data["dateFrom"] ? moment(_data["dateFrom"].toString()) : <any>undefined;
             this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
             this.price = _data["price"];
             this.numberOfPeople = _data["numberOfPeople"];
             this.name = _data["name"];
             this.description = _data["description"];
-            this.mealsId = _data["mealsId"];
             this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
             this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
-            this.meals = _data["meals"] ? Meal.fromJS(_data["meals"]) : <any>undefined;
+            this.meal = _data["meal"] ? Meal.fromJS(_data["meal"]) : <any>undefined;
             if (Array.isArray(_data["reservations"])) {
                 this.reservations = [] as any;
                 for (let item of _data["reservations"])
@@ -979,18 +965,15 @@ export class Offer implements IOffer {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["hotelId"] = this.hotelId;
-        data["cityId"] = this.cityId;
         data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>undefined;
         data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
         data["price"] = this.price;
         data["numberOfPeople"] = this.numberOfPeople;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["mealsId"] = this.mealsId;
         data["city"] = this.city ? this.city.toJSON() : <any>undefined;
         data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
-        data["meals"] = this.meals ? this.meals.toJSON() : <any>undefined;
+        data["meal"] = this.meal ? this.meal.toJSON() : <any>undefined;
         if (Array.isArray(this.reservations)) {
             data["reservations"] = [];
             for (let item of this.reservations)
@@ -1002,25 +985,21 @@ export class Offer implements IOffer {
 
 export interface IOffer {
     id: number;
-    hotelId: number;
-    cityId: number;
     dateFrom: moment.Moment;
     dateTo: moment.Moment;
     price: number;
     numberOfPeople: number;
     name: string | undefined;
     description: string | undefined;
-    mealsId: number | undefined;
     city: City | undefined;
     hotel: Hotel | undefined;
-    meals: Meal | undefined;
+    meal: Meal | undefined;
     reservations: Reservation[] | undefined;
 }
 
 export class City implements ICity {
     id!: number;
     name!: string | undefined;
-    countryId!: number;
     isAirport!: boolean;
     country!: Country | undefined;
     hotels!: Hotel[] | undefined;
@@ -1039,7 +1018,6 @@ export class City implements ICity {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.countryId = _data["countryId"];
             this.isAirport = _data["isAirport"];
             this.country = _data["country"] ? Country.fromJS(_data["country"]) : <any>undefined;
             if (Array.isArray(_data["hotels"])) {
@@ -1066,7 +1044,6 @@ export class City implements ICity {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["countryId"] = this.countryId;
         data["isAirport"] = this.isAirport;
         data["country"] = this.country ? this.country.toJSON() : <any>undefined;
         if (Array.isArray(this.hotels)) {
@@ -1086,7 +1063,6 @@ export class City implements ICity {
 export interface ICity {
     id: number;
     name: string | undefined;
-    countryId: number;
     isAirport: boolean;
     country: Country | undefined;
     hotels: Hotel[] | undefined;
@@ -1148,8 +1124,7 @@ export interface ICountry {
 export class Hotel implements IHotel {
     id!: number;
     name!: string | undefined;
-    star!: number | undefined;
-    cityId!: number | undefined;
+    star!: number;
     description!: string | undefined;
     photosPaths!: string | undefined;
     city!: City | undefined;
@@ -1169,7 +1144,6 @@ export class Hotel implements IHotel {
             this.id = _data["id"];
             this.name = _data["name"];
             this.star = _data["star"];
-            this.cityId = _data["cityId"];
             this.description = _data["description"];
             this.photosPaths = _data["photosPaths"];
             this.city = _data["city"] ? City.fromJS(_data["city"]) : <any>undefined;
@@ -1193,7 +1167,6 @@ export class Hotel implements IHotel {
         data["id"] = this.id;
         data["name"] = this.name;
         data["star"] = this.star;
-        data["cityId"] = this.cityId;
         data["description"] = this.description;
         data["photosPaths"] = this.photosPaths;
         data["city"] = this.city ? this.city.toJSON() : <any>undefined;
@@ -1209,8 +1182,7 @@ export class Hotel implements IHotel {
 export interface IHotel {
     id: number;
     name: string | undefined;
-    star: number | undefined;
-    cityId: number | undefined;
+    star: number;
     description: string | undefined;
     photosPaths: string | undefined;
     city: City | undefined;

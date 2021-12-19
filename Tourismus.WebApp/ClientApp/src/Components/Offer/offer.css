@@ -1,0 +1,48 @@
+@media screen and (orientation: portrait) {
+	.login-modal {
+		min-width: 45vw;
+	}
+}
+@media screen and (orientation: landscape) {
+	.login-modal {
+		min-width: 20vw;
+		max-width: 25vw;
+		transition: all 0.5s ease-in-out;
+	}
+}
+.unselectable-menu-item:hover {
+	background: #001529 !important;
+}
+tr:nth-child(even) {
+	background-color: #629958 !important;
+}
+
+h1 {
+	text-align: center;
+}
+.item-container {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 2em;
+}
+.card {
+	text-align: center;
+	padding: 10px;
+	width: 300px;
+	border-radius: 5px;
+	padding: 1em;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+img {
+	height: 100px;
+	width: auto;
+}
+
+a.fill-div {
+	display: block;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	text-decoration: none;
+}
