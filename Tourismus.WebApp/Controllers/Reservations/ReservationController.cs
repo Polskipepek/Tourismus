@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Tourismus.Model.Models;
-using Tourismus.WebApp.ReadModels.Dtos.ControllerBase;
 using Tourismus.WebApp.ReadModels.Dtos.List;
 
 namespace Tourismus.WebApp.Controllers.Offers {
