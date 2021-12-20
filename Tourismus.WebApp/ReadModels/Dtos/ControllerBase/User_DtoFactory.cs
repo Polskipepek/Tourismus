@@ -5,6 +5,7 @@ namespace Tourismus.WebApp.ReadModels.Dtos.Single {
     public class User_DtoFactory {
         public static User_Dto BuildDtos(TourismusDbContext context, User user) {
             return new User_Dto {
+                Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 AccountCreationDate = user.AccountCreationDate,
@@ -12,7 +13,6 @@ namespace Tourismus.WebApp.ReadModels.Dtos.Single {
                 LastSuccessfullyLogin = user.LastSuccessfullyLogin,
                 LastUnsuccessfullyLoginAttempt = user.LastUnsuccessfullyLoginAttempt,
                 TelephoneNumber = user.TelephoneNumber,
-                Reservations = context.Reservations.Where(r => r.User.Id == user.Id).ToArray(),
             };
         }
     }

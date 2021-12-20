@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Tourismus.Model.Models;
@@ -32,8 +33,13 @@ namespace Tourismus.WebApp.Controllers.Authentication {
 
             if (user != null) {
                 SignIn(action.Mail, ref user);
+                user.LastSuccessfullyLogin = DateTime.Now;
+                _context.SaveChanges();
                 return Ok(user.WithoutSensitiveDataButToken());
             }
+            user.LastUnsuccessfullyLoginAttempt = DateTime.Now;
+            _context.SaveChanges();
+
             return Unauthorized();
         }
 

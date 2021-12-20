@@ -415,6 +415,33 @@
           }
         }
       }
+    },
+    "/api/users/GetUserData": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetUserData",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "format": "int32",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/User_Dto"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -952,6 +979,44 @@
         },
         "Password": {
           "type": "string"
+        }
+      }
+    },
+    "User_Dto": {
+      "type": "object",
+      "required": [
+        "AccountCreationDate"
+      ],
+      "properties": {
+        "FirstName": {
+          "type": "string"
+        },
+        "LastName": {
+          "type": "string"
+        },
+        "TelephoneNumber": {
+          "type": "string"
+        },
+        "Email": {
+          "type": "string"
+        },
+        "AccountCreationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastSuccessfullyLogin": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastUnsuccessfullyLoginAttempt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Reservations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Reservation"
+          }
         }
       }
     }

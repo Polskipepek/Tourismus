@@ -5,7 +5,7 @@ using Tourismus.Model.Models;
 namespace Tourismus.FakeData.Factories {
     public class OfferFactory {
         public static Offer Create(Meal meal, City city) {
-            DateTime dateTime = new DateTime(2020,1,1);
+            DateTime dateTime = new (2020,1,1);
             return new() {
                 City = city,
                 DateFrom = dateTime.AddDays(Faker.RandomNumber.Next(10,300)),

@@ -43,7 +43,7 @@ class InnerForm extends React.Component<IRegisterFormProps & FormikProps<IRegist
 						<TextInputF {...this.props} name="passwordConfirmation" placeholder={Resources.InputPlaceholder.password} isPassword />
 					</Col>
 					<Col span={24}>
-						<TextInputF {...this.props} name="phoneNumber" placeholder={Resources.InputPlaceholder.phoneNumber} />
+						<TextInputF {...this.props} name="phoneNumber" placeholder={Resources.InputPlaceholder.telephoneNumber} />
 					</Col>
 				</Row>
 			</Form>

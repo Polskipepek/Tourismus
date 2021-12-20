@@ -64,11 +64,11 @@ const MainLayout: React.FunctionComponent<RouteComponentProps> = (props) => {
 								{Resources.PageNames.aboutUsPage}
 							</Menu.Item>
 						)}
-
-						<Menu.Item key="4" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.adminDashboardPage)}>
-							{Resources.PageNames.adminDashboardPage}
-						</Menu.Item>
-
+						{user?.isAdmin && (
+							<Menu.Item key="4" style={{ float: "left" }} onClick={() => changePage(Resources.AvailablePages.adminDashboardPage)}>
+								{Resources.PageNames.adminDashboardPage}
+							</Menu.Item>
+						)}
 						{user == undefined && (
 							<Menu.Item key="98" style={{ float: "right" }} onClick={() => setLoginModalVisibility(true)}>
 								{Resources.Buttons.layout_signIn}

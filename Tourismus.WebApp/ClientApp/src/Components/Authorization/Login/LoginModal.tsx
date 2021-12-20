@@ -1,6 +1,6 @@
 import "./login.css";
 
-import { Button, Modal } from "antd";
+import { Button, Modal, Tooltip } from "antd";
 
 import { CheckCircleTwoTone } from "@ant-design/icons";
 
@@ -21,7 +21,6 @@ export const LoginModal: React.FunctionComponent<ILoginProps> = (props) => {
 	const setUser = (user: IUser | undefined) => {
 		if (toggleUser) {
 			toggleUser(user);
-			console.log(user);
 		}
 	};
 
@@ -35,9 +34,11 @@ export const LoginModal: React.FunctionComponent<ILoginProps> = (props) => {
 				onCancel={() => props.closeModal()}
 				destroyOnClose
 				footer={[
-					<Button form="login-form" key="submit" htmlType="submit" type="primary">
-						<CheckCircleTwoTone />
-					</Button>,
+					<Tooltip title="Zaloguj">
+						<Button form="login-form" key="submit" htmlType="submit" type="primary">
+							<CheckCircleTwoTone />
+						</Button>
+					</Tooltip>,
 				]}>
 				<LoginForm {...props} toggleUser={setUser} />
 			</Modal>

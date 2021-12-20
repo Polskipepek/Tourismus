@@ -6,6 +6,7 @@ namespace Helpers.ExtensionMethods {
             return user == null ? null : new User {
                 Id = user.Id,
                 Token = user.Token,
+                IsAdmin = user.IsAdmin,
                 
             };
         }

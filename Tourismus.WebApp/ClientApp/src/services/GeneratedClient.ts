@@ -645,6 +645,45 @@ export class OfferClient extends ClientBase {
         return Promise.resolve<FileResponse>(<any>null);
     }
 
+    bookOffer(parameters: BookOfferParameters, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/offers/BookOffer";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(parameters);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processBookOffer(_response));
+        });
+    }
+
+    protected processBookOffer(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
     getListOffers(signal?: AbortSignal | undefined): Promise<OfferList_Dto[] | null> {
         let url_ = this.baseUrl + "/api/offers/GetListOffers";
         url_ = url_.replace(/[?&]$/, "");
@@ -684,6 +723,102 @@ export class OfferClient extends ClientBase {
             });
         }
         return Promise.resolve<OfferList_Dto[] | null>(<any>null);
+    }
+}
+
+export class ReservationClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    cancelReservation(reservationId: number, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/reservations/CancelReservation";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(reservationId);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processCancelReservation(_response));
+        });
+    }
+
+    protected processCancelReservation(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getListReservations(userId: number, signal?: AbortSignal | undefined): Promise<Reservation_ListDto[] | null> {
+        let url_ = this.baseUrl + "/api/reservations/GetListReservations?";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined and cannot be null.");
+        else
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetListReservations(_response));
+        });
+    }
+
+    protected processGetListReservations(response: Response): Promise<Reservation_ListDto[] | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Reservation_ListDto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Reservation_ListDto[] | null>(<any>null);
     }
 }
 
@@ -766,6 +901,86 @@ export class UserClient extends ClientBase {
             });
         }
         return Promise.resolve<void>(<any>null);
+    }
+
+    getUserData(id: number, signal?: AbortSignal | undefined): Promise<User_Dto | null> {
+        let url_ = this.baseUrl + "/api/users/GetUserData?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined and cannot be null.");
+        else
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetUserData(_response));
+        });
+    }
+
+    protected processGetUserData(response: Response): Promise<User_Dto | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? User_Dto.fromJS(resultData200) : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<User_Dto | null>(<any>null);
+    }
+
+    updateUser(parameters: EditUserParameters, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/users/UpdateUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(parameters);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateUser(_response));
+        });
+    }
+
+    protected processUpdateUser(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
     }
 }
 
@@ -1701,6 +1916,46 @@ export interface IAddNewOfferParameters {
     name: string | undefined;
 }
 
+export class BookOfferParameters implements IBookOfferParameters {
+    offerId!: number;
+    userId!: number;
+
+    constructor(data?: IBookOfferParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.offerId = _data["offerId"];
+            this.userId = _data["userId"];
+        }
+    }
+
+    static fromJS(data: any): BookOfferParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new BookOfferParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offerId"] = this.offerId;
+        data["userId"] = this.userId;
+        return data; 
+    }
+}
+
+export interface IBookOfferParameters {
+    offerId: number;
+    userId: number;
+}
+
 export class OfferList_Dto implements IOfferList_Dto {
     id!: number;
     name!: string | undefined;
@@ -1773,6 +2028,78 @@ export interface IOfferList_Dto {
     mealType: string | undefined;
 }
 
+export class Reservation_ListDto implements IReservation_ListDto {
+    id!: number;
+    userId!: number;
+    reservationDate!: moment.Moment;
+    isPaid!: boolean;
+    dateFrom!: moment.Moment;
+    dateTo!: moment.Moment;
+    price!: number;
+    numberOfPeople!: number;
+    hotelId!: number;
+    mealName!: string | undefined;
+
+    constructor(data?: IReservation_ListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+            this.reservationDate = _data["reservationDate"] ? moment(_data["reservationDate"].toString()) : <any>undefined;
+            this.isPaid = _data["isPaid"];
+            this.dateFrom = _data["dateFrom"] ? moment(_data["dateFrom"].toString()) : <any>undefined;
+            this.dateTo = _data["dateTo"] ? moment(_data["dateTo"].toString()) : <any>undefined;
+            this.price = _data["price"];
+            this.numberOfPeople = _data["numberOfPeople"];
+            this.hotelId = _data["hotelId"];
+            this.mealName = _data["mealName"];
+        }
+    }
+
+    static fromJS(data: any): Reservation_ListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Reservation_ListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        data["reservationDate"] = this.reservationDate ? this.reservationDate.toISOString() : <any>undefined;
+        data["isPaid"] = this.isPaid;
+        data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>undefined;
+        data["dateTo"] = this.dateTo ? this.dateTo.toISOString() : <any>undefined;
+        data["price"] = this.price;
+        data["numberOfPeople"] = this.numberOfPeople;
+        data["hotelId"] = this.hotelId;
+        data["mealName"] = this.mealName;
+        return data; 
+    }
+}
+
+export interface IReservation_ListDto {
+    id: number;
+    userId: number;
+    reservationDate: moment.Moment;
+    isPaid: boolean;
+    dateFrom: moment.Moment;
+    dateTo: moment.Moment;
+    price: number;
+    numberOfPeople: number;
+    hotelId: number;
+    mealName: string | undefined;
+}
+
 export class AddNewUserParameters implements IAddNewUserParameters {
     firstName!: string | undefined;
     lastName!: string | undefined;
@@ -1818,6 +2145,126 @@ export class AddNewUserParameters implements IAddNewUserParameters {
 }
 
 export interface IAddNewUserParameters {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    telephoneNumber: string | undefined;
+    email: string | undefined;
+    password: string | undefined;
+}
+
+export class User_Dto implements IUser_Dto {
+    id!: number;
+    firstName!: string | undefined;
+    lastName!: string | undefined;
+    telephoneNumber!: string | undefined;
+    email!: string | undefined;
+    accountCreationDate!: moment.Moment;
+    lastSuccessfullyLogin!: moment.Moment | undefined;
+    lastUnsuccessfullyLoginAttempt!: moment.Moment | undefined;
+
+    constructor(data?: IUser_Dto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.telephoneNumber = _data["telephoneNumber"];
+            this.email = _data["email"];
+            this.accountCreationDate = _data["accountCreationDate"] ? moment(_data["accountCreationDate"].toString()) : <any>undefined;
+            this.lastSuccessfullyLogin = _data["lastSuccessfullyLogin"] ? moment(_data["lastSuccessfullyLogin"].toString()) : <any>undefined;
+            this.lastUnsuccessfullyLoginAttempt = _data["lastUnsuccessfullyLoginAttempt"] ? moment(_data["lastUnsuccessfullyLoginAttempt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): User_Dto {
+        data = typeof data === 'object' ? data : {};
+        let result = new User_Dto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["telephoneNumber"] = this.telephoneNumber;
+        data["email"] = this.email;
+        data["accountCreationDate"] = this.accountCreationDate ? this.accountCreationDate.toISOString() : <any>undefined;
+        data["lastSuccessfullyLogin"] = this.lastSuccessfullyLogin ? this.lastSuccessfullyLogin.toISOString() : <any>undefined;
+        data["lastUnsuccessfullyLoginAttempt"] = this.lastUnsuccessfullyLoginAttempt ? this.lastUnsuccessfullyLoginAttempt.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IUser_Dto {
+    id: number;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    telephoneNumber: string | undefined;
+    email: string | undefined;
+    accountCreationDate: moment.Moment;
+    lastSuccessfullyLogin: moment.Moment | undefined;
+    lastUnsuccessfullyLoginAttempt: moment.Moment | undefined;
+}
+
+export class EditUserParameters implements IEditUserParameters {
+    id!: number;
+    firstName!: string | undefined;
+    lastName!: string | undefined;
+    telephoneNumber!: string | undefined;
+    email!: string | undefined;
+    password!: string | undefined;
+
+    constructor(data?: IEditUserParameters) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.telephoneNumber = _data["telephoneNumber"];
+            this.email = _data["email"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): EditUserParameters {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditUserParameters();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["telephoneNumber"] = this.telephoneNumber;
+        data["email"] = this.email;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface IEditUserParameters {
+    id: number;
     firstName: string | undefined;
     lastName: string | undefined;
     telephoneNumber: string | undefined;

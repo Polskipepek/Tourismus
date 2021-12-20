@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
@@ -58,6 +59,25 @@ namespace Tourismus.WebApp.Controllers.Offers {
             return Ok();
         }
 
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult BookOffer([FromBody] BookOfferParameters parameters) {
+            var offer = context.Offers.First(o => o.Id ==parameters.OfferId);
+            if (offer == null) {
+                throw new Exception("Offer does not exist.");
+            }
+
+            Reservation reservation = new() { 
+                Offer = offer,
+                ReservationDate= DateTime.Now,
+                User = context.Users.First(u=>u.Id==parameters.UserId),
+            };
+
+            context.Reservations.Add(reservation);
+            context.SaveChanges();
+
+            return Ok();
+        }
 
         [HttpPost]
         [Route("[action]")]

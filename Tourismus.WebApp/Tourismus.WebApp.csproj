@@ -51,6 +51,9 @@
 		<None Update="ClientApp\src\services\ListDtos\Offer_ListDto.ts">
 			<CustomToolNamespace>ReadModels\Dtos\List\Offer_ListDto.cs</CustomToolNamespace>
 		</None>
+		<None Update="ClientApp\src\services\ListDtos\Reservation_ListDto.ts">
+		  <CustomToolNamespace>ReadModels\Dtos\List\Reservation_ListDto.cs</CustomToolNamespace>
+		</None>
 		<None Update="ClientApp\src\services\SingleDto\Offer_DetailsDto.ts">
 			<CustomToolNamespace>ReadModels\Dtos\Single\Offer_DetailsDto.cs</CustomToolNamespace>
 		</None>

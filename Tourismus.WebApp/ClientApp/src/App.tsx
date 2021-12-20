@@ -82,8 +82,8 @@ const App: React.FunctionComponent = () => {
 					<Switch>
 						<Route path={Resources.AvailablePages.homePage} component={HomePage} />
 						<Route path={Resources.AvailablePages.aboutUsPage} component={AboutUsPage} />
-						<Route path={Resources.AvailablePages.userProfilePage} component={UserProfilePage} />
-						<Route path={Resources.AvailablePages.adminDashboardPage} component={AdminDashboardPage} />
+						{user && <Route path={Resources.AvailablePages.userProfilePage} component={UserProfilePage} />}
+						{user && user.isAdmin && <Route path={Resources.AvailablePages.adminDashboardPage} component={AdminDashboardPage} />}
 						<Redirect from="/" to={Resources.AvailablePages.homePage} />
 					</Switch>
 				</MainLayout>

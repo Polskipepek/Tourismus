@@ -37,6 +37,7 @@
 			"Offer_ListDto",
 			"Hotel_ListDto",
 			"Meal_ListDto",
+			"Reservation_ListDto",
 		};
 		return classes.Contains(c.Name);
 	}

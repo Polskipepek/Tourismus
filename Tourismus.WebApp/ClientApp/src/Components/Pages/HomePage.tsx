@@ -1,7 +1,10 @@
-import { Spin, Image } from "antd";
-import { FunctionComponent, useEffect, useState } from "react";
+import { Spin } from "antd";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
+import { AppContext, IAppContext } from "../../App";
+import { openErrorNotification, openNotification } from "../../Helpers/NotificationHelper";
+import Resources from "../../Resources";
 
-import { OfferClient, OfferList_Dto } from "../../services/GeneratedClient";
+import { BookOfferParameters, OfferClient, OfferList_Dto } from "../../services/GeneratedClient";
 import { starOptions } from "../Hotel/AddHotelForm";
 
 import { AddOfferModal } from "../Offer/AddOfferModal";
@@ -13,6 +16,8 @@ export const HomePage: FunctionComponent<IHomePageProps> = (props) => {
 	const [offers, setOffers] = useState<OfferList_Dto[]>([]);
 	const [addOfferModalVisible, setAddOfferModalVisible] = useState<boolean>(false);
 	const [selectedOffer, setSelectedOffer] = useState<OfferList_Dto | undefined>(undefined);
+
+	const { user } = useContext<IAppContext>(AppContext);
 
 	useEffect(() => {
 		getOffers();
@@ -28,25 +33,38 @@ export const HomePage: FunctionComponent<IHomePageProps> = (props) => {
 		});
 	};
 
+	const bookOffer = () => {
+		var params = new BookOfferParameters({
+			offerId: selectedOffer?.id ?? -1,
+			userId: user?.id ?? -1,
+		});
+		new OfferClient()
+			.bookOffer(params)
+			.then((resp) => openNotification(Resources.Notifications.successTitle, Resources.Notifications.successMessage))
+			.catch((err) => openErrorNotification(Resources.Notifications.failureTitle, Resources.Notifications.failureMessage));
+		setAddOfferModalVisible(false);
+	};
+
+	const offersFilter = {};
+
 	return (
 		<>
 			<Spin spinning={offers.length == 0}>
 				<div className="item-container">
 					{offers.map((offer) => (
-						<div className="card" key={offer.id}>
-							<a className="fill-div" onClick={() => setSelectedOffer(offer)} />
+						<a className="card" onClick={() => setSelectedOffer(offer)} key={offer.id}>
 							<h3>{`${offer.name}`}</h3>
 							<p>{`Od ${offer.dateFrom.format("MMM DD, YYYY")} do  ${offer.dateTo.format("MMM DD, YYYY")}`}</p>
 							<p>{`${offer.cityName} - ${offer.countryName}`}</p>
 							{starOptions[offer.stars].label}
 							<p>{`${offer.price}PLN za ${offer.numberOfPeople} ${offer.numberOfPeople > 1 ? "osób" : "osobę"}`}</p>
-						</div>
+						</a>
 					))}
 				</div>
 			</Spin>
 
 			<AddOfferModal modalVisible={addOfferModalVisible} closeModal={() => setAddOfferModalVisible(false)} />
-			<OfferModal offer={selectedOffer} closeModal={() => setSelectedOffer(undefined)} />
+			<OfferModal offer={selectedOffer} closeModal={() => setSelectedOffer(undefined)} onBookClicked={() => bookOffer()} />
 		</>
 	);
 };

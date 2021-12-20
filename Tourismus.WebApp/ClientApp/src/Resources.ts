@@ -19,7 +19,8 @@ export default class Resources {
     AddOffer:"Dodaj ofertę",
     Offer:"Oferta",
     AddMeal:"Dodaj typ posiłku",
-    AddHotel:"Dodaj hotel",
+    AddHotel: "Dodaj hotel",
+    EditUser: "Edytuj informacje o użytkowniku"
   };
 
   public static PageNames = {
@@ -34,7 +35,7 @@ export default class Resources {
     password: "Hasło",
     firstName: "Imię",
     lastName: "Nazwisko",
-    phoneNumber: "Numer telefonu",
+    telephoneNumber: "Numer telefonu",
     countryName: "Kraj",
     cityName: "Miasto",
     meal: "Posiłek",
@@ -86,6 +87,8 @@ export default class Resources {
 
     failureTitle: "Ups!",
     failureMessage: "Ta tablica tutaj nie stała!",
+
+    canceledReservation: "Anulowane rezerwacje",
   };
   public static BusinessNames = {
     offers: "Oferty",
@@ -103,7 +106,9 @@ export default class Resources {
     addCountry: "Dodaj kraj",
     addHotel: "Dodaj hotel",
     remove: "Usuń",
-    addOffer:"Dodaj ofertę"
+    addOffer: "Dodaj ofertę",
+    
+    edit: "Edytuj",
   };
 
   static persistentKeys = {
@@ -118,6 +123,14 @@ export default class Resources {
     meal: "Posiłek",
     offer: "Oferta",
     stars: "Gwiazdki",
-    hotel:"Hotel",
+    hotel: "Hotel",
+		ReservationDate: "Data rezerwacji",
+		IsPaid: "Staus płatności",
+		DateFrom: "Data rozpoczęcia",
+		DateTo: "Data zakończenia",
+		Price: "Cena",
+		NumberOfPeople: "Liczba osób",
+		HotelId: "Hotel",
+		MealName: "Posiłki",
   };
 }
